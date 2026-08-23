@@ -1,26 +1,554 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==================================================================
+   Athletic Excellence — see DESIGN.md
+
+   :root holds the palette. It is the single source of truth: every
+   shadcn semantic slot below is an alias onto one of these values,
+   never a second copy of a hex code.
+   ================================================================== */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---------- Surfaces ---------- */
+  --surface: #f7fafd;
+  --surface-dim: #d7dadd;
+  --surface-bright: #f7fafd;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f1f4f7;
+  --surface-container: #ebeef1;
+  --surface-container-high: #e5e8eb;
+  --surface-container-highest: #e0e3e6;
+  --surface-variant: #e0e3e6;
+  --surface-tint: #2856c7;
+  --on-surface: #181c1e;
+  --on-surface-variant: #434653;
+  --inverse-surface: #2d3133;
+  --inverse-on-surface: #eef1f4;
+
+  --outline: #747685;
+  --outline-variant: #c4c6d6;
+
+  /* ---------- Primary — Athletic Blue ---------- */
+  --primary: #0041b3;
+  --on-primary: #ffffff;
+  --primary-container: #2e5bcc;
+  --on-primary-container: #d7dfff;
+  --inverse-primary: #b4c5ff;
+  --primary-fixed: #dbe1ff;
+  --primary-fixed-dim: #b4c5ff;
+  --on-primary-fixed: #00174c;
+  --on-primary-fixed-variant: #003da9;
+
+  /* ---------- Secondary — Golden Yellow ---------- */
+  --secondary: #825500;
+  --on-secondary: #ffffff;
+  --secondary-container: #feb23d;
+  --on-secondary-container: #6e4700;
+  --secondary-fixed: #ffddb4;
+  --secondary-fixed-dim: #ffb953;
+  --on-secondary-fixed: #291800;
+  --on-secondary-fixed-variant: #633f00;
+
+  /* ---------- Tertiary — Deep Onyx ---------- */
+  --tertiary: #4c4b4b;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #646363;
+  --on-tertiary-container: #e2e0df;
+  --tertiary-fixed: #e5e2e1;
+  --tertiary-fixed-dim: #c8c6c5;
+  --on-tertiary-fixed: #1c1b1b;
+  --on-tertiary-fixed-variant: #474746;
+
+  /* ---------- Error ---------- */
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+
+  /* ==================================================================
+     shadcn semantic slots — aliases onto the palette above.
+     `primary` and `secondary` are omitted: DESIGN.md already owns
+     those names and the values agree.
+     ================================================================== */
+  --background: var(--surface);
+  --foreground: var(--on-surface);
+
+  --card: var(--surface-container-lowest);
+  --card-foreground: var(--on-surface);
+  --popover: var(--surface-container-lowest);
+  --popover-foreground: var(--on-surface);
+
+  --primary-foreground: var(--on-primary);
+  --secondary-foreground: var(--on-secondary);
+
+  --muted: var(--surface-container);
+  --muted-foreground: var(--on-surface-variant);
+
+  /* Golden Yellow is the highlight, so it lands on shadcn's accent slot. */
+  --accent: var(--secondary-container);
+  --accent-foreground: var(--on-secondary-fixed);
+
+  --destructive: var(--error);
+  --destructive-foreground: var(--on-error);
+
+  --border: var(--outline-variant);
+  --input: var(--outline-variant);
+  --ring: var(--primary);
+
+  --chart-1: var(--primary);
+  --chart-2: var(--secondary-container);
+  --chart-3: var(--primary-fixed-dim);
+  --chart-4: var(--tertiary);
+  --chart-5: var(--surface-tint);
+
+  --sidebar: var(--surface-container-low);
+  --sidebar-foreground: var(--on-surface);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--on-primary);
+  --sidebar-accent: var(--secondary-container);
+  --sidebar-accent-foreground: var(--on-secondary-fixed);
+  --sidebar-border: var(--outline-variant);
+  --sidebar-ring: var(--primary);
+
+  /* Base radius for shadcn components that read var(--radius) directly.
+     DESIGN.md: 8px containers. */
+  --radius: 0.5rem;
 }
+
+/* ==================================================================
+   Theme — exposes the palette above as Tailwind utilities.
+   ================================================================== */
 
 @theme inline {
+  /* ---------- Design tokens ---------- */
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-surface-tint: var(--surface-tint);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+
+  /* ---------- shadcn slots ---------- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ---------- Fonts (runtime vars injected by next/font) ---------- */
+  --font-display: var(--font-anybody), "Arial Black", system-ui, sans-serif;
+  --font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  /* ---------- Type scale ---------- */
+  --text-display-lg: 64px;
+  --text-display-lg--line-height: 72px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 800;
+
+  --text-headline-lg: 40px;
+  --text-headline-lg--line-height: 48px;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-lg-mobile: 32px;
+  --text-headline-lg-mobile--line-height: 40px;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 500;
+
+  --text-button: 16px;
+  --text-button--line-height: 16px;
+  --text-button--font-weight: 700;
+
+  /* ---------- Spacing (8px base rhythm) ----------
+     Tailwind's numeric scale stays intact; these are DESIGN.md's
+     named steps, usable as p-md, gap-lg, py-xl, w-xs. */
+  --spacing-xs: 4px;
+  --spacing-base: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 80px;
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-tablet: 32px;
+  --spacing-margin-desktop: 64px;
+
+  /* ---------- Radius ----------
+     Tailwind's ramp is retuned to DESIGN.md's shape language so stock
+     shadcn components (rounded-md on controls, rounded-lg/xl on
+     containers) land on-spec without per-component edits. */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem; /* controls — 4px */
+  --radius-lg: 0.5rem; /* containers — 8px */
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.75rem;
+  --radius-3xl: 0.75rem;
+
+  --radius-control: 0.25rem;
+  --radius-container: 0.5rem;
+  --radius-accent: 0px;
+
+  /* ---------- Elevation ----------
+     No soft shadows. Depth is a hard 2D-stacked offset. */
+  --shadow-hard: 4px 4px 0 0 var(--primary);
+  --shadow-hard-secondary: 4px 4px 0 0 var(--secondary-container);
+
+  /* ---------- Breakpoints ---------- */
+  --breakpoint-desktop: 1440px;
+
+  /* ---------- Motion ----------
+     One easing for the whole site. The duration scale is mirrored in
+     src/lib/motion.ts for the JS layer — change both together.
+     Tailwind resolves duration-* against the --transition-duration
+     namespace, so that is the prefix these have to carry. */
+  --ease-athletic: cubic-bezier(0.2, 0, 0, 1);
+  --transition-duration-fast: 150ms; /* colour and border state changes */
+  --transition-duration-base: 300ms; /* transforms, popups, scroll reveals */
+  --transition-duration-slow: 450ms; /* large surfaces — drawer, page slides */
+
+  /* Tailwind's own defaults. Setting the curve here puts every bare
+     `transition-colors` in the codebase on the athletic easing without
+     touching a single component. */
+  --default-transition-timing-function: var(--ease-athletic);
+  --default-transition-duration: var(--transition-duration-fast);
+}
+
+/* ==================================================================
+   Base layer
+   ================================================================== */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-size: var(--text-body-md);
+    line-height: 24px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-fixed);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ==================================================================
+   Reduced motion
+
+   Durations are crushed rather than animations removed. Base UI's drawer
+   and navigation menu wait on getAnimations() before they unmount, so
+   `animation: none` would strand open popups in the DOM. 0.01ms still
+   fires the animation and transition events they listen for.
+
+   Motion's own components are handled separately by MotionProvider's
+   reducedMotion="user", which keeps the opacity fade and drops only the
+   movement. The view-transition pseudo-elements are not reachable by the
+   universal selector, so they need their own rule.
+   ================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+  }
+}
+
+/* ==================================================================
+   Utilities — the pieces DESIGN.md names that aren't plain tokens
+   ================================================================== */
+
+/* Diagonal "speed lines" backdrop, echoing the jersey striping. */
+@utility speed-lines {
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--primary) 8%, transparent) 0 2px,
+    transparent 2px 14px
+  );
+}
+
+@utility speed-lines-bold {
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--secondary-container) 55%, transparent) 0 6px,
+    transparent 6px 24px
+  );
+}
+
+/* "Kinetic Structure" made literal: the jersey striping drifts. Compose this
+   onto a speed-lines layer inside an overflow-hidden parent.
+
+   Only `translate` animates, so the gradient is painted once into a
+   compositor layer and never repainted — animating background-position here
+   would repaint a full-bleed band every frame instead.
+
+   The shift is one horizontal period of the pattern, which is what makes the
+   loop seamless. A repeating-linear-gradient at angle A repeats every P along
+   its own axis, so it repeats every P / |sin A| horizontally. The two layers
+   have different periods, hence two values:
+     speed-lines      P = 14px, 14 / sin(115°) = 15.45px
+     speed-lines-bold P = 24px, 24 / sin(115°) = 26.48px
+   The layer is widened by the shift on the leading edge so nothing uncovers. */
+@utility speed-lines-drift {
+  --speed-lines-shift: 15.45px;
+  left: calc(-1 * var(--speed-lines-shift));
+  animation: speed-lines-drift 6s linear infinite;
+}
+
+@utility speed-lines-drift-bold {
+  --speed-lines-shift: 26.48px;
+  left: calc(-1 * var(--speed-lines-shift));
+  animation: speed-lines-drift 10s linear infinite;
+}
+
+@keyframes speed-lines-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: var(--speed-lines-shift) 0;
+  }
+}
+
+/* 4px team stripe on a card edge. */
+@utility team-stripe-t {
+  border-top: 4px solid var(--primary);
+}
+
+/* Hover wipe for a card's team stripe. DESIGN.md forbids a shadow lift, so
+   the feedback is the stripe itself filling in gold from the left. Scaling a
+   pseudo-element keeps this on the compositor — no layout, no repaint. */
+@utility stripe-wipe {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    /* Cards are overflow-hidden, which clips to the padding box — a bar sat
+       over the border itself would never be drawn. This rides just inside it,
+       so the primary stripe stays and the gold wipes in beneath it. */
+    top: 0;
+    height: 4px;
+    background-color: var(--secondary-container);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-duration-base) var(--ease-athletic);
+    pointer-events: none;
+  }
+
+  &:hover::after,
+  &:focus-within::after {
+    transform: scaleX(1);
+  }
+}
+
+@utility team-stripe-l {
+  border-left: 4px solid var(--primary);
+}
+
+/* ==================================================================
+   View transitions
+
+   Routes slide rather than cut. Direction comes from the transitionTypes
+   a <Link> carries, so an untagged navigation (browser back, refresh) gets
+   no direction rather than a wrong one.
+
+   Timings are asymmetric on purpose: the old page leaves quickly so it
+   stops competing for attention, and the new one arrives more gently.
+   The reduced-motion override lives with the rest of that block above —
+   these pseudo-elements are not reachable by a universal selector.
+   ================================================================== */
+
+/* The transition overlay swallows clicks while it runs. Let them through. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* The header is the reader's spatial anchor. Content moves; it does not. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-old(.nav-forward) {
+  --page-slide: -60px;
+  animation:
+    var(--transition-duration-fast) var(--ease-athletic) both page-fade reverse,
+    var(--transition-duration-slow) var(--ease-athletic) both page-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --page-slide: 60px;
+  animation:
+    var(--transition-duration-base) var(--ease-athletic)
+      var(--transition-duration-fast) both page-fade,
+    var(--transition-duration-slow) var(--ease-athletic) both page-slide;
+}
+
+::view-transition-old(.nav-back) {
+  --page-slide: 60px;
+  animation:
+    var(--transition-duration-fast) var(--ease-athletic) both page-fade reverse,
+    var(--transition-duration-slow) var(--ease-athletic) both page-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --page-slide: -60px;
+  animation:
+    var(--transition-duration-base) var(--ease-athletic)
+      var(--transition-duration-fast) both page-fade,
+    var(--transition-duration-slow) var(--ease-athletic) both page-slide;
+}
+
+@keyframes page-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-slide {
+  from {
+    translate: var(--page-slide);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+/* Page gutter: 16px mobile / 32px tablet / 64px desktop. */
+@utility page-gutter {
+  padding-inline: var(--spacing-margin-mobile);
+  @media (width >= 768px) {
+    padding-inline: var(--spacing-margin-tablet);
+  }
+  @media (width >= 1440px) {
+    padding-inline: var(--spacing-margin-desktop);
+  }
 }
