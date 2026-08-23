@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Goa Science High School Website
+
+Public website for **Goa Science High School** (GSHS) — a public science high school in Goa, Camarines Sur, Philippines, offering a special science curriculum for Grades 7 to 12.
+
+Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, and shadcn/ui.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Pages
 
-To learn more about Next.js, take a look at the following resources:
+| Route | Page |
+| --- | --- |
+| `/` | Home — hero, mission stats, program previews, alumni testimonials, news preview |
+| `/about` | Story, mission and vision, milestones |
+| `/about/news-and-announcements` | News listing |
+| `/about/news-and-announcements/[slug]` | News article detail |
+| `/academics/junior-high-school` | Junior high program (Grades 7–10) |
+| `/academics/senior-high-school` | Senior high program (Grades 11–12) |
+| `/faculty-and-staff` | Faculty and staff directory |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+  app/          Routes (App Router), root layout, global styles
+  components/
+    home/       Landing page sections
+    about/      About page sections
+    junior-high/, senior-high/   Program page sections
+    news/       News listing and article components
+    faculty/    Faculty directory components
+    layout/     Header, footer, navigation shell
+    motion/     Reveal and page-transition primitives
+    ui/         shadcn/ui base components
+  lib/
+    site.ts        School identity and contact details (single source of truth)
+    navigation.ts  Nav structure
+    news.ts        News content
+    faculty.ts     Faculty and staff data
+    motion.ts      Shared animation variants
+    utils.ts       `cn` class helper
+  types/        Local type declarations
+```
 
-## Deploy on Vercel
+Content lives as typed data in `src/lib` rather than in a CMS — edit those files to update copy, news, or staff listings.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Design
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Design tokens (colors, typography scale, elevation) are documented in [DESIGN.md](DESIGN.md) and applied as CSS variables in the global stylesheet.
+
+## Conventions
+
+Coding principles (KISS, DRY, self-documenting code, YAGNI) are in [CLAUDE.md](CLAUDE.md). Notes for AI coding agents are in [AGENTS.md](AGENTS.md).
