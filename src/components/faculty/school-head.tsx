@@ -26,10 +26,7 @@ async function SchoolHead() {
             priority
           />
         ) : (
-          <MediaPlaceholder
-            label={`Portrait of ${fullName}`}
-            className="aspect-[3/4] w-full max-w-[20rem]"
-          />
+          <MediaPlaceholder className="aspect-[3/4] w-full max-w-[20rem]" />
         )}
         <div className="flex flex-col gap-xs">
           <h3 className="text-headline-lg-mobile uppercase md:text-headline-lg">

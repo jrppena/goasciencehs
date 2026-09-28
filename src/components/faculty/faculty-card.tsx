@@ -33,10 +33,7 @@ function FacultyCard({
           />
         </div>
       ) : (
-        <MediaPlaceholder
-          label={`Portrait of ${fullName}`}
-          className="aspect-square rounded-none border-0 border-b"
-        />
+        <MediaPlaceholder className="aspect-square rounded-none border-0 border-b" />
       )}
 
       <div className="flex flex-col gap-xs px-md py-md">

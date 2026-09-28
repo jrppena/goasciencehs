@@ -57,7 +57,7 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
             className="size-24 shrink-0 rounded-container border border-border object-cover"
           />
         ) : (
-          <MediaPlaceholder label={label} className="size-24 shrink-0" />
+          <MediaPlaceholder className="size-24 shrink-0" />
         )}
 
         <div className="flex flex-1 flex-col gap-xs">
