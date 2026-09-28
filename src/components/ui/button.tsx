@@ -1,3 +1,4 @@
+import * as React from "react"
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -45,20 +46,46 @@ function Button({
   variant = "default",
   size = "default",
   render,
-  // A rendered element (a Link, say) is usually not a <button>, and Base UI
-  // warns when it is told otherwise. Only claim native semantics by default
-  // when this really does render a <button>.
-  nativeButton = render === undefined,
+  children,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  // A rendered element (a Link, say) is usually not a <button>. Base UI's
+  // `nativeButton={false}` keeps it keyboard-operable but still stamps
+  // `role="button"` and its own keydown/keyup handling onto it, which
+  // announces links as buttons to assistive tech. Bypass the primitive for
+  // non-<button> elements and style them directly, so a link keeps native
+  // link semantics; real <button>s (and function `render`s) stay on Base UI.
+  if (
+    React.isValidElement<{ className?: string; children?: React.ReactNode }>(render) &&
+    render.type !== "button"
+  ) {
+    return React.cloneElement(
+      render,
+      {
+        "data-slot": "button",
+        className: cn(
+          buttonVariants({ variant, size, className }),
+          render.props.className
+        ),
+        ...props,
+      } as React.HTMLAttributes<HTMLElement>,
+      children ?? render.props.children
+    )
+  }
+
   return (
     <ButtonPrimitive
       data-slot="button"
       render={render}
-      nativeButton={nativeButton}
+      // Anything that reaches the primitive here is either absent (a real
+      // <button>) or already a <button> element (see the branch above), so
+      // it always has native button semantics.
+      nativeButton={render === undefined || React.isValidElement(render)}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {children}
+    </ButtonPrimitive>
   )
 }
 

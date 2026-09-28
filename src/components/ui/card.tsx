@@ -21,7 +21,7 @@ const cardVariants = cva(
       // DESIGN.md > Elevation: a hovered card shifts colour and gains a sharp
       // accent — it never lifts on a shadow.
       interactive: {
-        true: "transition-colors duration-fast hover:border-primary focus-within:border-primary",
+        true: "transition-colors duration-fast hover:border-primary focus-within:border-primary has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background",
         false: "",
       },
     },
