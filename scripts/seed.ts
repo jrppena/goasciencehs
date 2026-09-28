@@ -6,10 +6,12 @@ import { FacultyModel } from "@/lib/db/models/faculty"
 import { NewsModel } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
 import { SiteSettingsModel } from "@/lib/db/models/site-settings"
+import { TestimonialModel } from "@/lib/db/models/testimonial"
 import { facultyMembers, nonTeachingPersonnel, schoolHead } from "@/lib/faculty"
 import { newsPosts } from "@/lib/news"
 import { schoolStats } from "@/lib/school-stats"
 import { site } from "@/lib/site"
+import { testimonials } from "@/lib/testimonials"
 
 loadEnvConfig(process.cwd())
 
@@ -55,8 +57,18 @@ async function seed() {
     { upsert: true, runValidators: true }
   )
 
+  let newTestimonials = 0
+  for (const testimonial of testimonials) {
+    const { upsertedCount } = await TestimonialModel.updateOne(
+      { quote: testimonial.quote },
+      { $set: testimonial },
+      { upsert: true, runValidators: true }
+    )
+    newTestimonials += upsertedCount
+  }
+
   console.log(
-    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · site settings and school stats updated`
+    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · testimonials: ${testimonials.length} (${newTestimonials} new) · site settings and school stats updated`
   )
 }
 

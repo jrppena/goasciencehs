@@ -13,6 +13,10 @@ import {
   SiteSettingsModel,
   type SiteSettings,
 } from "@/lib/db/models/site-settings"
+import {
+  TestimonialModel,
+  type Testimonial,
+} from "@/lib/db/models/testimonial"
 
 /** A news document with a serialisable id, for admin lists and forms. */
 export type AdminNewsPost = NewsPost & { _id: string }
@@ -210,5 +214,78 @@ export async function updateSchoolStats(
     {},
     { $set: { ...input, facultyAndStaff } },
     { upsert: true, runValidators: true }
+  )
+}
+
+/** A testimonial with a serialisable id, for admin lists and forms. */
+export type AdminTestimonial = Testimonial & { _id: string }
+
+export async function getAdminTestimonials(): Promise<AdminTestimonial[]> {
+  await connect()
+  const testimonials = await TestimonialModel.find({})
+    .sort({ order: 1, name: 1 })
+    .lean()
+  return testimonials.map((testimonial) => ({
+    ...testimonial,
+    _id: String(testimonial._id),
+  }))
+}
+
+export async function getAdminTestimonialById(
+  id: string
+): Promise<AdminTestimonial | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const testimonial = await TestimonialModel.findById(id).lean()
+  return testimonial
+    ? { ...testimonial, _id: String(testimonial._id) }
+    : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createTestimonial(
+  input: Testimonial
+): Promise<AdminTestimonial> {
+  const testimonial = new TestimonialModel(input)
+  await testimonial.validate()
+
+  await connect()
+  await testimonial.save()
+
+  return { ...testimonial.toObject(), _id: String(testimonial._id) }
+}
+
+export async function updateTestimonial(
+  id: string,
+  input: Testimonial
+): Promise<AdminTestimonial | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const testimonial = await TestimonialModel.findByIdAndUpdate(
+    id,
+    { $set: input },
+    { runValidators: true, returnDocument: "after" }
+  ).lean()
+
+  return testimonial
+    ? { ...testimonial, _id: String(testimonial._id) }
+    : null
+}
+
+export async function deleteTestimonial(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await TestimonialModel.findByIdAndDelete(id)
+}
+
+export async function setTestimonialVisible(id: string, isVisible: boolean) {
+  await connect()
+  await TestimonialModel.updateOne(
+    { _id: id },
+    { $set: { isVisible } },
+    { runValidators: true }
   )
 }

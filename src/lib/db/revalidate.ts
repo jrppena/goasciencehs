@@ -2,7 +2,7 @@ import "server-only"
 
 import { revalidatePath } from "next/cache"
 
-export type ContentType = "news" | "faculty" | "site" | "stats"
+export type ContentType = "news" | "faculty" | "testimonials" | "site" | "stats"
 
 /**
  * Admin mutations call this after a save. A change can surface in the shared
