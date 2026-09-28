@@ -252,7 +252,11 @@
 
   /* ---------- Spacing (8px base rhythm) ----------
      Tailwind's numeric scale stays intact; these are DESIGN.md's
-     named steps, usable as p-md, gap-lg, py-xl, w-xs. */
+     named steps, usable as p-md, gap-lg, py-xl, w-xs.
+
+     Careful: Tailwind 4 resolves named max-w utilities from this namespace,
+     so max-w-xs/sm/md/lg/xl mean 4/12/24/48/80px, not the container widths.
+     Use numeric (max-w-96) or arbitrary (max-w-[24rem]) values instead. */
   --spacing-xs: 4px;
   --spacing-base: 8px;
   --spacing-sm: 12px;

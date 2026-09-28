@@ -25,7 +25,7 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="page-gutter flex min-h-[70svh] items-center justify-center py-xl">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-[24rem]">
         <CardHeader>
           <CardTitle>Admin sign in</CardTitle>
           <CardDescription>
