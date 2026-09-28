@@ -3,8 +3,6 @@ import { ArrowLeftIcon } from "lucide-react"
 
 import { formatNewsDate, type NewsPost } from "@/lib/news"
 import { Badge } from "@/components/ui/badge"
-import { RevealGroup } from "@/components/motion/reveal-group"
-import { RevealItem } from "@/components/motion/reveal-item"
 
 /** Title block of a single bulletin: where you are, what it is, who wrote it. */
 function ArticleHeader({ post }: { post: NewsPost }) {
@@ -14,8 +12,10 @@ function ArticleHeader({ post }: { post: NewsPost }) {
         aria-hidden="true"
         className="speed-lines-bold speed-lines-drift-bold absolute inset-0 opacity-10"
       />
-      <RevealGroup className="page-gutter relative mx-auto flex max-w-4xl flex-col gap-md py-xl">
-        <RevealItem>
+      {/* Above the fold: no reveal wrappers, so there's no server-rendered
+          opacity:0 blocking the article header before JS hydrates. */}
+      <div className="page-gutter relative mx-auto flex max-w-4xl flex-col gap-md py-xl">
+        <div>
           <Link
             href="/about/news-and-announcements"
             transitionTypes={["nav-back"]}
@@ -24,28 +24,28 @@ function ArticleHeader({ post }: { post: NewsPost }) {
             <ArrowLeftIcon className="size-4" aria-hidden="true" />
             All News
           </Link>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <Badge variant="active" className="w-fit">
             {post.category}
           </Badge>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             {post.title}
           </h1>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <p className="text-body-lg text-primary-fixed">{post.excerpt}</p>
-        </RevealItem>
-        <RevealItem className="flex flex-wrap items-center gap-sm font-mono text-label-md uppercase text-primary-fixed-dim">
+        </div>
+        <div className="flex flex-wrap items-center gap-sm font-mono text-label-md uppercase text-primary-fixed-dim">
           <span>{post.author}</span>
           <span aria-hidden="true">/</span>
           <time dateTime={post.publishedOn}>
             {formatNewsDate(post.publishedOn)}
           </time>
-        </RevealItem>
-      </RevealGroup>
+        </div>
+      </div>
     </section>
   )
 }

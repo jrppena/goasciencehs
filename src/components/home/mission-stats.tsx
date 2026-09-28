@@ -1,11 +1,12 @@
 import { Section } from "@/components/home/section"
+import { schoolStats } from "@/lib/school-stats"
 import { StatGrid } from "@/components/ui/stat-grid"
 
 const stats = [
-  { value: "1,240", label: "Learners enrolled" },
-  { value: "68", label: "Faculty and staff" },
-  { value: "2015", label: "Established" },
-  { value: "97%", label: "Move on to college" },
+  { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
+  { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
+  { value: schoolStats.yearEstablished, label: "Established" },
+  { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
 ]
 
 function MissionStats() {

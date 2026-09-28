@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 
-/** Page header for Grades 11 and 12. Names the track before any detail. */
-function ShsHero() {
+/** Page header for the academics overview. Names the page before the two programs below it. */
+function AcademicsHero() {
   return (
     <section className="relative overflow-hidden bg-primary text-on-primary">
       <div
@@ -13,21 +13,19 @@ function ShsHero() {
       <div className="page-gutter relative flex max-w-3xl flex-col gap-md py-xl">
         <div>
           <Badge variant="active" className="w-fit">
-            Grades 11 and 12
+            Grades 7 to 12
           </Badge>
         </div>
         <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
-            Senior High School
+            Academics
           </h1>
         </div>
         <div>
           <p className="text-body-lg text-primary-fixed">
-            Goa Science High School offers the Academic Track of the Strengthened
-            Senior High School curriculum. Every learner carries the same five
-            core subjects, then builds an elective load from the three clusters
-            the school runs — STEM, Business and Entrepreneurship, and Field
-            Experience.
+            A special science curriculum runs across all six years, from
+            Junior High School in Grades 7 to 10 through Senior High School in
+            Grades 11 and 12.
           </p>
         </div>
       </div>
@@ -35,4 +33,4 @@ function ShsHero() {
   )
 }
 
-export { ShsHero }
+export { AcademicsHero }

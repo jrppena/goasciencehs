@@ -3,7 +3,7 @@ import Link from "next/link"
 import { newsCategories, type NewsCategory } from "@/lib/news"
 import { Badge } from "@/components/ui/badge"
 
-const NEWS_PATH = "/about/news-and-announcements"
+export const NEWS_PATH = "/about/news-and-announcements"
 
 /**
  * Filter chips. Plain links carrying a `category` query param, so filtering

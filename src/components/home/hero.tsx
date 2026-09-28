@@ -4,8 +4,6 @@ import Link from "next/link"
 import { site } from "@/lib/site"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { RevealGroup } from "@/components/motion/reveal-group"
-import { RevealItem } from "@/components/motion/reveal-item"
 
 function Hero() {
   return (
@@ -27,27 +25,28 @@ function Hero() {
         className="absolute inset-0 -z-10 bg-linear-to-b from-primary/90 from-35% via-primary/65 via-70% to-primary/25 lg:bg-linear-to-r lg:from-primary lg:from-15% lg:via-primary/70 lg:via-50% lg:to-primary/5"
       />
 
-      {/* The photograph and scrim never animate — the hero image is the LCP
-          element and must paint on the first frame. */}
-      <RevealGroup className="page-gutter relative flex min-h-[32rem] max-w-3xl flex-col justify-center gap-md py-xl">
-        <RevealItem>
+      {/* Above the fold: no reveal wrappers. Motion server-renders
+          `initial` inline (opacity:0), so a RevealGroup/RevealItem here
+          would leave the hero blank until JS hydrates. */}
+      <div className="page-gutter relative flex min-h-[32rem] max-w-3xl flex-col justify-center gap-md py-xl">
+        <div>
           <Badge variant="active" className="w-fit whitespace-normal">
             Admissions open for S.Y. 2026–2027
           </Badge>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             Science, discipline, and a place to belong
           </h1>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <p className="text-body-lg text-primary-fixed">
             {site.tagline} {site.name} prepares Grades 7 to 12 learners of Goa,
             Camarines Sur for research, competition, and the university of their
             choice.
           </p>
-        </RevealItem>
-        <RevealItem className="flex flex-wrap gap-sm pt-base">
+        </div>
+        <div className="flex flex-wrap gap-sm pt-base">
           <Button
             size="lg"
             variant="accent"
@@ -62,8 +61,8 @@ function Hero() {
           >
             About GSHS
           </Button>
-        </RevealItem>
-      </RevealGroup>
+        </div>
+      </div>
     </section>
   )
 }

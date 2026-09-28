@@ -1,7 +1,5 @@
 import { site } from "@/lib/site"
 import { Badge } from "@/components/ui/badge"
-import { RevealGroup } from "@/components/motion/reveal-group"
-import { RevealItem } from "@/components/motion/reveal-item"
 
 /** Compact page header. Orients the reader before the long-form sections. */
 function AboutHero() {
@@ -11,18 +9,20 @@ function AboutHero() {
         aria-hidden="true"
         className="speed-lines-bold speed-lines-drift-bold absolute inset-0 opacity-10"
       />
-      <RevealGroup className="page-gutter relative flex max-w-3xl flex-col gap-md py-xl">
-        <RevealItem>
+      {/* Above the fold: no reveal wrappers, so there's no server-rendered
+          opacity:0 blocking the header before JS hydrates. */}
+      <div className="page-gutter relative flex max-w-3xl flex-col gap-md py-xl">
+        <div>
           <Badge variant="active" className="w-fit">
             About GSHS
           </Badge>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             A young science school built for Bicolano learners
           </h1>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <p className="text-body-lg text-primary-fixed">
             {site.name} is a public secondary school in Goa, Camarines Sur,
             offering a special science curriculum for Grades 7 to 12.
@@ -30,8 +30,8 @@ function AboutHero() {
             school with a plain purpose: keep a rigorous science education
             within reach of the learners of Goa and its neighbouring towns.
           </p>
-        </RevealItem>
-      </RevealGroup>
+        </div>
+      </div>
     </section>
   )
 }

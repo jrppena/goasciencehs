@@ -3,12 +3,13 @@ import Image from "next/image"
 import { StatGrid } from "@/components/ui/stat-grid"
 import { Reveal } from "@/components/motion/reveal"
 import { STAGGER_SECONDS } from "@/lib/motion"
+import { schoolStats } from "@/lib/school-stats"
 
 const stats = [
-  { value: "2015", label: "Year established" },
-  { value: "1,240", label: "Learners enrolled" },
-  { value: "21", label: "Faculty and staff" },
-  { value: "97%", label: "Move on to college" },
+  { value: schoolStats.yearEstablished, label: "Year established" },
+  { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
+  { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
+  { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
 ]
 
 function OurStory() {

@@ -16,11 +16,15 @@ function CtaBand() {
             Ready to begin?
           </h2>
           <p className="text-body-lg text-primary-fixed">
-            Entrance examination slots for incoming Grade 7 and Grade 11 are
-            open. Talk to the registrar about requirements and schedules.
+            Talk to the registrar about admission for incoming Grade 7 and
+            Grade 11, including requirements and schedules.
           </p>
         </div>
-        <Button size="lg" variant="accent" render={<Link href="/about" />}>
+        <Button
+          size="lg"
+          variant="accent"
+          render={<Link href="/faculty-and-staff#front-office" />}
+        >
           Contact the Registrar
         </Button>
       </Reveal>

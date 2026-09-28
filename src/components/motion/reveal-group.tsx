@@ -32,7 +32,11 @@ function RevealGroup({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
+      // No `amount`: it's relative to the whole element, so on tall
+      // content (e.g. long grids) the viewport can never satisfy a
+      // fraction and it stays hidden forever. Default ("some") fires on
+      // any pixel intersecting.
+      viewport={{ once: true }}
       variants={revealGroupVariants}
     >
       {children}

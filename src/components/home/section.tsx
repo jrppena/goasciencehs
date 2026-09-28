@@ -8,6 +8,7 @@ function Section({
   description,
   centered = false,
   className,
+  id,
   children,
 }: {
   eyebrow: string
@@ -16,10 +17,12 @@ function Section({
   /** Centres the header block; the section's content is laid out by the caller. */
   centered?: boolean
   className?: string
+  /** Anchor target, e.g. for a CTA link elsewhere on the site. */
+  id?: string
   children: React.ReactNode
 }) {
   return (
-    <section className={cn("page-gutter flex flex-col gap-md py-xl", className)}>
+    <section id={id} className={cn("page-gutter flex flex-col gap-md py-xl", className)}>
       {/* Only the header reveals here. Content reveals are owned by the caller
           so that a grid can stagger its own cells — nesting a reveal inside a
           reveal would just fade the same pixels twice. */}

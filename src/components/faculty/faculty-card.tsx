@@ -48,12 +48,29 @@ function FacultyCard({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 divide-x divide-border border-y border-border bg-surface-container-low font-mono text-label-md text-on-surface-variant">
-        <p className="truncate px-sm py-xs">{member.email ?? FACULTY_PENDING}</p>
-        <p className="truncate px-sm py-xs uppercase">
-          Room: {member.room ?? FACULTY_PENDING}
-        </p>
-      </div>
+      {member.email || member.room ? (
+        <div className="grid grid-cols-1 divide-y divide-border border-y border-border bg-surface-container-low font-mono text-label-md text-on-surface-variant sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+          <p className="px-sm py-xs [overflow-wrap:anywhere]">
+            {member.email ? (
+              <a
+                href={`mailto:${member.email}`}
+                className="underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {member.email}
+              </a>
+            ) : (
+              FACULTY_PENDING
+            )}
+          </p>
+          <p className="px-sm py-xs uppercase [overflow-wrap:anywhere]">
+            Room: {member.room ?? FACULTY_PENDING}
+          </p>
+        </div>
+      ) : (
+        <div className="border-y border-border bg-surface-container-low px-sm py-xs font-mono text-label-md text-on-surface-variant">
+          {`Contact details: ${FACULTY_PENDING}`}
+        </div>
+      )}
 
       {withSubjects ? (
         <div className="flex flex-col gap-sm px-md py-md">

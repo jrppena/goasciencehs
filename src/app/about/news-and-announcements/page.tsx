@@ -1,11 +1,14 @@
 import type { Metadata } from "next"
 
+import Link from "next/link"
+
 import { getPostsByCategory, parseNewsCategory } from "@/lib/news"
-import { CategoryFilter } from "@/components/news/category-filter"
+import { CategoryFilter, NEWS_PATH } from "@/components/news/category-filter"
 import { FeaturedPost } from "@/components/news/featured-post"
 import { NewsCard } from "@/components/news/news-card"
 import { NewsHero } from "@/components/news/news-hero"
 import { CtaBand } from "@/components/home/cta-band"
+import { Button } from "@/components/ui/button"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
 import { PageTransition } from "@/components/motion/page-transition"
@@ -41,9 +44,14 @@ export default async function NewsPage({
             </RevealGroup>
           </>
         ) : (
-          <p className="text-body-lg text-muted-foreground">
-            No posts in this category yet. Try another one.
-          </p>
+          <div className="flex flex-col items-start gap-sm py-lg">
+            <p className="text-body-lg text-muted-foreground">
+              No {activeCategory} posts yet.
+            </p>
+            <Button variant="outline" render={<Link href={NEWS_PATH} />}>
+              View all news
+            </Button>
+          </div>
         )}
       </section>
 
