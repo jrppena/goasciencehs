@@ -4,6 +4,7 @@ import { model, models, Schema, type InferSchemaType, type Model } from "mongoos
 
 const schoolStatsSchema = new Schema({
   learnersEnrolled: { type: String, required: true },
+  /** Derived: read paths recompute it from the faculty collection, never trust the stored value. */
   facultyAndStaff: { type: String, required: true },
   yearEstablished: { type: String, required: true },
   collegeProgressionRate: { type: String, required: true },
