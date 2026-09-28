@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 
@@ -38,6 +39,17 @@ function ArticleHeader({ post }: { post: NewsPost }) {
         <div>
           <p className="text-body-lg text-primary-fixed">{post.excerpt}</p>
         </div>
+        {post.image ? (
+          <div className="relative aspect-video overflow-hidden rounded-container border border-border">
+            <Image
+              src={post.image}
+              alt=""
+              fill
+              sizes="(min-width: 896px) 56rem, 100vw"
+              className="object-cover"
+            />
+          </div>
+        ) : null}
         <div className="flex flex-wrap items-center gap-sm font-mono text-label-md uppercase text-primary-fixed-dim">
           <span>{post.author}</span>
           <span aria-hidden="true">/</span>

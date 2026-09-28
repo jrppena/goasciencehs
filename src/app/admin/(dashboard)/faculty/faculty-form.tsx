@@ -4,6 +4,7 @@ import { useActionState } from "react"
 import Link from "next/link"
 
 import { facultyKindLabels, type FacultyKind, type FacultyMember } from "@/lib/faculty"
+import { ImageUpload } from "@/components/admin/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -121,20 +122,12 @@ function FacultyForm({ member }: FacultyFormProps) {
           <FieldError message={state.fieldErrors?.subjects} />
         </div>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="photo">Photo</Label>
-          <Input
-            id="photo"
-            name="photo"
-            defaultValue={state.values?.photo ?? member?.photo ?? ""}
-            aria-invalid={state.fieldErrors?.photo ? true : undefined}
-          />
-          <p className="text-body-sm text-muted-foreground">
-            Path under public/ (e.g. /sir-ronald.png) or a full URL. Uploads
-            arrive in a later update.
-          </p>
-          <FieldError message={state.fieldErrors?.photo} />
-        </div>
+        <ImageUpload
+          name="photo"
+          label="Photo"
+          defaultValue={state.values?.photo ?? member?.photo ?? ""}
+          hint="Path under public/ or a Cloudinary upload. Blank uses the placeholder."
+        />
       </div>
 
       <aside className="flex flex-col gap-md rounded-container border border-border bg-card p-md">

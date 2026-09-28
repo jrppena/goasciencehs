@@ -6,6 +6,7 @@ export type NewsValues = {
   author: string
   excerpt: string
   body: string
+  image: string
   isPublished: boolean
   isFeatured: boolean
 }

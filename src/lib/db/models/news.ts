@@ -12,6 +12,7 @@ const newsSchema = new Schema({
   excerpt: { type: String, required: true },
   author: { type: String, required: true },
   body: { type: [String], required: true },
+  image: String,
   isPublished: { type: Boolean, default: true },
   isFeatured: { type: Boolean, default: false },
 })

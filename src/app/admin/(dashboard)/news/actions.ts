@@ -83,6 +83,7 @@ function readNewsValues(formData: FormData): NewsValues {
     author: readString(formData, "author"),
     excerpt: readString(formData, "excerpt"),
     body: readString(formData, "body"),
+    image: readString(formData, "image"),
     isPublished: formData.get("isPublished") === "on",
     isFeatured: formData.get("isFeatured") === "on",
   }
@@ -100,6 +101,7 @@ function toNewsPost(values: NewsValues): NewsPost {
       .split(/\n\s*\n/)
       .map((paragraph) => paragraph.trim())
       .filter(Boolean),
+    image: values.image || null,
     isPublished: values.isPublished,
     isFeatured: values.isFeatured,
   }
