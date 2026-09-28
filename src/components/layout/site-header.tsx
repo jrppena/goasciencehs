@@ -38,11 +38,11 @@ async function SiteHeader() {
           </span>
         </Link>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <MainNav />
         </div>
 
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <MobileNav shortName={site.shortName} />
         </div>
       </div>

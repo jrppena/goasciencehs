@@ -39,7 +39,7 @@ import {
   TestimonialModel,
   type Testimonial,
 } from "@/lib/db/models/testimonial"
-import type { NewsCategory } from "@/lib/news"
+import { advisoryWindow, type NewsCategory } from "@/lib/news"
 
 /**
  * The single read path for public content. Everything here filters out
@@ -79,6 +79,19 @@ export async function getRelatedNews(
   const sameCategory = others.filter((candidate) => candidate.category === post.category)
   const rest = others.filter((candidate) => candidate.category !== post.category)
   return [...sameCategory, ...rest].slice(0, limit)
+}
+
+/** The most recent Advisory still inside the header strip's display window. */
+export async function getLatestAdvisory(now = new Date()): Promise<NewsPost | null> {
+  await connect()
+  const { since, today } = advisoryWindow(now)
+  return NewsModel.findOne({
+    isPublished: true,
+    category: "Advisory",
+    publishedOn: { $gte: since, $lte: today },
+  })
+    .sort({ publishedOn: -1, _id: -1 })
+    .lean()
 }
 
 export async function getVisibleFaculty(

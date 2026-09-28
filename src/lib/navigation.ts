@@ -21,6 +21,10 @@ export const navigation: NavSection[] = [
     href: "/",
   },
   {
+    label: "Advisories",
+    href: "/about/news-and-announcements?category=Advisory",
+  },
+  {
     label: "About",
     href: "/about",
     children: [

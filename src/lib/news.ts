@@ -186,3 +186,27 @@ export function parseNewsCategory(value: string | string[] | undefined) {
   const raw = (Array.isArray(value) ? value[0] : value)?.trim().toLowerCase()
   return newsCategories.find((category) => category.toLowerCase() === raw)
 }
+
+/** How many days (inclusive of today) an Advisory stays in the header strip. */
+export const ADVISORY_STRIP_DAYS = 3
+
+/** The school's local time zone, used to decide what "today" means for advisories. */
+export const SCHOOL_TIME_ZONE = "Asia/Manila"
+
+const isoDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: SCHOOL_TIME_ZONE,
+})
+
+/**
+ * The `publishedOn` window (inclusive, YYYY-MM-DD) a current advisory must
+ * fall in, anchored to "today" in the school's time zone.
+ */
+export function advisoryWindow(now: Date): { since: string; today: string } {
+  const today = isoDateFormatter.format(now)
+  const [year, month, day] = today.split("-").map(Number)
+  const since = new Date(Date.UTC(year, month - 1, day - (ADVISORY_STRIP_DAYS - 1)))
+    .toISOString()
+    .slice(0, 10)
+
+  return { since, today }
+}
