@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
+// Admin data must always be fresh.
+export const dynamic = "force-dynamic"
+
 export default async function AdminPage() {
   const counts = await getAdminCounts()
 

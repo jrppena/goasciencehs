@@ -15,6 +15,8 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.ts"],
+    // Integration suites share the gshs-test database and drop it per file.
+    fileParallelism: false,
     env: {
       MONGODB_ENV: "development",
       MONGODB_URI_DEVELOPMENT:
