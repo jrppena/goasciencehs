@@ -30,6 +30,8 @@ cp .env.example .env.local
 
 All three variables are server-only. If `MONGODB_ENV` is missing or the selected connection string is unset, the first database connection fails fast with a clear error.
 
+`AUTH_SECRET` signs the admin session cookie. Generate one with `openssl rand -base64 32` and set the same value on Vercel.
+
 #### Local MongoDB
 
 Run MongoDB locally and point `MONGODB_URI_DEVELOPMENT` at it (the default in `.env.example` is `mongodb://127.0.0.1:27017/gshs`).
@@ -52,6 +54,8 @@ Run MongoDB locally and point `MONGODB_URI_DEVELOPMENT` at it (the default in `.
 | `npm run build` | Production build |
 | `npm run start` | Serve the production build |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run the Vitest suite |
+| `npm run create-admin` | Create or update the single admin account |
 
 ## Pages
 
@@ -64,6 +68,22 @@ Run MongoDB locally and point `MONGODB_URI_DEVELOPMENT` at it (the default in `.
 | `/academics/junior-high-school` | Junior high program (Grades 7–10) |
 | `/academics/senior-high-school` | Senior high program (Grades 11–12) |
 | `/faculty-and-staff` | Faculty and staff directory |
+
+## Admin
+
+The admin area (`/admin`) is protected by [Auth.js](https://authjs.dev) v5 — credentials provider, JWT session cookie — and is meant for a single staff account.
+
+1. Set `AUTH_SECRET` in `.env.local` (see [Environment](#environment)).
+2. Create the account:
+
+   ```bash
+   npm run create-admin
+   ```
+
+   The script reads `ADMIN_EMAIL` and `ADMIN_PASSWORD` when set and prompts otherwise. Only a bcrypt hash is stored.
+3. Sign in at [http://localhost:3000/admin/login](http://localhost:3000/admin/login).
+
+There is no public signup. Route protection lives in `src/proxy.ts` (Next 16's rename of middleware), and no Server Action may mutate without calling `requireAdmin()` first.
 
 ## Project Structure
 
@@ -80,13 +100,17 @@ src/
     motion/     Reveal and page-transition primitives
     ui/         shadcn/ui base components
   lib/
+    auth/          Auth.js config, password hashing, requireAdmin
+    db/            Mongoose connection and models
     site.ts        School identity and contact details (single source of truth)
     navigation.ts  Nav structure
     news.ts        News content
     faculty.ts     Faculty and staff data
     motion.ts      Shared animation variants
     utils.ts       `cn` class helper
+  proxy.ts      Auth gate for /admin/** (Next 16's middleware)
   types/        Local type declarations
+scripts/        One-off maintenance scripts (create-admin)
 ```
 
 Content lives as typed data in `src/lib` rather than in a CMS — edit those files to update copy, news, or staff listings.

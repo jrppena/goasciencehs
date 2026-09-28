@@ -1,6 +1,6 @@
 # Database models
 
-One file per collection: `news.ts`, `faculty.ts`, `site-settings.ts`, `school-stats.ts`. Each follows the same convention, and every later content ticket copies it.
+One file per collection: `news.ts`, `faculty.ts`, `site-settings.ts`, `school-stats.ts`, `user.ts`. Each follows the same convention, and every later content ticket copies it.
 
 ## Each model file
 
