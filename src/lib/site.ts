@@ -1,10 +1,12 @@
+import type { SiteSettings } from "@/lib/db/models/site-settings"
+
 /**
  * Single source of truth for the school's identity and contact details.
  * Read by the footer and by the root layout's metadata — never duplicated.
  *
  * TODO: replace the placeholder contact details with the real ones.
  */
-export const site = {
+export const site: SiteSettings = {
   name: "Goa Science High School",
   shortName: "GSHS",
   tagline: "Educating the mind without educating the heart is no education at all.",
@@ -18,4 +20,4 @@ export const site = {
     { label: "YouTube", href: "https://youtube.com" },
     { label: "Instagram", href: "https://instagram.com" },
   ],
-} as const
+}

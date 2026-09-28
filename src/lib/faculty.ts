@@ -1,20 +1,6 @@
-export type Honorific = "Ma'am" | "Sir"
+import type { FacultyMember } from "@/lib/db/models/faculty"
 
-/**
- * One member of the school's personnel. Only `honorific` and `name` are
- * confirmed; every other field is pending from the school, and the card
- * renders `FACULTY_PENDING` in its place until it arrives.
- */
-export type FacultyMember = {
-  honorific: Honorific
-  name: string
-  position?: string
-  email?: string
-  room?: string
-  subjects?: string[]
-  /** Path in `public/`. Members without one fall back to a placeholder. */
-  photo?: string
-}
+export type { FacultyMember, Honorific } from "@/lib/db/models/faculty"
 
 /** Drawn wherever a detail has not been supplied yet. */
 export const FACULTY_PENDING = "To be announced"
@@ -25,6 +11,9 @@ export const schoolHead: FacultyMember & { photo: string } = {
   name: "Ronald Enciso",
   position: "Principal",
   photo: "/sir-ronald.png",
+  kind: "head",
+  isVisible: true,
+  order: 1,
 }
 
 /**
@@ -33,7 +22,14 @@ export const schoolHead: FacultyMember & { photo: string } = {
  * TODO: fill in emails and offices once the school confirms them.
  */
 export const nonTeachingPersonnel: FacultyMember[] = [
-  { honorific: "Ma'am", name: "Sheryl Blance", position: "School Registrar" },
+  {
+    honorific: "Ma'am",
+    name: "Sheryl Blance",
+    position: "School Registrar",
+    kind: "non-teaching",
+    isVisible: true,
+    order: 1,
+  },
 ]
 
 /**
@@ -44,25 +40,25 @@ export const nonTeachingPersonnel: FacultyMember[] = [
  * confirms them.
  */
 export const facultyMembers: FacultyMember[] = [
-  { honorific: "Ma'am", name: "Angela P. Ortiz" },
-  { honorific: "Sir", name: "Apollo C. Tracena" },
-  { honorific: "Ma'am", name: "Bernadette G. Cariño" },
-  { honorific: "Ma'am", name: "Catherine R. Dumanay" },
-  { honorific: "Sir", name: "Earl Henrie B. Pacamarra" },
-  { honorific: "Ma'am", name: "Famela B. Tibayan" },
-  { honorific: "Sir", name: "Generoso G. Conmigo" },
-  { honorific: "Ma'am", name: "Jamaica C. Pascua" },
-  { honorific: "Ma'am", name: "Jennifer P. Siarot" },
-  { honorific: "Sir", name: "Jhon Leroy C. Garcera" },
-  { honorific: "Ma'am", name: "Ketchie G. Magonles" },
-  { honorific: "Ma'am", name: "Ma. Ferly A. Periera" },
-  { honorific: "Ma'am", name: "Manilyn B. Gonzaga" },
-  { honorific: "Sir", name: "Mark Joffet Reconcillo" },
-  { honorific: "Ma'am", name: "Mary Gel P. Prado" },
-  { honorific: "Ma'am", name: "Mary Rose B. Reconcillo" },
-  { honorific: "Ma'am", name: "Michelle Ann T. Botial" },
-  { honorific: "Sir", name: "Patrick Paul E. Prado" },
-  { honorific: "Ma'am", name: "Rachel B. Zape" },
-  { honorific: "Sir", name: "Ryan S. Ortiz" },
-  { honorific: "Ma'am", name: "Shiela B. Moraña" },
+  { honorific: "Ma'am", name: "Angela P. Ortiz", kind: "teaching", isVisible: true, order: 1 },
+  { honorific: "Sir", name: "Apollo C. Tracena", kind: "teaching", isVisible: true, order: 2 },
+  { honorific: "Ma'am", name: "Bernadette G. Cariño", kind: "teaching", isVisible: true, order: 3 },
+  { honorific: "Ma'am", name: "Catherine R. Dumanay", kind: "teaching", isVisible: true, order: 4 },
+  { honorific: "Sir", name: "Earl Henrie B. Pacamarra", kind: "teaching", isVisible: true, order: 5 },
+  { honorific: "Ma'am", name: "Famela B. Tibayan", kind: "teaching", isVisible: true, order: 6 },
+  { honorific: "Sir", name: "Generoso G. Conmigo", kind: "teaching", isVisible: true, order: 7 },
+  { honorific: "Ma'am", name: "Jamaica C. Pascua", kind: "teaching", isVisible: true, order: 8 },
+  { honorific: "Ma'am", name: "Jennifer P. Siarot", kind: "teaching", isVisible: true, order: 9 },
+  { honorific: "Sir", name: "Jhon Leroy C. Garcera", kind: "teaching", isVisible: true, order: 10 },
+  { honorific: "Ma'am", name: "Ketchie G. Magonles", kind: "teaching", isVisible: true, order: 11 },
+  { honorific: "Ma'am", name: "Ma. Ferly A. Periera", kind: "teaching", isVisible: true, order: 12 },
+  { honorific: "Ma'am", name: "Manilyn B. Gonzaga", kind: "teaching", isVisible: true, order: 13 },
+  { honorific: "Sir", name: "Mark Joffet Reconcillo", kind: "teaching", isVisible: true, order: 14 },
+  { honorific: "Ma'am", name: "Mary Gel P. Prado", kind: "teaching", isVisible: true, order: 15 },
+  { honorific: "Ma'am", name: "Mary Rose B. Reconcillo", kind: "teaching", isVisible: true, order: 16 },
+  { honorific: "Ma'am", name: "Michelle Ann T. Botial", kind: "teaching", isVisible: true, order: 17 },
+  { honorific: "Sir", name: "Patrick Paul E. Prado", kind: "teaching", isVisible: true, order: 18 },
+  { honorific: "Ma'am", name: "Rachel B. Zape", kind: "teaching", isVisible: true, order: 19 },
+  { honorific: "Sir", name: "Ryan S. Ortiz", kind: "teaching", isVisible: true, order: 20 },
+  { honorific: "Ma'am", name: "Shiela B. Moraña", kind: "teaching", isVisible: true, order: 21 },
 ]
