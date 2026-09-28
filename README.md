@@ -32,6 +32,8 @@ All three variables are server-only. If `MONGODB_ENV` is missing or the selected
 
 `AUTH_SECRET` signs the admin session cookie. Generate one with `openssl rand -base64 32` and set the same value on Vercel.
 
+`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` enable admin image uploads. The secret stays server-side; uploaded assets are served from `res.cloudinary.com` (allowed in `next.config.ts`).
+
 #### Local MongoDB
 
 Run MongoDB locally and point `MONGODB_URI_DEVELOPMENT` at it (the default in `.env.example` is `mongodb://127.0.0.1:27017/gshs`).

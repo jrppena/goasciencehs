@@ -4,6 +4,7 @@ import { useActionState, useState } from "react"
 import Link from "next/link"
 
 import { newsCategories, slugify, type NewsPost } from "@/lib/news"
+import { ImageUpload } from "@/components/admin/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -80,6 +81,13 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
           />
           <FieldError message={state.fieldErrors?.excerpt} />
         </div>
+
+        <ImageUpload
+          name="image"
+          label="Image"
+          defaultValue={state.values?.image ?? post?.image ?? ""}
+          hint="Shown on the article page. Uploads go to Cloudinary; images up to 5 MB."
+        />
 
         <div className="flex flex-col gap-xs">
           <Label htmlFor="body">Body</Label>
