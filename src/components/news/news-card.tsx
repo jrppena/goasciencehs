@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { formatNewsDate, type NewsPost } from "@/lib/news"
+import { formatNewsDate, isNoticeCategory, type NewsPost } from "@/lib/news"
 import { CategoryBadge } from "@/components/news/category-badge"
 import {
   Card,
@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils"
 function NewsCard({ post, className }: { post: NewsPost; className?: string }) {
   return (
     <Card
-      stripe={post.category === "Advisory" ? "top" : "none"}
+      stripe={isNoticeCategory(post.category) ? "top" : "none"}
       interactive
       className={cn("relative", className)}
     >

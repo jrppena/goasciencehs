@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 // DESIGN.md > Components > Buttons: Anybody, bold, uppercase, 4px radius.
-// Secondary is an Athletic Blue outline with a Golden Yellow hover.
+// Secondary is a School Blue outline with a Golden Yellow hover.
 // The trailing-arrow nudge is scoped with :not(:only-child) so icon-only
 // buttons, whose glyph is the whole control, stay put.
 const buttonVariants = cva(

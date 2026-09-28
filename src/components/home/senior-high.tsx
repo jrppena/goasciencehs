@@ -26,7 +26,7 @@ async function SeniorHigh() {
       className="bg-surface-container-low"
     >
       <div className="flex flex-col gap-xs">
-        <span className="font-mono text-label-md uppercase text-muted-foreground">
+        <span className="font-mono text-label-md text-muted-foreground">
           Core subjects, taken by everyone
         </span>
         <p className="text-body-md text-foreground">
@@ -37,7 +37,7 @@ async function SeniorHigh() {
         <RevealGroup className="grid gap-md md:grid-cols-2 lg:grid-cols-3">
           {clusters.map((cluster) => (
             <RevealItem key={cluster.name}>
-              <Card tone={cluster.tone} interactive className="relative h-full justify-between">
+              <Card interactive className="relative h-full justify-between">
                 <CardHeader>
                   <span className="font-mono text-label-md uppercase text-muted-foreground">
                     Elective cluster

@@ -24,7 +24,7 @@ async function ScienceProgram() {
       <RevealGroup className="grid gap-md md:grid-cols-2 xl:grid-cols-4">
         {gradeLevels.map((level) => (
           <RevealItem key={level.grade}>
-            <Card tone={level.tone} className="h-full">
+            <Card className="h-full">
             <CardHeader>
               <span className="font-mono text-label-md uppercase text-muted-foreground">
                 {level.grade}

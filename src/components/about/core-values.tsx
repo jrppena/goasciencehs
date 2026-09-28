@@ -25,7 +25,7 @@ async function CoreValues() {
               className="team-stripe-l flex flex-col gap-sm pl-md"
             >
               <Icon className="size-8 text-primary" strokeWidth={1.5} aria-hidden="true" />
-              <h3 className="text-headline-md uppercase">{value.title}</h3>
+              <h3 className="text-headline-md">{value.title}</h3>
               <p className="text-body-md text-muted-foreground">{value.body}</p>
             </RevealItem>
           )

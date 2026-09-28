@@ -34,7 +34,7 @@ function JuniorHigh() {
             Junior High School
           </h2>
         </div>
-        <p className="text-body-lg text-muted-foreground">
+        <p className="max-w-prose text-body-lg text-muted-foreground">
           Junior high is where the habits form. Students carry a full science
           and mathematics load alongside the core subjects, and spend their
           afternoons in the laboratory rather than reading about it.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { advisoryWindow, slugify } from "@/lib/news"
+import { advisoryWindow, isNoticeCategory, slugify } from "@/lib/news"
 
 describe("advisoryWindow", () => {
   it("anchors to the Asia/Manila calendar date, not UTC", () => {
@@ -19,6 +19,20 @@ describe("advisoryWindow", () => {
 
   it("rolls the window across a year boundary", () => {
     expect(advisoryWindow(new Date("2027-01-01T01:00:00Z")).since).toBe("2026-12-30")
+  })
+})
+
+describe("isNoticeCategory", () => {
+  it("flags Advisory and Admissions", () => {
+    expect(isNoticeCategory("Advisory")).toBe(true)
+    expect(isNoticeCategory("Admissions")).toBe(true)
+  })
+
+  it("does not flag the other categories", () => {
+    expect(isNoticeCategory("Achievement")).toBe(false)
+    expect(isNoticeCategory("Athletics")).toBe(false)
+    expect(isNoticeCategory("Campus")).toBe(false)
+    expect(isNoticeCategory("Community")).toBe(false)
   })
 })
 

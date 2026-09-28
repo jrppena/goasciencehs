@@ -11,7 +11,7 @@ function ArticleHeader({ post }: { post: NewsPost }) {
     <section className="relative overflow-hidden bg-primary text-on-primary">
       <div
         aria-hidden="true"
-        className="speed-lines-bold speed-lines-drift-bold absolute inset-0 opacity-10"
+        className="ruled-paper absolute inset-0 text-on-primary opacity-10"
       />
       {/* Above the fold: no reveal wrappers, so there's no server-rendered
           opacity:0 blocking the article header before JS hydrates. */}
@@ -48,7 +48,7 @@ function ArticleHeader({ post }: { post: NewsPost }) {
           </aside>
         ) : null}
         <div>
-          <p className="text-body-lg text-primary-fixed">{post.excerpt}</p>
+          <p className="max-w-prose text-body-lg text-primary-fixed">{post.excerpt}</p>
         </div>
         {post.image ? (
           <div className="relative aspect-video overflow-hidden rounded-container border border-border">
