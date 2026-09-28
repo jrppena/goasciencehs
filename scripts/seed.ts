@@ -2,11 +2,21 @@ import { loadEnvConfig } from "@next/env"
 import mongoose from "mongoose"
 
 import { connect } from "@/lib/db/connect"
+import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { CoreValueModel } from "@/lib/db/models/core-value"
 import { FacultyModel } from "@/lib/db/models/faculty"
+import { MilestoneModel } from "@/lib/db/models/milestone"
+import { MissionVisionModel } from "@/lib/db/models/mission-vision"
 import { NewsModel } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
 import { SiteSettingsModel } from "@/lib/db/models/site-settings"
 import { TestimonialModel } from "@/lib/db/models/testimonial"
+import {
+  aboutStory,
+  coreValues,
+  milestones,
+  missionVisionStatements,
+} from "@/lib/about"
 import { facultyMembers, nonTeachingPersonnel, schoolHead } from "@/lib/faculty"
 import { newsPosts } from "@/lib/news"
 import { schoolStats } from "@/lib/school-stats"
@@ -67,8 +77,35 @@ async function seed() {
     newTestimonials += upsertedCount
   }
 
+  for (const coreValue of coreValues) {
+    await CoreValueModel.updateOne(
+      { title: coreValue.title },
+      { $set: coreValue },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const milestone of milestones) {
+    await MilestoneModel.updateOne(
+      { year: milestone.year },
+      { $set: milestone },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const statement of missionVisionStatements) {
+    await MissionVisionModel.updateOne(
+      { label: statement.label },
+      { $set: statement },
+      { upsert: true, runValidators: true }
+    )
+  }
+  await AboutStoryModel.updateOne(
+    {},
+    { $set: aboutStory },
+    { upsert: true, runValidators: true }
+  )
+
   console.log(
-    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · testimonials: ${testimonials.length} (${newTestimonials} new) · site settings and school stats updated`
+    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · testimonials: ${testimonials.length} (${newTestimonials} new) · About: ${coreValues.length} values, ${milestones.length} milestones, ${missionVisionStatements.length} statements, story · site settings and school stats updated`
   )
 }
 

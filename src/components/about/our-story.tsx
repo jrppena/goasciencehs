@@ -3,10 +3,14 @@ import Image from "next/image"
 import { StatGrid } from "@/components/ui/stat-grid"
 import { Reveal } from "@/components/motion/reveal"
 import { STAGGER_SECONDS } from "@/lib/motion"
-import { getSchoolStats } from "@/lib/db/content"
+import { getAboutStory, getSchoolStats } from "@/lib/db/content"
 
 async function OurStory() {
-  const schoolStats = await getSchoolStats()
+  const [schoolStats, story] = await Promise.all([
+    getSchoolStats(),
+    getAboutStory(),
+  ])
+
   const stats = [
     { value: schoolStats.yearEstablished, label: "Year established" },
     { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
@@ -23,25 +27,21 @@ async function OurStory() {
               Our Story
             </span>
             <h2 className="text-headline-lg-mobile uppercase md:text-headline-lg">
-              From Belen Street to Tagongtong
+              {story.heading}
             </h2>
           </div>
-          <p className="text-body-lg text-muted-foreground">
-            Every year, learners from Goa sat the Philippine Science High
-            School entrance examination, and every year most of them did not
-            make it — leaving a science curriculum out of reach unless the
-            family could send a child away from Goa entirely. In 2015 local
-            stakeholders decided the town should stop exporting that problem
-            and build the school here instead.
-          </p>
-          <p className="text-body-md text-muted-foreground">
-            GSHS opened in a temporary campus, the ABC Building along Belen
-            Street, and moved to its own grounds in Tagongtong in 2017. The
-            curriculum was special from the first intake: extra laboratory
-            hours, an advanced mathematics track, and a research project every
-            learner defends out loud — near enough to home that no family has
-            to choose between the two.
-          </p>
+          {story.paragraphs.map((paragraph, index) => (
+            <p
+              key={paragraph}
+              className={
+                index === 0
+                  ? "text-body-lg text-muted-foreground"
+                  : "text-body-md text-muted-foreground"
+              }
+            >
+              {paragraph}
+            </p>
+          ))}
         </Reveal>
         <Reveal
           delay={STAGGER_SECONDS}

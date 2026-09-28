@@ -3,12 +3,16 @@ import mongoose from "mongoose"
 
 import { connect } from "@/lib/db/connect"
 import {
+  createCoreValue,
   createFaculty,
   createNews,
   createTestimonial,
+  deleteCoreValue,
   deleteFaculty,
   deleteNews,
   deleteTestimonial,
+  getAdminCoreValueById,
+  getAdminCoreValues,
   getAdminFacultyById,
   getAdminNewsById,
   getAdminTestimonialById,
@@ -16,6 +20,8 @@ import {
   setNewsFeatured,
   setNewsPublished,
   setTestimonialVisible,
+  updateAboutStory,
+  updateCoreValue,
   updateFaculty,
   updateNews,
   updateSchoolStats,
@@ -23,11 +29,14 @@ import {
   updateTestimonial,
 } from "@/lib/db/admin"
 import {
+  getAboutStory,
   getPublishedNews,
   getSiteSettings,
   getVisibleFaculty,
   getVisibleTestimonials,
 } from "@/lib/db/content"
+import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { CoreValueModel } from "@/lib/db/models/core-value"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
@@ -64,6 +73,8 @@ beforeEach(async () => {
       SiteSettingsModel.deleteMany({}),
       SchoolStatsModel.deleteMany({}),
       TestimonialModel.deleteMany({}),
+      CoreValueModel.deleteMany({}),
+      AboutStoryModel.deleteMany({}),
     ])
   }
 })
@@ -295,5 +306,50 @@ describe("admin testimonial operations", () => {
 
     await deleteTestimonial(created._id)
     await expect(getAdminTestimonialById(created._id)).resolves.toBeNull()
+  })
+})
+
+describe("admin about operations", () => {
+  it("creates, updates, and deletes a core value", async (context) => {
+    if (!connected) return context.skip()
+
+    await createCoreValue({
+      icon: "Compass",
+      title: "Discipline",
+      body: "Show up, prepare, follow through.",
+      order: 4,
+    })
+
+    const [created] = await getAdminCoreValues()
+    expect(created?.title).toBe("Discipline")
+
+    await updateCoreValue(created._id, {
+      icon: "ShieldCheck",
+      title: "Discipline (revised)",
+      body: "Updated body.",
+      order: 1,
+    })
+
+    await expect(getAdminCoreValueById(created._id)).resolves.toMatchObject({
+      title: "Discipline (revised)",
+      icon: "ShieldCheck",
+      order: 1,
+    })
+
+    await deleteCoreValue(created._id)
+    await expect(getAdminCoreValueById(created._id)).resolves.toBeNull()
+  })
+
+  it("upserts the About story without duplicating it", async (context) => {
+    if (!connected) return context.skip()
+
+    await updateAboutStory({ heading: "First", paragraphs: ["One."] })
+    await updateAboutStory({ heading: "Second", paragraphs: ["Two."] })
+
+    await expect(AboutStoryModel.countDocuments({})).resolves.toBe(1)
+    await expect(getAboutStory()).resolves.toMatchObject({
+      heading: "Second",
+      paragraphs: ["Two."],
+    })
   })
 })

@@ -1,11 +1,18 @@
 import "server-only"
 
 import { connect } from "@/lib/db/connect"
+import { AboutStoryModel, type AboutStory } from "@/lib/db/models/about-story"
+import { CoreValueModel, type CoreValue } from "@/lib/db/models/core-value"
 import {
   FacultyModel,
   type FacultyKind,
   type FacultyMember,
 } from "@/lib/db/models/faculty"
+import { MilestoneModel, type Milestone } from "@/lib/db/models/milestone"
+import {
+  MissionVisionModel,
+  type MissionVisionStatement,
+} from "@/lib/db/models/mission-vision"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel, type SchoolStats } from "@/lib/db/models/school-stats"
 import { SiteSettingsModel, type SiteSettings } from "@/lib/db/models/site-settings"
@@ -68,6 +75,32 @@ export async function getVisibleTestimonials(): Promise<Testimonial[]> {
   return TestimonialModel.find({ isVisible: true })
     .sort({ order: 1, name: 1 })
     .lean()
+}
+
+export async function getCoreValues(): Promise<CoreValue[]> {
+  await connect()
+  return CoreValueModel.find({}).sort({ order: 1, title: 1 }).lean()
+}
+
+export async function getMilestones(): Promise<Milestone[]> {
+  await connect()
+  return MilestoneModel.find({}).sort({ order: 1, year: 1 }).lean()
+}
+
+export async function getMissionVision(): Promise<MissionVisionStatement[]> {
+  await connect()
+  return MissionVisionModel.find({}).sort({ order: 1, label: 1 }).lean()
+}
+
+export async function getAboutStory(): Promise<AboutStory> {
+  await connect()
+  const story = await AboutStoryModel.findOne().lean()
+
+  if (!story) {
+    throw new Error("The About story is not seeded. Run `npm run seed`.")
+  }
+
+  return story
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
