@@ -1,4 +1,5 @@
 import { getElectiveClusters } from "@/lib/db/content"
+import { slugify } from "@/lib/news"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
@@ -24,7 +25,11 @@ async function ElectiveClusters() {
       <RevealGroup className="grid gap-md lg:grid-cols-3">
         {clusters.map((cluster) => (
           <RevealItem key={cluster.name}>
-            <Card tone={cluster.tone} className="h-full">
+            <Card
+              id={slugify(cluster.name)}
+              tone={cluster.tone}
+              className="h-full scroll-mt-20"
+            >
             <CardHeader>
               <span className="font-mono text-label-md uppercase text-muted-foreground">
                 Cluster
