@@ -3,12 +3,19 @@ import mongoose from "mongoose"
 
 import { connect } from "@/lib/db/connect"
 import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { AcademicsSettingsModel } from "@/lib/db/models/academics-settings"
+import { CoreSubjectModel } from "@/lib/db/models/core-subject"
 import { CoreValueModel } from "@/lib/db/models/core-value"
+import { CurriculumShiftStepModel } from "@/lib/db/models/curriculum-shift-step"
+import { ElectiveClusterModel } from "@/lib/db/models/elective-cluster"
 import { FacultyModel } from "@/lib/db/models/faculty"
+import { LearningAreaModel } from "@/lib/db/models/learning-area"
+import { MatatagStepModel } from "@/lib/db/models/matatag-step"
 import { MilestoneModel } from "@/lib/db/models/milestone"
 import { MissionVisionModel } from "@/lib/db/models/mission-vision"
 import { NewsModel } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
+import { ScienceProgramLevelModel } from "@/lib/db/models/science-program-level"
 import { SiteSettingsModel } from "@/lib/db/models/site-settings"
 import { TestimonialModel } from "@/lib/db/models/testimonial"
 import {
@@ -17,6 +24,15 @@ import {
   milestones,
   missionVisionStatements,
 } from "@/lib/about"
+import {
+  academicsSettings,
+  coreSubjects,
+  curriculumShiftSteps,
+  electiveClusters,
+  learningAreas,
+  matatagSteps,
+  scienceProgramLevels,
+} from "@/lib/academics"
 import { facultyMembers, nonTeachingPersonnel, schoolHead } from "@/lib/faculty"
 import { newsPosts } from "@/lib/news"
 import { schoolStats } from "@/lib/school-stats"
@@ -29,7 +45,8 @@ const facultyRoster = [schoolHead, ...facultyMembers, ...nonTeachingPersonnel]
 
 /**
  * Idempotent: news upsert by slug, faculty by name, settings and stats as
- * single documents. Re-running only updates what changed.
+ * single documents, and Academics entries by their natural keys. Re-running
+ * only updates what changed.
  */
 async function seed() {
   await connect()
@@ -104,8 +121,56 @@ async function seed() {
     { upsert: true, runValidators: true }
   )
 
+  for (const learningArea of learningAreas) {
+    await LearningAreaModel.updateOne(
+      { name: learningArea.name },
+      { $set: learningArea },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const level of scienceProgramLevels) {
+    await ScienceProgramLevelModel.updateOne(
+      { grade: level.grade },
+      { $set: level },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const step of matatagSteps) {
+    await MatatagStepModel.updateOne(
+      { title: step.title },
+      { $set: step },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const subject of coreSubjects) {
+    await CoreSubjectModel.updateOne(
+      { name: subject.name },
+      { $set: subject },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const cluster of electiveClusters) {
+    await ElectiveClusterModel.updateOne(
+      { name: cluster.name },
+      { $set: cluster },
+      { upsert: true, runValidators: true }
+    )
+  }
+  for (const step of curriculumShiftSteps) {
+    await CurriculumShiftStepModel.updateOne(
+      { title: step.title },
+      { $set: step },
+      { upsert: true, runValidators: true }
+    )
+  }
+  await AcademicsSettingsModel.updateOne(
+    {},
+    { $set: academicsSettings },
+    { upsert: true, runValidators: true }
+  )
+
   console.log(
-    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · testimonials: ${testimonials.length} (${newTestimonials} new) · About: ${coreValues.length} values, ${milestones.length} milestones, ${missionVisionStatements.length} statements, story · site settings and school stats updated`
+    `News: ${newsPosts.length} posts (${newNews} new) · faculty: ${facultyRoster.length} entries (${newFaculty} new) · testimonials: ${testimonials.length} (${newTestimonials} new) · About: ${coreValues.length} values, ${milestones.length} milestones, ${missionVisionStatements.length} statements, story · Academics: ${learningAreas.length} learning areas, ${scienceProgramLevels.length} levels, ${matatagSteps.length} MATATAG steps, ${coreSubjects.length} core subjects, ${electiveClusters.length} clusters, ${curriculumShiftSteps.length} shift steps, settings · site settings and school stats updated`
   )
 }
 

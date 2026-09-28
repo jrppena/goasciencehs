@@ -4,7 +4,9 @@ import mongoose from "mongoose"
 import { connect } from "@/lib/db/connect"
 import {
   getAboutStory,
+  getAcademicsSettings,
   getCoreValues,
+  getLearningAreas,
   getNewsByCategory,
   getNewsBySlug,
   getPublishedNews,
@@ -14,10 +16,17 @@ import {
   getVisibleTestimonials,
 } from "@/lib/db/content"
 import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { AcademicsSettingsModel } from "@/lib/db/models/academics-settings"
+import { CoreSubjectModel } from "@/lib/db/models/core-subject"
 import { CoreValueModel } from "@/lib/db/models/core-value"
+import { CurriculumShiftStepModel } from "@/lib/db/models/curriculum-shift-step"
+import { ElectiveClusterModel } from "@/lib/db/models/elective-cluster"
 import { FacultyModel } from "@/lib/db/models/faculty"
+import { LearningAreaModel } from "@/lib/db/models/learning-area"
+import { MatatagStepModel } from "@/lib/db/models/matatag-step"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
+import { ScienceProgramLevelModel } from "@/lib/db/models/science-program-level"
 import { TestimonialModel } from "@/lib/db/models/testimonial"
 
 let connected = false
@@ -46,6 +55,13 @@ beforeEach(async () => {
     TestimonialModel.deleteMany({}),
     CoreValueModel.deleteMany({}),
     AboutStoryModel.deleteMany({}),
+    LearningAreaModel.deleteMany({}),
+    ScienceProgramLevelModel.deleteMany({}),
+    MatatagStepModel.deleteMany({}),
+    CoreSubjectModel.deleteMany({}),
+    ElectiveClusterModel.deleteMany({}),
+    CurriculumShiftStepModel.deleteMany({}),
+    AcademicsSettingsModel.deleteMany({}),
   ])
 })
 
@@ -226,6 +242,29 @@ describe("content layer", () => {
     await expect(getAboutStory()).resolves.toMatchObject({
       heading: "A heading",
       paragraphs: ["One.", "Two."],
+    })
+  })
+
+  it("returns learning areas in order", async (context) => {
+    if (!connected) return context.skip()
+
+    await LearningAreaModel.create([
+      { name: "Second", body: "B", order: 2 },
+      { name: "First", body: "A", order: 1 },
+    ])
+
+    const areas = await getLearningAreas()
+
+    expect(areas.map((area) => area.name)).toEqual(["First", "Second"])
+  })
+
+  it("returns the academics settings", async (context) => {
+    if (!connected) return context.skip()
+
+    await AcademicsSettingsModel.create({ coreSubjectHours: 160 })
+
+    await expect(getAcademicsSettings()).resolves.toMatchObject({
+      coreSubjectHours: 160,
     })
   })
 })

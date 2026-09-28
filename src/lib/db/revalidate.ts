@@ -9,6 +9,7 @@ export type ContentType =
   | "about"
   | "site"
   | "stats"
+  | "academics"
 
 /**
  * Admin mutations call this after a save. A change can surface in the shared

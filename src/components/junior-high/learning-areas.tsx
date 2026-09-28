@@ -1,44 +1,13 @@
+import { getLearningAreas } from "@/lib/db/content"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
 
-const learningAreas = [
-  {
-    name: "Language",
-    body: "English reading, writing, and oral communication, taught as a foundational literacy area under MATATAG.",
-  },
-  {
-    name: "Filipino",
-    body: "Pagbasa, pagsulat, at panitikan — carried across all four year levels.",
-  },
-  {
-    name: "Mathematics",
-    body: "Algebra, geometry, statistics, and probability, enriched for the school's science load.",
-  },
-  {
-    name: "Science",
-    body: "The spiral progression of earth, life, physical, and chemical science, taught with laboratory hours attached.",
-  },
-  {
-    name: "Araling Panlipunan",
-    body: "Asian and Philippine history, geography, economics, and contemporary issues.",
-  },
-  {
-    name: "Technology and Livelihood Education",
-    body: "Replaced by Research in the special science program, with computer education folded into the Research class.",
-  },
-  {
-    name: "MAPEH",
-    body: "Music, Arts, Physical Education, and Health, taken as one learning area.",
-  },
-  {
-    name: "Values Education",
-    body: "Character formation, carried alongside the Homeroom Guidance Program.",
-  },
-]
-
 /** The eight national learning areas, before the school's add-ons. */
-function LearningAreas() {
+async function LearningAreas() {
+  const learningAreas = await getLearningAreas()
+  if (learningAreas.length === 0) return null
+
   return (
     <Section
       eyebrow="Taken by everyone"

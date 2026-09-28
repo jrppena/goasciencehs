@@ -4,8 +4,10 @@ import mongoose from "mongoose"
 import { connect } from "@/lib/db/connect"
 import {
   createCoreValue,
+  createElectiveCluster,
   createFaculty,
   createNews,
+  createScienceProgramLevel,
   createTestimonial,
   deleteCoreValue,
   deleteFaculty,
@@ -15,31 +17,50 @@ import {
   getAdminCoreValues,
   getAdminFacultyById,
   getAdminNewsById,
+  getAdminScienceProgramLevels,
   getAdminTestimonialById,
   setFacultyVisible,
   setNewsFeatured,
   setNewsPublished,
   setTestimonialVisible,
   updateAboutStory,
+  updateAcademicsSettings,
   updateCoreValue,
   updateFaculty,
   updateNews,
   updateSchoolStats,
+  updateScienceProgramLevel,
   updateSiteSettings,
   updateTestimonial,
 } from "@/lib/db/admin"
 import {
   getAboutStory,
+  getAcademicsSettings,
+  getElectiveClusters,
   getPublishedNews,
+  getScienceProgramLevels,
   getSiteSettings,
   getVisibleFaculty,
   getVisibleTestimonials,
 } from "@/lib/db/content"
 import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { AcademicsSettingsModel } from "@/lib/db/models/academics-settings"
+import { CoreSubjectModel } from "@/lib/db/models/core-subject"
 import { CoreValueModel } from "@/lib/db/models/core-value"
+import { CurriculumShiftStepModel } from "@/lib/db/models/curriculum-shift-step"
+import {
+  ElectiveClusterModel,
+  type ElectiveCluster,
+} from "@/lib/db/models/elective-cluster"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
+import { LearningAreaModel } from "@/lib/db/models/learning-area"
+import { MatatagStepModel } from "@/lib/db/models/matatag-step"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
+import {
+  ScienceProgramLevelModel,
+  type ScienceProgramLevel,
+} from "@/lib/db/models/science-program-level"
 import { SiteSettingsModel } from "@/lib/db/models/site-settings"
 import {
   TestimonialModel,
@@ -75,6 +96,13 @@ beforeEach(async () => {
       TestimonialModel.deleteMany({}),
       CoreValueModel.deleteMany({}),
       AboutStoryModel.deleteMany({}),
+      LearningAreaModel.deleteMany({}),
+      ScienceProgramLevelModel.deleteMany({}),
+      MatatagStepModel.deleteMany({}),
+      CoreSubjectModel.deleteMany({}),
+      ElectiveClusterModel.deleteMany({}),
+      CurriculumShiftStepModel.deleteMany({}),
+      AcademicsSettingsModel.deleteMany({}),
     ])
   }
 })
@@ -350,6 +378,90 @@ describe("admin about operations", () => {
     await expect(getAboutStory()).resolves.toMatchObject({
       heading: "Second",
       paragraphs: ["Two."],
+    })
+  })
+})
+
+const scienceLevelInput: ScienceProgramLevel = {
+  grade: "Grade 7",
+  specialisation: "Environmental Science",
+  summary: "Ecosystems, water and soil quality, and waste.",
+  work: [
+    "Field sampling and data collection",
+    "Research 1: the nature of scientific investigation",
+  ],
+  tone: "primary",
+  order: 1,
+}
+
+const electiveClusterInput: ElectiveCluster = {
+  name: "Field Experience",
+  summary: "Optional in the Academic Track.",
+  subjects: [
+    "Apprenticeship with a partner laboratory, clinic, or firm",
+    "Supervised community and outreach work",
+  ],
+  pathways: "Any cluster",
+  tone: "primary",
+  order: 1,
+}
+
+describe("admin academics operations", () => {
+  it("round-trips a science program level's work array and tone", async (context) => {
+    if (!connected) return context.skip()
+
+    await createScienceProgramLevel(scienceLevelInput)
+    const [created] = await getAdminScienceProgramLevels()
+
+    await expect(getScienceProgramLevels()).resolves.toMatchObject([
+      {
+        grade: "Grade 7",
+        work: [
+          "Field sampling and data collection",
+          "Research 1: the nature of scientific investigation",
+        ],
+        tone: "primary",
+      },
+    ])
+
+    await expect(
+      updateScienceProgramLevel(created._id, {
+        ...scienceLevelInput,
+        work: ["Culture and sterile technique"],
+        tone: "secondary",
+      })
+    ).resolves.toBe(true)
+
+    const [updated] = await getScienceProgramLevels()
+    expect(updated?.work).toEqual(["Culture and sterile technique"])
+    expect(updated?.tone).toBe("secondary")
+  })
+
+  it("round-trips an elective cluster's subjects array", async (context) => {
+    if (!connected) return context.skip()
+
+    await createElectiveCluster(electiveClusterInput)
+
+    await expect(getElectiveClusters()).resolves.toMatchObject([
+      {
+        name: "Field Experience",
+        subjects: [
+          "Apprenticeship with a partner laboratory, clinic, or firm",
+          "Supervised community and outreach work",
+        ],
+      },
+    ])
+  })
+
+  it("keeps a single academics settings document", async (context) => {
+    if (!connected) return context.skip()
+
+    await updateAcademicsSettings({ coreSubjectHours: 160 })
+    await updateAcademicsSettings({ coreSubjectHours: 200 })
+
+    await expect(AcademicsSettingsModel.countDocuments({})).resolves.toBe(1)
+    await expect(getAcademicsSettings()).resolves.toMatchObject({
+      coreSubjectHours: 200,
     })
   })
 })

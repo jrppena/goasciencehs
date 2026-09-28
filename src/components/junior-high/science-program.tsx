@@ -1,3 +1,4 @@
+import { getScienceProgramLevels } from "@/lib/db/content"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
@@ -9,59 +10,11 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-const gradeLevels = [
-  {
-    grade: "Grade 7",
-    specialisation: "Environmental Science",
-    summary:
-      "Ecosystems, water and soil quality, and waste — studied on the campus grounds and along the Goa river system before anything is written up.",
-    work: [
-      "Field sampling and data collection",
-      "Research 1: the nature of scientific investigation",
-      "First investigatory project, in pairs",
-    ],
-    tone: "primary",
-  },
-  {
-    grade: "Grade 8",
-    specialisation: "Biotechnology",
-    summary:
-      "Fermentation, tissue culture, and applied microbiology, with the laboratory work that the topics need rather than a reading list about them.",
-    work: [
-      "Culture and sterile technique",
-      "Research 2: formulating a hypothesis and designing an experiment",
-      "Investigatory project with a controlled variable set",
-    ],
-    tone: "secondary",
-  },
-  {
-    grade: "Grade 9",
-    specialisation: "Consumer Chemistry",
-    summary:
-      "The chemistry of what households buy and use — food, cleaning agents, cosmetics, and fuels — tested for what the label claims.",
-    work: [
-      "Quantitative analysis and titration",
-      "Research 3: data handling and statistical treatment",
-      "Product-testing investigatory project",
-    ],
-    tone: "primary",
-  },
-  {
-    grade: "Grade 10",
-    specialisation: "Electronics and Robotics",
-    summary:
-      "Circuits, microcontrollers, and control systems, ending in a built and working device rather than a diagram of one.",
-    work: [
-      "Circuit design and microcontroller programming",
-      "Research 4: writing and defending the research report",
-      "Capstone project, defended before a faculty panel",
-    ],
-    tone: "secondary",
-  },
-] as const
-
 /** The special science add-ons, which are what separate GSHS from a general JHS. */
-function ScienceProgram() {
+async function ScienceProgram() {
+  const gradeLevels = await getScienceProgramLevels()
+  if (gradeLevels.length === 0) return null
+
   return (
     <Section
       eyebrow="The Science Load"
