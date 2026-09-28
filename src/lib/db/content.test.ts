@@ -6,6 +6,7 @@ import {
   getAboutStory,
   getAcademicsSettings,
   getCoreValues,
+  getLatestAdvisory,
   getLearningAreas,
   getNewsByCategory,
   getNewsBySlug,
@@ -157,6 +158,35 @@ describe("content layer", () => {
     const related = await getRelatedNews(current)
 
     expect(related.map((post) => post.slug)).toEqual(["same-category", "newer-other"])
+  })
+
+  it("returns the newest in-window Advisory", async (context) => {
+    if (!connected) return context.skip()
+
+    const now = new Date("2026-09-29T04:00:00Z") // 2026-09-29 in Asia/Manila
+
+    await NewsModel.create([
+      news({ slug: "older-in-window", publishedOn: "2026-09-27" }),
+      news({ slug: "newest-in-window", publishedOn: "2026-09-29" }),
+      news({ slug: "unpublished", publishedOn: "2026-09-29", isPublished: false }),
+      news({ slug: "wrong-category", publishedOn: "2026-09-29", category: "Campus" }),
+      news({ slug: "too-old", publishedOn: "2026-09-26" }),
+      news({ slug: "future-dated", publishedOn: "2026-09-30" }),
+    ])
+
+    await expect(getLatestAdvisory(now)).resolves.toMatchObject({
+      slug: "newest-in-window",
+    })
+  })
+
+  it("returns null when no Advisory is in the window", async (context) => {
+    if (!connected) return context.skip()
+
+    const now = new Date("2026-09-29T04:00:00Z")
+
+    await NewsModel.create([news({ slug: "too-old", publishedOn: "2026-09-26" })])
+
+    await expect(getLatestAdvisory(now)).resolves.toBeNull()
   })
 
   it("returns visible faculty only, sorted by order", async (context) => {

@@ -16,7 +16,7 @@ import {
 
 /**
  * Sections are laid out flat rather than behind collapsibles — the whole tree
- * is six links, so hiding any of it would only add taps.
+ * is seven links, so hiding any of it would only add taps.
  */
 function MobileNav({ shortName }: { shortName: string }) {
   return (

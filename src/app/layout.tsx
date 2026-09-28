@@ -23,6 +23,10 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+// Public pages read live content (e.g. the advisory strip); ISR lets that
+// content expire on its own instead of waiting on an admin save.
+export const revalidate = 3600;
+
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteSettings();
 
