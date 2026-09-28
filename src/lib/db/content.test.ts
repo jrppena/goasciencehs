@@ -70,6 +70,19 @@ describe("content layer", () => {
     expect(posts.map((post) => post.slug)).toEqual(["newest", "middle", "old"])
   })
 
+  it("leads listings with the featured post", async (context) => {
+    if (!connected) return context.skip()
+
+    await NewsModel.create([
+      news({ slug: "newer", publishedOn: "2026-03-01" }),
+      news({ slug: "featured-older", publishedOn: "2026-01-01", isFeatured: true }),
+    ])
+
+    const posts = await getPublishedNews()
+
+    expect(posts.map((post) => post.slug)).toEqual(["featured-older", "newer"])
+  })
+
   it("hides unpublished posts from slug lookups", async (context) => {
     if (!connected) return context.skip()
 

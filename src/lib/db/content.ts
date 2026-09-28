@@ -18,7 +18,9 @@ import type { NewsCategory } from "@/lib/news"
 
 export async function getPublishedNews(): Promise<NewsPost[]> {
   await connect()
-  return NewsModel.find({ isPublished: true }).sort({ publishedOn: -1 }).lean()
+  return NewsModel.find({ isPublished: true })
+    .sort({ isFeatured: -1, publishedOn: -1 })
+    .lean()
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsPost | null> {
@@ -31,7 +33,7 @@ export async function getNewsByCategory(
 ): Promise<NewsPost[]> {
   await connect()
   const filter = category ? { isPublished: true, category } : { isPublished: true }
-  return NewsModel.find(filter).sort({ publishedOn: -1 }).lean()
+  return NewsModel.find(filter).sort({ isFeatured: -1, publishedOn: -1 }).lean()
 }
 
 /** Same-category stories first, topped up with the next most recent ones. */

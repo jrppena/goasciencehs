@@ -171,6 +171,16 @@ export function formatNewsDate(isoDate: string) {
   return newsDateFormatter.format(new Date(isoDate))
 }
 
+/** URL-safe slug: lowercase, accents stripped, runs of non-alphanumerics to hyphens. */
+export function slugify(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+}
+
 /** Narrows an unvalidated query string to a known category, case-insensitively. */
 export function parseNewsCategory(value: string | string[] | undefined) {
   const raw = (Array.isArray(value) ? value[0] : value)?.trim().toLowerCase()
