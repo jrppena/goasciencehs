@@ -3,7 +3,7 @@ import "server-only"
 import { isValidObjectId } from "mongoose"
 
 import { connect } from "@/lib/db/connect"
-import { FacultyModel } from "@/lib/db/models/faculty"
+import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 
 /** A news document with a serialisable id, for admin lists and forms. */
@@ -103,5 +103,69 @@ async function unsetOtherFeatured(keepId: string) {
   await NewsModel.updateMany(
     { _id: { $ne: keepId }, isFeatured: true },
     { $set: { isFeatured: false } }
+  )
+}
+
+/** A faculty document with a serialisable id, for admin lists and forms. */
+export type AdminFacultyMember = FacultyMember & { _id: string }
+
+export async function getAdminFaculty(): Promise<AdminFacultyMember[]> {
+  await connect()
+  const members = await FacultyModel.find({}).sort({ order: 1, name: 1 }).lean()
+  return members.map((member) => ({ ...member, _id: String(member._id) }))
+}
+
+export async function getAdminFacultyById(
+  id: string
+): Promise<AdminFacultyMember | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const member = await FacultyModel.findById(id).lean()
+  return member ? { ...member, _id: String(member._id) } : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createFaculty(
+  input: FacultyMember
+): Promise<AdminFacultyMember> {
+  const member = new FacultyModel(input)
+  await member.validate()
+
+  await connect()
+  await member.save()
+
+  return { ...member.toObject(), _id: String(member._id) }
+}
+
+export async function updateFaculty(
+  id: string,
+  input: FacultyMember
+): Promise<AdminFacultyMember | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const member = await FacultyModel.findByIdAndUpdate(
+    id,
+    { $set: input },
+    { runValidators: true, returnDocument: "after" }
+  ).lean()
+
+  return member ? { ...member, _id: String(member._id) } : null
+}
+
+export async function deleteFaculty(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await FacultyModel.findByIdAndDelete(id)
+}
+
+export async function setFacultyVisible(id: string, isVisible: boolean) {
+  await connect()
+  await FacultyModel.updateOne(
+    { _id: id },
+    { $set: { isVisible } },
+    { runValidators: true }
   )
 }

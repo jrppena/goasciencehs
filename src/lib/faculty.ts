@@ -1,6 +1,13 @@
-import type { FacultyMember } from "@/lib/db/models/faculty"
+import type { FacultyKind, FacultyMember } from "@/lib/db/models/faculty"
 
-export type { FacultyMember, Honorific } from "@/lib/db/models/faculty"
+export type { FacultyKind, FacultyMember, Honorific } from "@/lib/db/models/faculty"
+
+/** Display names for the three faculty groups, in page order. */
+export const facultyKindLabels: Record<FacultyKind, string> = {
+  head: "School head",
+  teaching: "Teaching personnel",
+  "non-teaching": "Non-teaching personnel",
+}
 
 /** Drawn wherever a detail has not been supplied yet. */
 export const FACULTY_PENDING = "To be announced"
