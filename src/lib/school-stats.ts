@@ -2,8 +2,8 @@ import type { SchoolStats } from "@/lib/db/models/school-stats"
 import { facultyMembers, nonTeachingPersonnel } from "@/lib/faculty"
 
 /**
- * Single source of truth for the school's headline figures. Read by every
- * component that quotes them — never duplicated.
+ * Seed source for the school's headline figures. `facultyAndStaff` is only a
+ * placeholder here — the data layer recomputes it from the faculty collection.
  *
  * TODO: replace the placeholder figures (everything but faculty and staff)
  * with the school's real numbers once confirmed.

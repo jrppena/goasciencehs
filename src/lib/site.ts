@@ -2,7 +2,8 @@ import type { SiteSettings } from "@/lib/db/models/site-settings"
 
 /**
  * Single source of truth for the school's identity and contact details.
- * Read by the footer and by the root layout's metadata — never duplicated.
+ * Seeded into MongoDB by `npm run seed`; public pages read it back through
+ * `src/lib/db/content.ts`.
  *
  * TODO: replace the placeholder contact details with the real ones.
  */

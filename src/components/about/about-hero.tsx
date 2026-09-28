@@ -1,8 +1,10 @@
-import { site } from "@/lib/site"
+import { getSiteSettings } from "@/lib/db/content"
 import { Badge } from "@/components/ui/badge"
 
 /** Compact page header. Orients the reader before the long-form sections. */
-function AboutHero() {
+async function AboutHero() {
+  const site = await getSiteSettings()
+
   return (
     <section className="relative overflow-hidden bg-primary text-on-primary">
       <div

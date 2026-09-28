@@ -1,12 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { site } from "@/lib/site"
+import { getSiteSettings } from "@/lib/db/content"
 import { MainNav } from "@/components/layout/main-nav"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { StickyHeaderShell } from "@/components/layout/sticky-header-shell"
 
-function SiteHeader() {
+async function SiteHeader() {
+  const site = await getSiteSettings()
+
   return (
     <StickyHeaderShell>
       <a
@@ -41,7 +43,7 @@ function SiteHeader() {
         </div>
 
         <div className="md:hidden">
-          <MobileNav />
+          <MobileNav shortName={site.shortName} />
         </div>
       </div>
     </StickyHeaderShell>

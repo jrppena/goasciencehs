@@ -1,11 +1,13 @@
 import Image from "next/image"
 import Link from "next/link"
 
-import { site } from "@/lib/site"
+import { getSiteSettings } from "@/lib/db/content"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-function Hero() {
+async function Hero() {
+  const site = await getSiteSettings()
+
   return (
     <section className="relative isolate overflow-hidden bg-primary text-on-primary">
       <Image

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Anybody, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { site } from "@/lib/site";
+import { getSiteSettings } from "@/lib/db/content";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { MotionProvider } from "@/components/motion/motion-provider";
@@ -26,13 +26,17 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: site.name,
-    template: `%s — ${site.shortName}`,
-  },
-  description: site.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSiteSettings();
+
+  return {
+    title: {
+      default: site.name,
+      template: `%s — ${site.shortName}`,
+    },
+    description: site.description,
+  };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

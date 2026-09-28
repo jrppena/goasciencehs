@@ -2,7 +2,7 @@ import Link from "next/link"
 import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react"
 
 import { navigation } from "@/lib/navigation"
-import { site } from "@/lib/site"
+import { getSiteSettings } from "@/lib/db/content"
 
 const contactItemClassName =
   "flex items-start gap-base text-body-md text-inverse-on-surface/80 transition-colors hover:text-inverse-on-surface"
@@ -15,7 +15,9 @@ function FooterHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-function SiteFooter() {
+async function SiteFooter() {
+  const site = await getSiteSettings()
+
   return (
     <footer className="border-t bg-inverse-surface text-inverse-on-surface">
       <div className="page-gutter grid gap-lg py-xl md:grid-cols-2 lg:grid-cols-4">

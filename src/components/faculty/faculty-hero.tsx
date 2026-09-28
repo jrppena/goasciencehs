@@ -1,8 +1,10 @@
-import { facultyMembers } from "@/lib/faculty"
+import { getVisibleFaculty } from "@/lib/db/content"
 import { Badge } from "@/components/ui/badge"
 
 /** Compact page header, matching the About page's. */
-function FacultyHero() {
+async function FacultyHero() {
+  const teacherCount = (await getVisibleFaculty("teaching")).length
+
   return (
     <section className="relative overflow-hidden bg-primary text-on-primary">
       <div
@@ -24,7 +26,7 @@ function FacultyHero() {
         </div>
         <div>
           <p className="text-body-lg text-primary-fixed">
-            {facultyMembers.length} teachers carry the special science curriculum
+            {teacherCount} teachers carry the special science curriculum
             across Grades 7 to 12 — advisory classes, laboratory work, and the
             research programme that ends each learner&rsquo;s stay here.
           </p>
