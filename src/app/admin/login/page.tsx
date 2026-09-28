@@ -24,7 +24,7 @@ export default async function AdminLoginPage() {
   }
 
   return (
-    <div className="page-gutter flex min-h-[70svh] items-center justify-center py-xl">
+    <main className="page-gutter flex min-h-svh items-center justify-center py-xl">
       <Card className="w-full max-w-[24rem]">
         <CardHeader>
           <CardTitle>Admin sign in</CardTitle>
@@ -36,6 +36,6 @@ export default async function AdminLoginPage() {
           <LoginForm />
         </CardContent>
       </Card>
-    </div>
+    </main>
   )
 }

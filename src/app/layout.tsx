@@ -3,9 +3,6 @@ import { Anybody, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { getSiteSettings } from "@/lib/db/content";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
-import { MotionProvider } from "@/components/motion/motion-provider";
 
 const anybody = Anybody({
   variable: "--font-anybody",
@@ -55,11 +52,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
-        <SiteHeader />
-        <main id="main" className="flex-1">
-          <MotionProvider>{children}</MotionProvider>
-        </main>
-        <SiteFooter />
+        {children}
       </body>
     </html>
   );
