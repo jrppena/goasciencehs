@@ -67,8 +67,8 @@ export const newsPosts: NewsPost[] = [
     author: "Office of Admissions",
     body: [
       "The entrance examination for incoming Grade 7 will be held on the first three Saturdays of September. Applicants are assigned to a testing date by barangay cluster, and the assignment is printed on the examination permit.",
-      "Registration opens on the fifteenth of August at the guidance office and closes when the seat count for each date is filled. Applicants need a Grade 6 report card, a barangay certificate of residency, and two copies of a recent photograph.",
-      "The examination runs three hours and covers scientific reasoning, mathematics, reading comprehension, and English language proficiency. There is no interview component for Grade 7.",
+      "Registration opens on the fifteenth of August at the guidance office and closes when the seat count for each date is filled. Exact requirements will be confirmed by the registrar closer to the registration date.",
+      "The examination runs three hours and covers scientific reasoning, mathematics, reading comprehension, and English language proficiency.",
       "Results are posted at the school gate and on the official Facebook page four weeks after the last testing date. Passers confirm their slots in person within ten school days; unconfirmed slots go to the waiting list.",
     ],
   },
@@ -127,7 +127,7 @@ export const newsPosts: NewsPost[] = [
     author: "Office of Admissions",
     body: [
       "Incoming Grade 11 applicants and their parents are invited to an elective cluster orientation in the covered court, held before slot confirmation closes so that a change of mind costs nothing.",
-      "Grade 11 now runs on the Strengthened SHS curriculum, so there are no strands to pick. Faculty will walk through the five core subjects everyone carries, then through each Academic Track cluster — STEM, Arts and Social Sciences, Business and Entrepreneurship, and Sports, Health and Wellness — and the post-secondary paths its electives feed into.",
+      "Grade 11 now runs on the Strengthened SHS curriculum, so there are no strands to pick. Faculty will walk through the five core subjects everyone carries, then through each Academic Track cluster — STEM, Business and Entrepreneurship, and Field Experience — and the post-secondary paths its electives feed into.",
       "Current Grade 12 learners will sit on the panel. The admissions office has asked them to speak to the workload plainly rather than to recruit.",
       "Applicants who cannot attend may book a consultation slot with the guidance office during the same week.",
     ],
@@ -190,7 +190,8 @@ export function getRelatedPosts(post: NewsPost, limit = 3) {
   return [...sameCategory, ...rest].slice(0, limit)
 }
 
-/** Narrows an unvalidated query string to a known category. */
+/** Narrows an unvalidated query string to a known category, case-insensitively. */
 export function parseNewsCategory(value: string | string[] | undefined) {
-  return newsCategories.find((category) => category === value)
+  const raw = (Array.isArray(value) ? value[0] : value)?.trim().toLowerCase()
+  return newsCategories.find((category) => category.toLowerCase() === raw)
 }

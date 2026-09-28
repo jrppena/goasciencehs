@@ -8,10 +8,11 @@ import { RevealItem } from "@/components/motion/reveal-item"
 function NonTeachingPersonnel() {
   return (
     <Section
+      id="front-office"
       eyebrow="Non-Teaching Personnel"
       title="The front office"
       description="Records, enrolment, and transfer requests are handled here rather than by a class adviser."
-      className="bg-surface-container-low"
+      className="scroll-mt-20 bg-surface-container-low"
     >
       <RevealGroup as="ul" className="grid gap-md sm:grid-cols-2 lg:grid-cols-3">
         {nonTeachingPersonnel.map((member) => (
