@@ -4,20 +4,17 @@ import { cn } from "@/lib/utils"
 
 /**
  * Stands in for photography that has not been shot yet. Pure CSS and an icon,
- * so no placeholder images land in `public/`. Swapping in `next/image` later
- * is a change to this one file. `label` names the missing shot for assistive
- * tech; it is deliberately not drawn.
+ * so no placeholder images land in `public/`. Purely decorative, so it's
+ * hidden from assistive tech.
  */
 function MediaPlaceholder({
-  label,
   className,
   ...props
-}: React.ComponentProps<"div"> & { label: string }) {
+}: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="media-placeholder"
-      role="img"
-      aria-label={`Placeholder image: ${label}`}
+      aria-hidden="true"
       className={cn(
         "flex items-center justify-center rounded-container border border-border bg-surface-container",
         className

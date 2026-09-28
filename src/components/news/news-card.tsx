@@ -19,10 +19,7 @@ function NewsCard({ post, className }: { post: NewsPost; className?: string }) {
   return (
     <Card stripe="none" interactive className={cn("relative", className)}>
       <div className="-mt-md">
-        <MediaPlaceholder
-          label={`Photo for ${post.title}`}
-          className="aspect-[16/9] rounded-none border-0 border-b"
-        />
+        <MediaPlaceholder className="aspect-[16/9] rounded-none border-0 border-b" />
       </div>
       <CardHeader>
         <div className="flex items-center gap-sm">

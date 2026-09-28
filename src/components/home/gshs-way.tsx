@@ -7,17 +7,14 @@ const pillars = [
   {
     title: "Learn",
     body: "Small sections, laboratory-first instruction, and teachers who stay after the bell. Coursework is graded on reasoning, not recall.",
-    media: "Students at the physics bench",
   },
   {
     title: "Live",
     body: "Homerooms, student government, and a campus small enough that every learner is known by name. Values formation runs through all six year levels.",
-    media: "Homeroom assembly in the quadrangle",
   },
   {
     title: "Experience",
     body: "Regional science fairs, provincial athletic meets, and barangay outreach that puts classroom work in front of the community it serves.",
-    media: "Outreach day in Barangay Tagongtong",
   },
 ]
 
@@ -31,7 +28,7 @@ function GshsWay() {
       <RevealGroup className="grid gap-md lg:grid-cols-3">
         {pillars.map((pillar) => (
           <RevealItem as="article" key={pillar.title} className="flex flex-col gap-sm">
-            <MediaPlaceholder label={pillar.media} className="aspect-[3/2]" />
+            <MediaPlaceholder className="aspect-[3/2]" />
             <h3 className="text-headline-md uppercase">{pillar.title}</h3>
             <p className="text-body-md text-muted-foreground">{pillar.body}</p>
           </RevealItem>

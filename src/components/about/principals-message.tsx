@@ -23,10 +23,7 @@ async function PrincipalsMessage() {
             className="object-cover"
           />
         ) : (
-          <MediaPlaceholder
-            label={`Portrait of ${schoolHead.name}`}
-            className="absolute inset-0 rounded-none border-0"
-          />
+          <MediaPlaceholder className="absolute inset-0 rounded-none border-0" />
         )}
       </Reveal>
       <Reveal

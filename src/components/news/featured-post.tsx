@@ -14,10 +14,7 @@ function FeaturedPost({ post }: { post: NewsPost }) {
       as="article"
       className="grid gap-md overflow-hidden rounded-container border border-border border-t-4 border-t-primary bg-card lg:grid-cols-2 lg:gap-0"
     >
-      <MediaPlaceholder
-        label={`Photo for ${post.title}`}
-        className="aspect-[16/9] rounded-none border-0 border-b lg:aspect-auto lg:h-full lg:border-b-0 lg:border-r"
-      />
+      <MediaPlaceholder className="aspect-[16/9] rounded-none border-0 border-b lg:aspect-auto lg:h-full lg:border-b-0 lg:border-r" />
       <div className="flex flex-col items-start gap-md p-md lg:p-lg">
         <div className="flex items-center gap-sm">
           <Badge variant="active">Latest</Badge>
