@@ -3,16 +3,17 @@ import Image from "next/image"
 import { StatGrid } from "@/components/ui/stat-grid"
 import { Reveal } from "@/components/motion/reveal"
 import { STAGGER_SECONDS } from "@/lib/motion"
-import { schoolStats } from "@/lib/school-stats"
+import { getSchoolStats } from "@/lib/db/content"
 
-const stats = [
-  { value: schoolStats.yearEstablished, label: "Year established" },
-  { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
-  { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
-  { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
-]
+async function OurStory() {
+  const schoolStats = await getSchoolStats()
+  const stats = [
+    { value: schoolStats.yearEstablished, label: "Year established" },
+    { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
+    { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
+    { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
+  ]
 
-function OurStory() {
   return (
     <section className="page-gutter flex flex-col gap-lg py-xl">
       <div className="grid items-center gap-lg md:grid-cols-2">

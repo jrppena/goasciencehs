@@ -1,11 +1,13 @@
-import { nonTeachingPersonnel } from "@/lib/faculty"
+import { getVisibleFaculty } from "@/lib/db/content"
 import { FacultyCard } from "@/components/faculty/faculty-card"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
 
 /** Staff without a teaching load — records, admissions, and the front office. */
-function NonTeachingPersonnel() {
+async function NonTeachingPersonnel() {
+  const nonTeachingPersonnel = await getVisibleFaculty("non-teaching")
+
   return (
     <Section
       id="front-office"

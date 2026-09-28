@@ -1,10 +1,12 @@
-import { facultyMembers } from "@/lib/faculty"
+import { getVisibleFaculty } from "@/lib/db/content"
 import { FacultyCard } from "@/components/faculty/faculty-card"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
 
-function FacultyGrid() {
+async function FacultyGrid() {
+  const facultyMembers = await getVisibleFaculty("teaching")
+
   return (
     <Section
       eyebrow="Teaching Personnel"

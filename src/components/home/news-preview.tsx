@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
-import { newsPosts } from "@/lib/news"
+import { getPublishedNews } from "@/lib/db/content"
 import { NewsCard } from "@/components/news/news-card"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button"
 
 const PREVIEW_COUNT = 6
 
-function NewsPreview() {
+async function NewsPreview() {
+  const newsPosts = await getPublishedNews()
+
   return (
     <Section
       eyebrow="News and Announcements"

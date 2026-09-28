@@ -1,15 +1,16 @@
 import { Section } from "@/components/home/section"
-import { schoolStats } from "@/lib/school-stats"
+import { getSchoolStats } from "@/lib/db/content"
 import { StatGrid } from "@/components/ui/stat-grid"
 
-const stats = [
-  { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
-  { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
-  { value: schoolStats.yearEstablished, label: "Established" },
-  { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
-]
+async function MissionStats() {
+  const schoolStats = await getSchoolStats()
+  const stats = [
+    { value: schoolStats.learnersEnrolled, label: "Learners enrolled" },
+    { value: schoolStats.facultyAndStaff, label: "Faculty and staff" },
+    { value: schoolStats.yearEstablished, label: "Established" },
+    { value: schoolStats.collegeProgressionRate, label: "Move on to college" },
+  ]
 
-function MissionStats() {
   return (
     <Section
       eyebrow="Our Mission"

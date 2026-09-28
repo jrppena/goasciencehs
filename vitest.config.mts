@@ -15,5 +15,11 @@ export default defineConfig({
   },
   test: {
     include: ["src/**/*.test.ts"],
+    env: {
+      MONGODB_ENV: "development",
+      MONGODB_URI_DEVELOPMENT:
+        process.env.TEST_MONGODB_URI ??
+        "mongodb://127.0.0.1:27017/gshs-test?serverSelectionTimeoutMS=1500",
+    },
   },
 })

@@ -1,21 +1,33 @@
 import Image from "next/image"
 import { QuoteIcon } from "lucide-react"
 
-import { schoolHead } from "@/lib/faculty"
+import { getVisibleFaculty } from "@/lib/db/content"
+import { FACULTY_PENDING } from "@/lib/faculty"
 import { Reveal } from "@/components/motion/reveal"
+import { MediaPlaceholder } from "@/components/ui/media-placeholder"
 import { STAGGER_SECONDS } from "@/lib/motion"
 
-function PrincipalsMessage() {
+async function PrincipalsMessage() {
+  const [schoolHead] = await getVisibleFaculty("head")
+  if (!schoolHead) return null
+
   return (
     <section className="page-gutter grid items-center gap-lg py-xl md:grid-cols-[1fr_2fr]">
       <Reveal className="relative aspect-[3/4] overflow-hidden rounded-container border border-border">
-        <Image
-          src={schoolHead.photo}
-          alt={`Portrait of Goa Science High School principal ${schoolHead.name}`}
-          fill
-          sizes="(min-width: 768px) 33vw, 100vw"
-          className="object-cover"
-        />
+        {schoolHead.photo ? (
+          <Image
+            src={schoolHead.photo}
+            alt={`Portrait of Goa Science High School principal ${schoolHead.name}`}
+            fill
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="object-cover"
+          />
+        ) : (
+          <MediaPlaceholder
+            label={`Portrait of ${schoolHead.name}`}
+            className="absolute inset-0 rounded-none border-0"
+          />
+        )}
       </Reveal>
       <Reveal
         as="figure"
@@ -38,7 +50,7 @@ function PrincipalsMessage() {
             {schoolHead.name}
           </span>
           <span className="font-mono text-label-md uppercase text-muted-foreground">
-            {schoolHead.position}
+            {schoolHead.position ?? FACULTY_PENDING}
           </span>
         </figcaption>
       </Reveal>

@@ -33,8 +33,8 @@ export const nonTeachingPersonnel: FacultyMember[] = [
 ]
 
 /**
- * The teaching personnel, sorted by given name. Hand-authored for now;
- * a CMS would replace this array and nothing else.
+ * The teaching personnel, sorted by given name. Seed source for the faculty
+ * collection; `npm run seed` upserts by name.
  *
  * TODO: fill in positions, emails, rooms, and subjects once the school
  * confirms them.

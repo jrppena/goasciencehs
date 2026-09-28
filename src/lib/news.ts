@@ -15,8 +15,7 @@ export type NewsCategory = (typeof newsCategories)[number]
 export type { NewsPost }
 
 /**
- * Every bulletin the site publishes, newest first. Hand-authored for now;
- * a CMS would replace this array and nothing else.
+ * Seed source for the news collection; `npm run seed` upserts by slug.
  *
  * TODO: replace the placeholder copy with the school's real bulletins.
  */
@@ -170,25 +169,6 @@ const newsDateFormatter = new Intl.DateTimeFormat("en-GB", {
 /** Renders an ISO date as "12 Aug 2026". */
 export function formatNewsDate(isoDate: string) {
   return newsDateFormatter.format(new Date(isoDate))
-}
-
-export function getNewsPost(slug: string) {
-  return newsPosts.find((post) => post.slug === slug)
-}
-
-export function getPostsByCategory(category?: NewsCategory) {
-  if (!category) return newsPosts
-  return newsPosts.filter((post) => post.category === category)
-}
-
-/** Same-category posts first, topped up with the next most recent ones. */
-export function getRelatedPosts(post: NewsPost, limit = 3) {
-  const others = newsPosts.filter((candidate) => candidate.slug !== post.slug)
-  const sameCategory = others.filter(
-    (candidate) => candidate.category === post.category
-  )
-  const rest = others.filter((candidate) => candidate.category !== post.category)
-  return [...sameCategory, ...rest].slice(0, limit)
 }
 
 /** Narrows an unvalidated query string to a known category, case-insensitively. */

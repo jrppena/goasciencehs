@@ -2,7 +2,8 @@ import type { Metadata } from "next"
 
 import Link from "next/link"
 
-import { getPostsByCategory, parseNewsCategory } from "@/lib/news"
+import { parseNewsCategory } from "@/lib/news"
+import { getNewsByCategory } from "@/lib/db/content"
 import { CategoryFilter, NEWS_PATH } from "@/components/news/category-filter"
 import { FeaturedPost } from "@/components/news/featured-post"
 import { NewsCard } from "@/components/news/news-card"
@@ -23,7 +24,7 @@ export default async function NewsPage({
   searchParams,
 }: PageProps<"/about/news-and-announcements">) {
   const activeCategory = parseNewsCategory((await searchParams).category)
-  const [featured, ...rest] = getPostsByCategory(activeCategory)
+  const [featured, ...rest] = await getNewsByCategory(activeCategory)
 
   return (
     <PageTransition>

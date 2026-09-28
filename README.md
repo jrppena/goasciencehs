@@ -116,7 +116,7 @@ src/
 scripts/        One-off maintenance scripts (create-admin)
 ```
 
-Content lives as typed data in `src/lib` rather than in a CMS — edit those files to update copy, news, or staff listings.
+Content is seeded from typed data in `src/lib` into MongoDB (`npm run seed`). Public pages read it through the `server-only` data layer in `src/lib/db/content.ts`, which filters unpublished news and invisible faculty; admin saves refresh the affected pages via `revalidateContent`.
 
 ## Design
 
