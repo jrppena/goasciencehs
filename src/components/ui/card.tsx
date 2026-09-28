@@ -4,19 +4,15 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 // DESIGN.md > Elevation: no shadows, a 1px low-contrast outline instead.
-// DESIGN.md > Components > Cards: a 4px "Team Stripe" on the top or left edge.
+// DESIGN.md > Components > Cards: a 4px Notice Stripe on the top edge,
+// reserved for Advisory and Admissions posts.
 const cardVariants = cva(
   "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-container border border-border bg-card py-(--card-spacing) text-body-md text-card-foreground [--card-spacing:var(--spacing-md)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--spacing-sm)] data-[size=sm]:has-data-[slot=card-footer]:pb-0",
   {
     variants: {
       stripe: {
         none: "",
-        top: "border-t-4",
-        left: "border-l-4",
-      },
-      tone: {
-        primary: "",
-        secondary: "",
+        top: "border-t-4 border-t-primary",
       },
       // DESIGN.md > Elevation: a hovered card shifts colour and gains a sharp
       // accent — it never lifts on a shadow.
@@ -26,20 +22,11 @@ const cardVariants = cva(
       },
     },
     compoundVariants: [
-      { stripe: "top", tone: "primary", class: "border-t-primary" },
-      { stripe: "top", tone: "secondary", class: "border-t-secondary-container" },
-      { stripe: "left", tone: "primary", class: "border-l-primary" },
-      {
-        stripe: "left",
-        tone: "secondary",
-        class: "border-l-secondary-container",
-      },
       // The wipe rides on the top stripe, so it only makes sense there.
       { stripe: "top", interactive: true, class: "stripe-wipe" },
     ],
     defaultVariants: {
-      stripe: "top",
-      tone: "primary",
+      stripe: "none",
       interactive: false,
     },
   }
@@ -49,7 +36,6 @@ function Card({
   className,
   size = "default",
   stripe,
-  tone,
   interactive,
   ...props
 }: React.ComponentProps<"div"> &
@@ -58,7 +44,7 @@ function Card({
     <div
       data-slot="card"
       data-size={size}
-      className={cn(cardVariants({ stripe, tone, interactive }), className)}
+      className={cn(cardVariants({ stripe, interactive }), className)}
       {...props}
     />
   )

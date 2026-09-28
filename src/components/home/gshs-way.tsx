@@ -29,7 +29,7 @@ function GshsWay() {
         {pillars.map((pillar) => (
           <RevealItem as="article" key={pillar.title} className="flex flex-col gap-sm">
             <MediaPlaceholder className="aspect-[3/2]" />
-            <h3 className="text-headline-md uppercase">{pillar.title}</h3>
+            <h3 className="text-headline-md">{pillar.title}</h3>
             <p className="text-body-md text-muted-foreground">{pillar.body}</p>
           </RevealItem>
         ))}

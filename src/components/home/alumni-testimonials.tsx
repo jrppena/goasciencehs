@@ -27,7 +27,7 @@ async function AlumniTestimonials() {
               {testimonial.quote}
             </blockquote>
             <figcaption className="mt-auto flex flex-col gap-xs pt-sm">
-              <span className="font-display text-headline-md uppercase">
+              <span className="font-display text-headline-md">
                 {testimonial.name}
               </span>
               <span className="font-mono text-label-md uppercase text-muted-foreground">

@@ -21,7 +21,7 @@ function FacultyCard({
   const fullName = `${member.honorific} ${member.name}`
 
   return (
-    <Card stripe="top" className="h-full gap-0 py-0 text-center">
+    <Card className="h-full gap-0 py-0 text-center">
       {member.photo ? (
         <div className="relative aspect-square border-b border-border">
           <Image
@@ -71,7 +71,7 @@ function FacultyCard({
 
       {withSubjects ? (
         <div className="flex flex-col gap-sm px-md py-md">
-          <h4 className="font-display text-body-lg uppercase text-primary">
+          <h4 className="font-display text-body-lg text-primary">
             Subjects taught
           </h4>
           {member.subjects ? (

@@ -39,7 +39,9 @@ function Section({
           {title}
         </h2>
         {description ? (
-          <p className="text-body-lg text-muted-foreground">{description}</p>
+          <p className="max-w-prose text-body-lg text-muted-foreground">
+            {description}
+          </p>
         ) : null}
       </Reveal>
       {children}

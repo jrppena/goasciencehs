@@ -26,7 +26,7 @@ async function MissionVision() {
 
           return (
             <RevealItem key={statement.label}>
-              <Card tone={statement.tone} className="h-full">
+              <Card className="h-full">
                 <CardHeader>
                   <span className="flex items-center gap-base font-mono text-label-md uppercase text-muted-foreground">
                     <Icon className="size-4 text-primary" aria-hidden="true" />

@@ -1,5 +1,5 @@
 ---
-name: Athletic Excellence
+name: Official Record
 colors:
   surface: '#f7fafd'
   surface-dim: '#d7dadd'
@@ -112,57 +112,75 @@ spacing:
 
 ## Brand & Style
 
-This design system is engineered for high-performance sports organizations and educational institutions. It translates the kinetic energy of the reference image—characterized by synchronized movement and bold team colors—into a digital experience that feels disciplined, energetic, and professional.
+This design system reads as a school's own official record: a lab notebook and
+a bulletin board, not a jersey. It favours dated, attributable, and legible
+communication over spectacle — the visual language of a place that signs its
+name to what it posts.
 
-The visual style is a blend of **Corporate Modern** and **High-Contrast Bold**. It prioritizes clarity and impact, using strong structural lines, intentional whitespace, and a "team-first" aesthetic. The goal is to evoke a sense of pride, momentum, and institutional reliability. 
+The visual style is **Documentary Clean**: plain structure, generous
+whitespace, and a texture drawn from ruled paper rather than motion. The goal
+is to read as trustworthy and precise, the way an official notice or a lab
+report reads.
 
 Key principles:
-- **Kinetic Structure:** Use of diagonal accents or "speed lines" in backgrounds to mimic the jersey patterns.
-- **Precision:** Tight alignment and consistent geometry to reflect the discipline of a marching or athletic unit.
-- **Authority:** Bold typographic scales that command attention and communicate leadership.
+- **Record:** Every notice is dated, attributable, and — where it matters — signed. Dates, reference numbers, and signatories carry their own typographic treatment so they are never mistaken for prose.
+- **Precision:** An 8px grid and monospaced metadata keep facts and figures unambiguous.
+- **Quiet authority:** All-caps is for H1, H2, buttons, nav, the wordmark, and mono labels; card titles, quotes, names, and H3 and below read in sentence case. Texture stays at or below 15% opacity (10% on heroes, 15% on the CTA band) so it never competes with the text sitting on it.
 
 ## Colors
 
-The palette is derived directly from the athletic uniforms in the reference image, optimized for digital accessibility.
+The palette carries the school's own colours, kept legible against an
+official-record backdrop.
 
-- **Athletic Blue (Primary):** A vibrant, deep royal blue that serves as the foundation for action items, headers, and primary branding. It represents stability and professional excellence.
+- **School Blue (Primary):** A vibrant, deep royal blue that serves as the foundation for action items, headers, and primary branding. It represents stability and professional excellence.
 - **Golden Yellow (Secondary):** A bright, high-energy gold used sparingly for highlights, secondary call-to-actions, and status indicators. It provides a sharp contrast that draws the eye to critical information.
 - **Deep Onyx (Tertiary):** Used for primary text and high-contrast UI elements. It ensures readability and adds a grounded, serious tone.
 - **Cool Slate (Neutral):** A range of cool greys used for backgrounds, borders, and subtle containment, maintaining a clean and modern workspace.
 
 ## Typography
 
-The typography strategy focuses on the "Power-Utility" duo. 
+Three faces, each doing one job.
 
-**Anybody** is used for headlines. Its variable width and bold weights feel flexible and athletic, reminiscent of collegiate jersey numbering. It should be used in all-caps for high-impact sections.
+**Anybody** is the display face for every heading, card title, and name, plus
+buttons, nav, and the wordmark. Within Anybody, all-caps applies only at H1,
+H2, buttons, nav, and the wordmark; H3 and below, card titles, quotes, and names are sentence
+case — caps stop being a display device and start being noise past the second
+level. A blockquote pulled up to display size still needs a line-height of at
+least 1.4 so a two-line quote doesn't read as cramped.
 
-**Hanken Grotesk** handles the body copy. It is a sharp, contemporary sans-serif that maintains a professional and highly readable tone even in data-heavy layouts.
+**Hanken Grotesk** handles the body copy. It is a sharp, contemporary
+sans-serif that maintains a professional and highly readable tone even in
+data-heavy layouts. Lead paragraphs are capped at a prose measure
+(`max-w-prose`) so a line never runs past a comfortable reading width.
 
-**JetBrains Mono** is utilized for labels, technical data, and metadata. This monospaced choice introduces a "technical/coaching" feel, suggesting precision and data-driven performance.
+**JetBrains Mono** is reserved for what is actually data: dates, reference
+numbers, signatories, "last updated" stamps, and short labels. Short mono
+labels (eyebrows, badges, dates) are set in caps. It is the system's citation
+typeface, not a costume for "technical."
 
 ## Layout & Spacing
 
-The design system utilizes a **Fluid Grid** with an 8px base unit to ensure a mathematical, "coached" rhythm.
+The design system utilizes a **Fluid Grid** with an 8px base unit to ensure a mathematical rhythm.
 
 - **Desktop (1440px+):** 12-column grid, 64px side margins, 24px gutters.
 - **Tablet (768px - 1439px):** 8-column grid, 32px side margins, 20px gutters.
 - **Mobile (Up to 767px):** 4-column grid, 16px side margins, 16px gutters.
 
-Spacing should be generous to maintain a premium, professional feel. Avoid overcrowding elements; instead, use the `lg` (48px) and `xl` (80px) units to create distinct sections of content, mimicking the "lanes" of an athletic track.
+Spacing should be generous to maintain a premium, professional feel. Avoid overcrowding elements; instead, use the `lg` (48px) and `xl` (80px) units to create distinct sections of content.
 
 ## Elevation & Depth
 
-To maintain a crisp, athletic look, this system avoids heavy shadows. Instead, it uses **Tonal Layers** and **Low-Contrast Outlines**.
+To maintain a crisp, documentary look, this system avoids heavy shadows. Instead, it uses **Tonal Layers** and **Low-Contrast Outlines**.
 
 - **Surface 0 (Background):** Neutral cool grey (#F4F7FA).
 - **Surface 1 (Cards/Sections):** Pure White (#FFFFFF) with a 1px solid border in a light neutral.
-- **Surface 2 (Interactive):** When hovered, elements should not lift with shadows but rather shift in color (Primary Blue) or gain a subtle, sharp secondary-colored accent border.
+- **Surface 2 (Interactive):** When hovered, elements should not lift with shadows but rather shift in color (Primary Blue) or gain a subtle, sharp secondary-colored accent border. Only notice-striped cards (Advisory, Admissions) gain the gold stripe wipe on hover — a plain card just shifts colour.
 
 If depth is required for modals, use a "Hard Shadow" style: a 4px offset with 0 blur and 100% opacity in a muted blue tint, creating a 2D-stacked effect rather than a realistic 3D one.
 
 ## Motion
 
-Motion here is athletic: deliberate, synchronised, and over before it draws attention to itself. Nothing bounces, nothing floats, and nothing loops fast enough to be noticed twice.
+Motion here is restrained: deliberate, synchronised, and over before it draws attention to itself. Nothing bounces, nothing floats, and nothing loops.
 
 ### The scale
 
@@ -177,7 +195,7 @@ These live as `--transition-duration-fast|base|slow` in `globals.css` (Tailwind 
 
 ### Hover never lifts
 
-Restating the rule from **Elevation & Depth** because it is the one most often broken: an interactive element responds by **shifting colour or gaining a sharp accent**, never by rising on a shadow. `hover:shadow-lg` and `hover:-translate-y-1` are out of bounds. On a card the response is the border going Athletic Blue and the Team Stripe wiping in Golden Yellow from the left.
+Restating the rule from **Elevation & Depth** because it is the one most often broken: an interactive element responds by **shifting colour or gaining a sharp accent**, never by rising on a shadow. `hover:shadow-lg` and `hover:-translate-y-1` are out of bounds. On a card the response is the border going School Blue; on a notice-striped card the Notice Stripe additionally wipes in Golden Yellow from the left.
 
 ### Entrances
 
@@ -205,21 +223,21 @@ The shape language is **Soft (0.25rem)**. This slight rounding provides a profes
 
 - **Standard Elements:** 4px radius (Buttons, Inputs, small components).
 - **Containers:** 8px radius (Cards, Modals).
-- **Feature Elements:** Use 0px (Sharp) for decorative accents or "speed line" background graphics to emphasize speed and precision.
+- **Feature Elements:** Use 0px (Sharp) for decorative accents. The one texture the system uses — `ruled-paper`, a single axis of static 1px lines on a 24px pitch, at low opacity (≤15%) — sits behind hero and CTA copy, never in front of it.
 
 ## Components
 
 ### Buttons
-Primary buttons use the Athletic Blue background with White text in `button-text` style (Bold, Uppercase). They feature a sharp 4px radius. Secondary buttons should use an Athletic Blue outline with a Golden Yellow hover state.
+Primary buttons use the School Blue background with White text in `button-text` style (Bold, Uppercase). They feature a sharp 4px radius. Secondary buttons should use a School Blue outline with a Golden Yellow hover state.
 
 ### Chips & Tags
-Used for player status or categories. Use JetBrains Mono for the font. For "Active" or "Highlighted" states, use the Golden Yellow background with black text to ensure high visibility.
+Used for a category or a status. Use JetBrains Mono for the font. For "Active" or "Highlighted" states, use the Golden Yellow background with black text to ensure high visibility.
 
 ### Input Fields
-Clean, 1px bordered boxes using the `body-md` font. The focus state should be a 2px Athletic Blue border. Error states should avoid red if possible, instead using a high-contrast version of the brand palette with a dedicated error icon.
+Clean, 1px bordered boxes using the `body-md` font. The focus state should be a 2px School Blue border. Error states should avoid red if possible, instead using a high-contrast version of the brand palette with a dedicated error icon.
 
 ### Cards
-Cards are white with a subtle 1px border. A 4px thick "Team Stripe" (using the Primary or Secondary color) should be placed at the top or left edge of the card to create visual categorization.
+Cards are white with a subtle 1px border and carry no stripe by default. A 4px Notice Stripe (School Blue) marks a card as an official notice — reserved for Advisory and Admissions posts — and wipes in Golden Yellow on hover. Every other card just shifts its border colour on hover. The 4px School Blue left rule (`team-stripe-l`) is a separate utility for timeline and list items, not cards.
 
 ### Progress Bars
-Utilize the Golden Yellow for the progress fill against a light blue background. This mimics the high-visibility gear used in sports training.
+Utilize the Golden Yellow for the progress fill against a light blue background.

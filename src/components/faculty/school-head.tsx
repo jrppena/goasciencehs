@@ -29,14 +29,14 @@ async function SchoolHead() {
           <MediaPlaceholder className="aspect-[3/4] w-full max-w-[20rem]" />
         )}
         <div className="flex flex-col gap-xs">
-          <h3 className="text-headline-lg-mobile uppercase md:text-headline-lg">
+          <h3 className="text-headline-lg-mobile md:text-headline-lg">
             {fullName}
           </h3>
           <span className="font-mono text-label-md uppercase text-primary">
             {schoolHead.position}
           </span>
         </div>
-        <p className="text-body-lg text-muted-foreground">
+        <p className="max-w-prose text-body-lg text-muted-foreground">
           The principal leads the teaching personnel, signs off on the
           school&rsquo;s programmes, and keeps the special science curriculum
           running across Grades 7 to 12. His office handles enrolment appeals,

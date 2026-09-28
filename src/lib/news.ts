@@ -13,6 +13,14 @@ export const newsCategories = [
 
 export type NewsCategory = (typeof newsCategories)[number]
 
+/** Categories that carry the Notice Stripe: official, dated communications. */
+const NOTICE_CATEGORIES: readonly NewsCategory[] = ["Advisory", "Admissions"]
+
+/** Whether a category is an official notice and should show the Notice Stripe. */
+export function isNoticeCategory(category: NewsCategory) {
+  return NOTICE_CATEGORIES.includes(category)
+}
+
 /** Who may sign an Advisory, in the order they should appear in the form. */
 export const signatoryRoles = ["Principal", "Officer-in-Charge"] as const
 

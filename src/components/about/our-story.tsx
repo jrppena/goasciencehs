@@ -35,7 +35,7 @@ async function OurStory() {
               key={paragraph}
               className={
                 index === 0
-                  ? "text-body-lg text-muted-foreground"
+                  ? "max-w-prose text-body-lg text-muted-foreground"
                   : "text-body-md text-muted-foreground"
               }
             >

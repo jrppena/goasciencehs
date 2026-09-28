@@ -4,7 +4,7 @@ import { Input as InputPrimitive } from "@base-ui/react/input"
 import { cn } from "@/lib/utils"
 
 // DESIGN.md > Components > Input Fields: clean 1px bordered box in body-md,
-// focus is a 2px Athletic Blue border. Error states use a high-contrast
+// focus is a 2px School Blue border. Error states use a high-contrast
 // version of the brand palette rather than red.
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (

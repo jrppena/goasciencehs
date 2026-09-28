@@ -34,7 +34,7 @@ function AudienceDoors() {
       <ul className="grid gap-sm sm:grid-cols-2 lg:grid-cols-4">
         {doors.map((door) => (
           <li key={door.title}>
-            <Card size="sm" stripe="none" interactive className="relative h-full">
+            <Card size="sm" interactive className="relative h-full">
               <CardHeader>
                 <CardTitle>
                   <Link

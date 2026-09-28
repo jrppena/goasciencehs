@@ -12,14 +12,14 @@ async function CtaBand() {
     <section className="relative overflow-hidden bg-primary-container text-on-primary">
       <div
         aria-hidden="true"
-        className="speed-lines-bold speed-lines-drift-bold absolute inset-0 opacity-15"
+        className="ruled-paper absolute inset-0 text-on-primary opacity-15"
       />
       <Reveal className="page-gutter relative flex flex-col items-start justify-between gap-md py-xl lg:flex-row lg:items-center">
         <div className="flex max-w-2xl flex-col gap-xs">
           <h2 className="text-headline-lg-mobile uppercase md:text-headline-lg">
             Ready to begin?
           </h2>
-          <p className="text-body-lg text-primary-fixed">
+          <p className="max-w-prose text-body-lg text-primary-fixed">
             Call or email the school office to reach the registrar about
             admission for incoming Grade 7 and Grade 11, including
             requirements and schedules.

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ==================================================================
-   Athletic Excellence — see DESIGN.md
+   Official Record — see DESIGN.md
 
    :root holds the palette. It is the single source of truth: every
    shadcn semantic slot below is an alias onto one of these values,
@@ -32,7 +32,7 @@
   --outline: #747685;
   --outline-variant: #c4c6d6;
 
-  /* ---------- Primary — Athletic Blue ---------- */
+  /* ---------- Primary — School Blue ---------- */
   --primary: #0041b3;
   --on-primary: #ffffff;
   --primary-container: #2e5bcc;
@@ -381,64 +381,14 @@
    Utilities — the pieces DESIGN.md names that aren't plain tokens
    ================================================================== */
 
-/* Diagonal "speed lines" backdrop, echoing the jersey striping. */
-@utility speed-lines {
-  background-image: repeating-linear-gradient(
-    115deg,
-    color-mix(in srgb, var(--primary) 8%, transparent) 0 2px,
-    transparent 2px 14px
-  );
+/* Lab-notebook ruling: one axis of static 1px lines, 24px apart (the
+   spacing-md step). No drift, no gradient — a page background, not a motif. */
+@utility ruled-paper {
+  background-image: linear-gradient(currentColor 1px, transparent 1px);
+  background-size: 100% var(--spacing-md);
 }
 
-@utility speed-lines-bold {
-  background-image: repeating-linear-gradient(
-    115deg,
-    color-mix(in srgb, var(--secondary-container) 55%, transparent) 0 6px,
-    transparent 6px 24px
-  );
-}
-
-/* "Kinetic Structure" made literal: the jersey striping drifts. Compose this
-   onto a speed-lines layer inside an overflow-hidden parent.
-
-   Only `translate` animates, so the gradient is painted once into a
-   compositor layer and never repainted — animating background-position here
-   would repaint a full-bleed band every frame instead.
-
-   The shift is one horizontal period of the pattern, which is what makes the
-   loop seamless. A repeating-linear-gradient at angle A repeats every P along
-   its own axis, so it repeats every P / |sin A| horizontally. The two layers
-   have different periods, hence two values:
-     speed-lines      P = 14px, 14 / sin(115°) = 15.45px
-     speed-lines-bold P = 24px, 24 / sin(115°) = 26.48px
-   The layer is widened by the shift on the leading edge so nothing uncovers. */
-@utility speed-lines-drift {
-  --speed-lines-shift: 15.45px;
-  left: calc(-1 * var(--speed-lines-shift));
-  animation: speed-lines-drift 6s linear infinite;
-}
-
-@utility speed-lines-drift-bold {
-  --speed-lines-shift: 26.48px;
-  left: calc(-1 * var(--speed-lines-shift));
-  animation: speed-lines-drift 10s linear infinite;
-}
-
-@keyframes speed-lines-drift {
-  from {
-    translate: 0 0;
-  }
-  to {
-    translate: var(--speed-lines-shift) 0;
-  }
-}
-
-/* 4px team stripe on a card edge. */
-@utility team-stripe-t {
-  border-top: 4px solid var(--primary);
-}
-
-/* Hover wipe for a card's team stripe. DESIGN.md forbids a shadow lift, so
+/* Hover wipe for a card's notice stripe. DESIGN.md forbids a shadow lift, so
    the feedback is the stripe itself filling in gold from the left. Scaling a
    pseudo-element keeps this on the compositor — no layout, no repaint. */
 @utility stripe-wipe {

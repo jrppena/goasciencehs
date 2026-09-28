@@ -25,11 +25,7 @@ async function ElectiveClusters() {
       <RevealGroup className="grid gap-md lg:grid-cols-3">
         {clusters.map((cluster) => (
           <RevealItem key={cluster.name}>
-            <Card
-              id={slugify(cluster.name)}
-              tone={cluster.tone}
-              className="h-full scroll-mt-20"
-            >
+            <Card id={slugify(cluster.name)} className="h-full scroll-mt-20">
             <CardHeader>
               <span className="font-mono text-label-md uppercase text-muted-foreground">
                 Cluster
