@@ -51,11 +51,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <body className="flex min-h-full flex-col">
-        {/* Reveals start at opacity 0 and are un-hidden on hydration. Without
-            JS that never happens, so hand those blocks straight back. */}
-        <noscript>
-          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
         {children}
       </body>
     </html>

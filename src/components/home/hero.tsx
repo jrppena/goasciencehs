@@ -26,9 +26,8 @@ async function Hero() {
         className="absolute inset-0 -z-10 bg-linear-to-b from-primary/90 from-35% via-primary/65 via-70% to-primary/25 lg:bg-linear-to-r lg:from-primary lg:from-15% lg:via-primary/70 lg:via-50% lg:to-primary/5"
       />
 
-      {/* Above the fold: no reveal wrappers. Motion server-renders
-          `initial` inline (opacity:0), so a RevealGroup/RevealItem here
-          would leave the hero blank until JS hydrates. */}
+      {/* Above the fold: no reveal wrappers. Above the fold never animates
+          (DESIGN.md). */}
       <div className="page-gutter relative flex min-h-[32rem] max-w-3xl flex-col justify-center gap-md py-xl">
         <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">

@@ -181,7 +181,7 @@ Restating the rule from **Elevation & Depth** because it is the one most often b
 
 ### Entrances
 
-Content fades up 24px as it first scrolls into view, and only the first time — a section that has arrived stays arrived. Grids and lists stagger their cells 70ms apart, which is close enough to read as one unit moving together rather than a wave passing through it. Heroes use the same stagger on load.
+Content fades up 24px as it first scrolls into view, and only the first time — a section that has arrived stays arrived. Grids and lists stagger their cells 70ms apart, which is close enough to read as one unit moving together rather than a wave passing through it. Only blocks that start below the viewport on load are hidden; anything already on screen — including an anchor-nav target — shows as-is, never faded from opacity 0.
 
 Above-the-fold imagery never animates. The hero photograph is the largest contentful paint and has to be there on the first frame.
 
@@ -194,7 +194,7 @@ Only `opacity`, `translate`, `scale`, `filter`, and colour. Anything else — he
 Every animation is decoration over content that is already there, and it degrades in three directions:
 
 - **`prefers-reduced-motion: reduce`** collapses durations to `0.01ms` rather than removing animations, because Base UI's drawer and navigation menu wait on animation events before they unmount. The JavaScript layer is governed separately by `MotionConfig reducedMotion="user"`, which keeps the fade and drops the movement.
-- **No JavaScript** — a `<noscript>` rule hands every `[data-reveal]` block straight back at full opacity.
+- **No JavaScript** — reveal blocks are server-rendered visible; nothing is hidden until the client decides to hide what's off-screen, so there's nothing for a no-JS visitor to miss.
 - **No View Transitions support** — the page simply cuts, as it did before.
 
 Content must never be permanently invisible because an animation did not run.

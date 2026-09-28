@@ -6,7 +6,7 @@ import { DURATION, EASE_ATHLETIC, REVEAL_OFFSET_PX } from "@/lib/motion"
 
 /** Named so RevealGroup can drive it; the group owns all the timing. */
 const revealItemVariants = {
-  hidden: { opacity: 0, y: REVEAL_OFFSET_PX },
+  hidden: { opacity: 0, y: REVEAL_OFFSET_PX, transition: { duration: 0 } },
   visible: {
     opacity: 1,
     y: 0,
