@@ -31,7 +31,6 @@ async function main() {
     { $set: { passwordHash: await hashPassword(password) } },
     { upsert: true, runValidators: true }
   )
-  await mongoose.disconnect()
 
   console.log(`Admin account ready: ${email}`)
 }
@@ -86,7 +85,9 @@ function promptInput(question: string, hidden = false): Promise<string> {
   })
 }
 
-main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : error)
-  process.exitCode = 1
-})
+main()
+  .catch((error: unknown) => {
+    console.error(error instanceof Error ? error.message : error)
+    process.exitCode = 1
+  })
+  .finally(() => mongoose.disconnect())

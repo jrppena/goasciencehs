@@ -56,6 +56,9 @@ Run MongoDB locally and point `MONGODB_URI_DEVELOPMENT` at it (the default in `.
 | `npm run lint` | Run ESLint |
 | `npm test` | Run the Vitest suite |
 | `npm run create-admin` | Create or update the single admin account |
+| `npm run seed` | Upsert the core content into the configured database |
+
+`npm run seed` migrates the content in `src/lib` (news, faculty, site settings, school stats) into MongoDB. It is idempotent — news upserts by slug, faculty by name — so it is safe to re-run.
 
 ## Pages
 
