@@ -2,12 +2,27 @@ import "server-only"
 
 import { connect } from "@/lib/db/connect"
 import { AboutStoryModel, type AboutStory } from "@/lib/db/models/about-story"
+import {
+  AcademicsSettingsModel,
+  type AcademicsSettings,
+} from "@/lib/db/models/academics-settings"
+import { CoreSubjectModel, type CoreSubject } from "@/lib/db/models/core-subject"
 import { CoreValueModel, type CoreValue } from "@/lib/db/models/core-value"
+import {
+  CurriculumShiftStepModel,
+  type CurriculumShiftStep,
+} from "@/lib/db/models/curriculum-shift-step"
+import {
+  ElectiveClusterModel,
+  type ElectiveCluster,
+} from "@/lib/db/models/elective-cluster"
 import {
   FacultyModel,
   type FacultyKind,
   type FacultyMember,
 } from "@/lib/db/models/faculty"
+import { LearningAreaModel, type LearningArea } from "@/lib/db/models/learning-area"
+import { MatatagStepModel, type MatatagStep } from "@/lib/db/models/matatag-step"
 import { MilestoneModel, type Milestone } from "@/lib/db/models/milestone"
 import {
   MissionVisionModel,
@@ -15,6 +30,10 @@ import {
 } from "@/lib/db/models/mission-vision"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel, type SchoolStats } from "@/lib/db/models/school-stats"
+import {
+  ScienceProgramLevelModel,
+  type ScienceProgramLevel,
+} from "@/lib/db/models/science-program-level"
 import { SiteSettingsModel, type SiteSettings } from "@/lib/db/models/site-settings"
 import {
   TestimonialModel,
@@ -126,4 +145,45 @@ export async function getSchoolStats(): Promise<SchoolStats> {
   }
 
   return { ...stats, facultyAndStaff: String(facultyCount) }
+}
+
+export async function getLearningAreas(): Promise<LearningArea[]> {
+  await connect()
+  return LearningAreaModel.find({}).sort({ order: 1, name: 1 }).lean()
+}
+
+export async function getScienceProgramLevels(): Promise<ScienceProgramLevel[]> {
+  await connect()
+  return ScienceProgramLevelModel.find({}).sort({ order: 1, grade: 1 }).lean()
+}
+
+export async function getMatatagSteps(): Promise<MatatagStep[]> {
+  await connect()
+  return MatatagStepModel.find({}).sort({ order: 1, title: 1 }).lean()
+}
+
+export async function getCoreSubjects(): Promise<CoreSubject[]> {
+  await connect()
+  return CoreSubjectModel.find({}).sort({ order: 1, name: 1 }).lean()
+}
+
+export async function getElectiveClusters(): Promise<ElectiveCluster[]> {
+  await connect()
+  return ElectiveClusterModel.find({}).sort({ order: 1, name: 1 }).lean()
+}
+
+export async function getCurriculumShiftSteps(): Promise<CurriculumShiftStep[]> {
+  await connect()
+  return CurriculumShiftStepModel.find({}).sort({ order: 1, title: 1 }).lean()
+}
+
+export async function getAcademicsSettings(): Promise<AcademicsSettings> {
+  await connect()
+  const settings = await AcademicsSettingsModel.findOne().lean()
+
+  if (!settings) {
+    throw new Error("Academics settings are not seeded. Run `npm run seed`.")
+  }
+
+  return settings
 }

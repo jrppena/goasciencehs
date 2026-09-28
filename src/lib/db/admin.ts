@@ -4,8 +4,23 @@ import { isValidObjectId } from "mongoose"
 
 import { connect } from "@/lib/db/connect"
 import { AboutStoryModel, type AboutStory } from "@/lib/db/models/about-story"
+import {
+  AcademicsSettingsModel,
+  type AcademicsSettings,
+} from "@/lib/db/models/academics-settings"
+import { CoreSubjectModel, type CoreSubject } from "@/lib/db/models/core-subject"
 import { CoreValueModel, type CoreValue } from "@/lib/db/models/core-value"
+import {
+  CurriculumShiftStepModel,
+  type CurriculumShiftStep,
+} from "@/lib/db/models/curriculum-shift-step"
+import {
+  ElectiveClusterModel,
+  type ElectiveCluster,
+} from "@/lib/db/models/elective-cluster"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
+import { LearningAreaModel, type LearningArea } from "@/lib/db/models/learning-area"
+import { MatatagStepModel, type MatatagStep } from "@/lib/db/models/matatag-step"
 import { MilestoneModel, type Milestone } from "@/lib/db/models/milestone"
 import {
   MissionVisionModel,
@@ -16,6 +31,10 @@ import {
   SchoolStatsModel,
   type SchoolStats,
 } from "@/lib/db/models/school-stats"
+import {
+  ScienceProgramLevelModel,
+  type ScienceProgramLevel,
+} from "@/lib/db/models/science-program-level"
 import {
   SiteSettingsModel,
   type SiteSettings,
@@ -454,6 +473,313 @@ export async function updateAboutStory(input: AboutStory) {
 
   await connect()
   await AboutStoryModel.updateOne(
+    {},
+    { $set: input },
+    { upsert: true, runValidators: true }
+  )
+}
+
+export type AdminLearningArea = WithId<LearningArea>
+
+export async function getAdminLearningAreas(): Promise<AdminLearningArea[]> {
+  await connect()
+  const areas = await LearningAreaModel.find({}).sort({ order: 1, name: 1 }).lean()
+  return areas.map(withId)
+}
+
+export async function getAdminLearningAreaById(
+  id: string
+): Promise<AdminLearningArea | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const area = await LearningAreaModel.findById(id).lean()
+  return area ? withId(area) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createLearningArea(input: LearningArea) {
+  const area = new LearningAreaModel(input)
+  await area.validate()
+
+  await connect()
+  await area.save()
+}
+
+export async function updateLearningArea(id: string, input: LearningArea) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await LearningAreaModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteLearningArea(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await LearningAreaModel.findByIdAndDelete(id)
+}
+
+export type AdminScienceProgramLevel = WithId<ScienceProgramLevel>
+
+export async function getAdminScienceProgramLevels(): Promise<
+  AdminScienceProgramLevel[]
+> {
+  await connect()
+  const levels = await ScienceProgramLevelModel.find({})
+    .sort({ order: 1, grade: 1 })
+    .lean()
+  return levels.map(withId)
+}
+
+export async function getAdminScienceProgramLevelById(
+  id: string
+): Promise<AdminScienceProgramLevel | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const level = await ScienceProgramLevelModel.findById(id).lean()
+  return level ? withId(level) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createScienceProgramLevel(input: ScienceProgramLevel) {
+  const level = new ScienceProgramLevelModel(input)
+  await level.validate()
+
+  await connect()
+  await level.save()
+}
+
+export async function updateScienceProgramLevel(
+  id: string,
+  input: ScienceProgramLevel
+) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await ScienceProgramLevelModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteScienceProgramLevel(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await ScienceProgramLevelModel.findByIdAndDelete(id)
+}
+
+export type AdminMatatagStep = WithId<MatatagStep>
+
+export async function getAdminMatatagSteps(): Promise<AdminMatatagStep[]> {
+  await connect()
+  const steps = await MatatagStepModel.find({}).sort({ order: 1, title: 1 }).lean()
+  return steps.map(withId)
+}
+
+export async function getAdminMatatagStepById(
+  id: string
+): Promise<AdminMatatagStep | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const step = await MatatagStepModel.findById(id).lean()
+  return step ? withId(step) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createMatatagStep(input: MatatagStep) {
+  const step = new MatatagStepModel(input)
+  await step.validate()
+
+  await connect()
+  await step.save()
+}
+
+export async function updateMatatagStep(id: string, input: MatatagStep) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await MatatagStepModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteMatatagStep(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await MatatagStepModel.findByIdAndDelete(id)
+}
+
+export type AdminCoreSubject = WithId<CoreSubject>
+
+export async function getAdminCoreSubjects(): Promise<AdminCoreSubject[]> {
+  await connect()
+  const subjects = await CoreSubjectModel.find({})
+    .sort({ order: 1, name: 1 })
+    .lean()
+  return subjects.map(withId)
+}
+
+export async function getAdminCoreSubjectById(
+  id: string
+): Promise<AdminCoreSubject | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const subject = await CoreSubjectModel.findById(id).lean()
+  return subject ? withId(subject) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createCoreSubject(input: CoreSubject) {
+  const subject = new CoreSubjectModel(input)
+  await subject.validate()
+
+  await connect()
+  await subject.save()
+}
+
+export async function updateCoreSubject(id: string, input: CoreSubject) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await CoreSubjectModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteCoreSubject(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await CoreSubjectModel.findByIdAndDelete(id)
+}
+
+export type AdminElectiveCluster = WithId<ElectiveCluster>
+
+export async function getAdminElectiveClusters(): Promise<AdminElectiveCluster[]> {
+  await connect()
+  const clusters = await ElectiveClusterModel.find({})
+    .sort({ order: 1, name: 1 })
+    .lean()
+  return clusters.map(withId)
+}
+
+export async function getAdminElectiveClusterById(
+  id: string
+): Promise<AdminElectiveCluster | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const cluster = await ElectiveClusterModel.findById(id).lean()
+  return cluster ? withId(cluster) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createElectiveCluster(input: ElectiveCluster) {
+  const cluster = new ElectiveClusterModel(input)
+  await cluster.validate()
+
+  await connect()
+  await cluster.save()
+}
+
+export async function updateElectiveCluster(id: string, input: ElectiveCluster) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await ElectiveClusterModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteElectiveCluster(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await ElectiveClusterModel.findByIdAndDelete(id)
+}
+
+export type AdminCurriculumShiftStep = WithId<CurriculumShiftStep>
+
+export async function getAdminCurriculumShiftSteps(): Promise<
+  AdminCurriculumShiftStep[]
+> {
+  await connect()
+  const steps = await CurriculumShiftStepModel.find({})
+    .sort({ order: 1, title: 1 })
+    .lean()
+  return steps.map(withId)
+}
+
+export async function getAdminCurriculumShiftStepById(
+  id: string
+): Promise<AdminCurriculumShiftStep | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const step = await CurriculumShiftStepModel.findById(id).lean()
+  return step ? withId(step) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createCurriculumShiftStep(input: CurriculumShiftStep) {
+  const step = new CurriculumShiftStepModel(input)
+  await step.validate()
+
+  await connect()
+  await step.save()
+}
+
+export async function updateCurriculumShiftStep(
+  id: string,
+  input: CurriculumShiftStep
+) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await CurriculumShiftStepModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteCurriculumShiftStep(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await CurriculumShiftStepModel.findByIdAndDelete(id)
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function updateAcademicsSettings(input: AcademicsSettings) {
+  const settings = new AcademicsSettingsModel(input)
+  await settings.validate()
+
+  await connect()
+  await AcademicsSettingsModel.findOneAndUpdate(
     {},
     { $set: input },
     { upsert: true, runValidators: true }
