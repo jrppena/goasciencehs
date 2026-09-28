@@ -81,6 +81,8 @@ function readNewsValues(formData: FormData): NewsValues {
     category: readString(formData, "category"),
     publishedOn: readString(formData, "publishedOn"),
     author: readString(formData, "author"),
+    signatoryName: readString(formData, "signatoryName"),
+    signatoryRole: readString(formData, "signatoryRole"),
     excerpt: readString(formData, "excerpt"),
     body: readString(formData, "body"),
     image: readString(formData, "image"),
@@ -97,6 +99,8 @@ function toNewsPost(values: NewsValues): NewsPost {
     publishedOn: values.publishedOn,
     excerpt: values.excerpt,
     author: values.author,
+    signatoryName: values.signatoryName || null,
+    signatoryRole: (values.signatoryRole || null) as NewsPost["signatoryRole"],
     body: values.body
       .split(/\n\s*\n/)
       .map((paragraph) => paragraph.trim())

@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 
 import { formatNewsDate, type NewsPost } from "@/lib/news"
+import { CategoryBadge } from "@/components/news/category-badge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { MediaPlaceholder } from "@/components/ui/media-placeholder"
@@ -18,7 +19,7 @@ function FeaturedPost({ post }: { post: NewsPost }) {
       <div className="flex flex-col items-start gap-md p-md lg:p-lg">
         <div className="flex items-center gap-sm">
           <Badge variant="active">Latest</Badge>
-          <Badge variant="outline">{post.category}</Badge>
+          <CategoryBadge category={post.category} variant="outline" />
           <time
             dateTime={post.publishedOn}
             className="font-mono text-label-md uppercase text-muted-foreground"

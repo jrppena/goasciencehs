@@ -1,3 +1,4 @@
+import { schoolHead } from "@/lib/faculty"
 import type { NewsPost } from "@/lib/db/models/news"
 
 /** The news categories, in the order they should appear in the filter. */
@@ -11,6 +12,15 @@ export const newsCategories = [
 ] as const
 
 export type NewsCategory = (typeof newsCategories)[number]
+
+/** Who may sign an Advisory, in the order they should appear in the form. */
+export const signatoryRoles = ["Principal", "Officer-in-Charge"] as const
+
+export type SignatoryRole = (typeof signatoryRoles)[number]
+
+/** Shown alongside an Advisory's signature, explaining what makes it official. */
+export const ADVISORY_VERIFICATION_RULE =
+  "A notice is official only if it carries the principal's or officer-in-charge's signature."
 
 export type { NewsPost }
 
@@ -47,6 +57,8 @@ export const newsPosts: NewsPost[] = [
     excerpt:
       "How announcements are released, and what learners and parents should check first.",
     author: "Office of the Principal",
+    signatoryName: schoolHead.name,
+    signatoryRole: "Principal",
     body: [
       "With the rainy season underway, the school is restating how class suspensions are decided and announced so that no household has to rely on rumour.",
       "Suspensions covering the whole municipality are declared by the Local Chief Executive of Goa or by the Department of Education regional office. The school does not issue its own suspension when a wider order is already in force — it relays that order.",

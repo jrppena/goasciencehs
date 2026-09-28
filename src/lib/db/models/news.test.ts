@@ -10,6 +10,8 @@ const validNews: Partial<NewsPost> = {
   title: "A post",
   excerpt: "An excerpt.",
   author: "Office of the Principal",
+  signatoryName: "Ronald Enciso",
+  signatoryRole: "Principal",
   body: ["First paragraph."],
 }
 
@@ -35,6 +37,38 @@ describe("News model", () => {
     })
 
     await expect(post.validate()).rejects.toHaveProperty("errors.category")
+  })
+
+  it("requires a signatory name on an Advisory", async () => {
+    const post = new NewsModel({ ...validNews, signatoryName: undefined })
+
+    await expect(post.validate()).rejects.toHaveProperty("errors.signatoryName")
+  })
+
+  it("requires a signatory role on an Advisory", async () => {
+    const post = new NewsModel({ ...validNews, signatoryRole: undefined })
+
+    await expect(post.validate()).rejects.toHaveProperty("errors.signatoryRole")
+  })
+
+  it("does not require a signatory on a non-Advisory post", async () => {
+    const post = new NewsModel({
+      ...validNews,
+      category: "Campus",
+      signatoryName: undefined,
+      signatoryRole: undefined,
+    })
+
+    await expect(post.validate()).resolves.toBeUndefined()
+  })
+
+  it("rejects an unknown signatory role", async () => {
+    const post = new NewsModel({
+      ...validNews,
+      signatoryRole: "OIC" as unknown as NewsPost["signatoryRole"],
+    })
+
+    await expect(post.validate()).rejects.toHaveProperty("errors.signatoryRole")
   })
 
   it("survives a dev HMR re-evaluation without OverwriteModelError", async () => {

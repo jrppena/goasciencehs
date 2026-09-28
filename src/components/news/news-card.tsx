@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 import { formatNewsDate, type NewsPost } from "@/lib/news"
-import { Badge } from "@/components/ui/badge"
+import { CategoryBadge } from "@/components/news/category-badge"
 import {
   Card,
   CardDescription,
@@ -17,13 +17,17 @@ import { cn } from "@/lib/utils"
  */
 function NewsCard({ post, className }: { post: NewsPost; className?: string }) {
   return (
-    <Card stripe="none" interactive className={cn("relative", className)}>
+    <Card
+      stripe={post.category === "Advisory" ? "top" : "none"}
+      interactive
+      className={cn("relative", className)}
+    >
       <div className="-mt-md">
         <MediaPlaceholder className="aspect-[16/9] rounded-none border-0 border-b" />
       </div>
       <CardHeader>
         <div className="flex items-center gap-sm">
-          <Badge variant="outline">{post.category}</Badge>
+          <CategoryBadge category={post.category} variant="outline" />
           <time
             dateTime={post.publishedOn}
             className="font-mono text-label-md uppercase text-muted-foreground"
