@@ -61,7 +61,7 @@ function SeniorHigh() {
       <RevealGroup className="grid gap-md md:grid-cols-2 lg:grid-cols-3">
         {electiveClusters.map((cluster) => (
           <RevealItem key={cluster.name}>
-            <Card tone={cluster.tone} interactive className="h-full justify-between">
+            <Card tone={cluster.tone} className="h-full justify-between">
             <CardHeader>
               <span className="font-mono text-label-md uppercase text-muted-foreground">
                 Elective cluster
