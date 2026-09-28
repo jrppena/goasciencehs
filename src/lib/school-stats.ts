@@ -1,3 +1,4 @@
+import type { SchoolStats } from "@/lib/db/models/school-stats"
 import { facultyMembers, nonTeachingPersonnel } from "@/lib/faculty"
 
 /**
@@ -7,7 +8,7 @@ import { facultyMembers, nonTeachingPersonnel } from "@/lib/faculty"
  * TODO: replace the placeholder figures (everything but faculty and staff)
  * with the school's real numbers once confirmed.
  */
-export const schoolStats = {
+export const schoolStats: SchoolStats = {
   learnersEnrolled: "1,240",
   /** Everyone the faculty page renders: the school head, teaching staff, and non-teaching personnel. */
   facultyAndStaff: String(
@@ -15,4 +16,4 @@ export const schoolStats = {
   ),
   yearEstablished: "2015",
   collegeProgressionRate: "97%",
-} satisfies Record<string, string>
+}

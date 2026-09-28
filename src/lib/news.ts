@@ -1,23 +1,18 @@
-export type NewsCategory =
-  | "Achievement"
-  | "Admissions"
-  | "Advisory"
-  | "Athletics"
-  | "Campus"
-  | "Community"
+import type { NewsPost } from "@/lib/db/models/news"
 
-export type NewsPost = {
-  /** URL segment under /about/news-and-announcements. */
-  slug: string
-  category: NewsCategory
-  /** ISO 8601 date. The only stored form — display strings are derived. */
-  publishedOn: string
-  title: string
-  excerpt: string
-  author: string
-  /** Body paragraphs, in reading order. */
-  body: string[]
-}
+/** The news categories, in the order they should appear in the filter. */
+export const newsCategories = [
+  "Achievement",
+  "Admissions",
+  "Advisory",
+  "Athletics",
+  "Campus",
+  "Community",
+] as const
+
+export type NewsCategory = (typeof newsCategories)[number]
+
+export type { NewsPost }
 
 /**
  * Every bulletin the site publishes, newest first. Hand-authored for now;
@@ -30,6 +25,8 @@ export const newsPosts: NewsPost[] = [
     slug: "research-team-places-second-regional-science-fair",
     category: "Achievement",
     publishedOn: "2026-08-12",
+    isPublished: true,
+    isFeatured: true,
     title: "GSHS research team places second in the regional science fair",
     excerpt:
       "Two Grade 10 learners took the silver for a low-cost water turbidity sensor built from salvaged parts.",
@@ -45,6 +42,8 @@ export const newsPosts: NewsPost[] = [
     slug: "class-suspension-guidelines-rainy-season",
     category: "Advisory",
     publishedOn: "2026-08-05",
+    isPublished: true,
+    isFeatured: false,
     title: "Class suspension guidelines for the rainy season",
     excerpt:
       "How announcements are released, and what learners and parents should check first.",
@@ -61,6 +60,8 @@ export const newsPosts: NewsPost[] = [
     slug: "entrance-examination-schedule-grade-7",
     category: "Admissions",
     publishedOn: "2026-07-28",
+    isPublished: true,
+    isFeatured: false,
     title: "Entrance examination schedule released for incoming Grade 7",
     excerpt:
       "Testing runs across three Saturdays in September. Slots are assigned by barangay cluster.",
@@ -76,6 +77,8 @@ export const newsPosts: NewsPost[] = [
     slug: "new-computer-laboratory-opens",
     category: "Campus",
     publishedOn: "2026-07-19",
+    isPublished: true,
+    isFeatured: false,
     title: "New computer laboratory opens with thirty workstations",
     excerpt:
       "Funded through the alumni association and the municipal government of Goa.",
@@ -91,6 +94,8 @@ export const newsPosts: NewsPost[] = [
     slug: "tracksters-sweep-district-meet",
     category: "Athletics",
     publishedOn: "2026-07-02",
+    isPublished: true,
+    isFeatured: false,
     title: "Tracksters sweep the district meet for the third straight year",
     excerpt:
       "Nine golds across sprints and distance events send eleven athletes to the provincials.",
@@ -106,6 +111,8 @@ export const newsPosts: NewsPost[] = [
     slug: "outreach-program-science-demos-barangays",
     category: "Community",
     publishedOn: "2026-06-21",
+    isPublished: true,
+    isFeatured: false,
     title: "Outreach program brings science demos to five barangays",
     excerpt:
       "Senior high students ran hands-on stations for elementary pupils over the semestral break.",
@@ -121,6 +128,8 @@ export const newsPosts: NewsPost[] = [
     slug: "senior-high-cluster-orientation-schedule",
     category: "Admissions",
     publishedOn: "2026-06-08",
+    isPublished: true,
+    isFeatured: false,
     title: "Elective cluster orientation set for incoming Grade 11 applicants",
     excerpt:
       "Academic Track faculty answer questions on the Strengthened SHS curriculum before slot confirmation closes.",
@@ -136,6 +145,8 @@ export const newsPosts: NewsPost[] = [
     slug: "library-extended-hours-research-season",
     category: "Campus",
     publishedOn: "2026-05-27",
+    isPublished: true,
+    isFeatured: false,
     title: "Library moves to extended hours for research season",
     excerpt:
       "Open until six in the evening on weekdays through the end of the research defence period.",
@@ -147,16 +158,6 @@ export const newsPosts: NewsPost[] = [
       "The center is also holding short citation clinics twice a week for research groups working through their reference lists.",
     ],
   },
-]
-
-/** Distinct categories in the order they should appear in the filter. */
-export const newsCategories: NewsCategory[] = [
-  "Achievement",
-  "Admissions",
-  "Advisory",
-  "Athletics",
-  "Campus",
-  "Community",
 ]
 
 const newsDateFormatter = new Intl.DateTimeFormat("en-GB", {
