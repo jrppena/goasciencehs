@@ -32,7 +32,10 @@ function Reveal({
       className={className}
       initial={{ opacity: 0, y: REVEAL_OFFSET_PX }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      // No `amount`: it's relative to the whole element, so tall blocks
+      // may never satisfy a fraction and never reveal. Default ("some")
+      // fires on any pixel intersecting.
+      viewport={{ once: true }}
       transition={{ duration: DURATION.base, ease: EASE_ATHLETIC, delay }}
     >
       {children}

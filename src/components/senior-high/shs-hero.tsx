@@ -1,6 +1,4 @@
 import { Badge } from "@/components/ui/badge"
-import { RevealGroup } from "@/components/motion/reveal-group"
-import { RevealItem } from "@/components/motion/reveal-item"
 
 /** Page header for Grades 11 and 12. Names the track before any detail. */
 function ShsHero() {
@@ -10,18 +8,20 @@ function ShsHero() {
         aria-hidden="true"
         className="speed-lines-bold speed-lines-drift-bold absolute inset-0 opacity-10"
       />
-      <RevealGroup className="page-gutter relative flex max-w-3xl flex-col gap-md py-xl">
-        <RevealItem>
+      {/* Above the fold: no reveal wrappers, so there's no server-rendered
+          opacity:0 blocking the header before JS hydrates. */}
+      <div className="page-gutter relative flex max-w-3xl flex-col gap-md py-xl">
+        <div>
           <Badge variant="active" className="w-fit">
             Grades 11 and 12
           </Badge>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             Senior High School
           </h1>
-        </RevealItem>
-        <RevealItem>
+        </div>
+        <div>
           <p className="text-body-lg text-primary-fixed">
             Goa Science High School offers the Academic Track of the Strengthened
             Senior High School curriculum. Every learner carries the same five
@@ -29,8 +29,8 @@ function ShsHero() {
             the school runs — STEM, Business and Entrepreneurship, and Field
             Experience.
           </p>
-        </RevealItem>
-      </RevealGroup>
+        </div>
+      </div>
     </section>
   )
 }
