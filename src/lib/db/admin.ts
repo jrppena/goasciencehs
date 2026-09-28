@@ -5,6 +5,14 @@ import { isValidObjectId } from "mongoose"
 import { connect } from "@/lib/db/connect"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
+import {
+  SchoolStatsModel,
+  type SchoolStats,
+} from "@/lib/db/models/school-stats"
+import {
+  SiteSettingsModel,
+  type SiteSettings,
+} from "@/lib/db/models/site-settings"
 
 /** A news document with a serialisable id, for admin lists and forms. */
 export type AdminNewsPost = NewsPost & { _id: string }
@@ -167,5 +175,40 @@ export async function setFacultyVisible(id: string, isVisible: boolean) {
     { _id: id },
     { $set: { isVisible } },
     { runValidators: true }
+  )
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function updateSiteSettings(input: SiteSettings) {
+  const settings = new SiteSettingsModel(input)
+  await settings.validate()
+
+  await connect()
+  await SiteSettingsModel.findOneAndUpdate(
+    {},
+    { $set: input },
+    { upsert: true, runValidators: true }
+  )
+}
+
+/**
+ * Stores the three school-supplied figures. `facultyAndStaff` is derived: it
+ * is recomputed from the visible faculty here so the stored value never lies.
+ */
+export async function updateSchoolStats(
+  input: Omit<SchoolStats, "facultyAndStaff">
+) {
+  const stats = new SchoolStatsModel({ ...input, facultyAndStaff: "0" })
+  await stats.validate()
+
+  await connect()
+  const facultyAndStaff = String(
+    await FacultyModel.countDocuments({ isVisible: true })
+  )
+
+  await SchoolStatsModel.findOneAndUpdate(
+    {},
+    { $set: { ...input, facultyAndStaff } },
+    { upsert: true, runValidators: true }
   )
 }

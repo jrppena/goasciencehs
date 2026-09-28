@@ -14,10 +14,18 @@ import {
   setNewsPublished,
   updateFaculty,
   updateNews,
+  updateSchoolStats,
+  updateSiteSettings,
 } from "@/lib/db/admin"
-import { getPublishedNews, getVisibleFaculty } from "@/lib/db/content"
+import {
+  getPublishedNews,
+  getSiteSettings,
+  getVisibleFaculty,
+} from "@/lib/db/content"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
+import { SchoolStatsModel } from "@/lib/db/models/school-stats"
+import { SiteSettingsModel } from "@/lib/db/models/site-settings"
 
 let connected = false
 
@@ -40,7 +48,12 @@ afterAll(async () => {
 
 beforeEach(async () => {
   if (connected) {
-    await Promise.all([NewsModel.deleteMany({}), FacultyModel.deleteMany({})])
+    await Promise.all([
+      NewsModel.deleteMany({}),
+      FacultyModel.deleteMany({}),
+      SiteSettingsModel.deleteMany({}),
+      SchoolStatsModel.deleteMany({}),
+    ])
   }
 })
 
@@ -176,5 +189,57 @@ describe("admin faculty operations", () => {
 
     await deleteFaculty(created._id)
     await expect(getAdminFacultyById(created._id)).resolves.toBeNull()
+  })
+})
+
+const settingsInput = {
+  name: "Goa Science High School",
+  shortName: "GSHS",
+  tagline: "Tagline",
+  description: "Description",
+  address: "Address",
+  phone: "+63 54 453 1234",
+  email: "info@goasciencehs.edu.ph",
+  socials: [{ label: "Facebook", href: "https://facebook.com" }],
+}
+
+describe("admin settings operations", () => {
+  it("upserts site settings and reads them back publicly", async (context) => {
+    if (!connected) return context.skip()
+
+    await updateSiteSettings(settingsInput)
+    await expect(getSiteSettings()).resolves.toMatchObject({
+      name: "Goa Science High School",
+      socials: [{ label: "Facebook", href: "https://facebook.com" }],
+    })
+
+    await updateSiteSettings({ ...settingsInput, name: "Renamed School" })
+
+    await expect(SiteSettingsModel.countDocuments({})).resolves.toBe(1)
+    await expect(getSiteSettings()).resolves.toMatchObject({
+      name: "Renamed School",
+    })
+  })
+
+  it("recomputes facultyAndStaff from visible faculty", async (context) => {
+    if (!connected) return context.skip()
+
+    await createFaculty({ ...facultyInput, name: "Visible One" })
+    await createFaculty({ ...facultyInput, name: "Visible Two" })
+    await createFaculty({
+      ...facultyInput,
+      name: "Hidden",
+      isVisible: false,
+    })
+
+    await updateSchoolStats({
+      learnersEnrolled: "1,240",
+      yearEstablished: "2015",
+      collegeProgressionRate: "97%",
+    })
+
+    const stored = await SchoolStatsModel.findOne({}).lean()
+    expect(stored?.facultyAndStaff).toBe("2")
+    await expect(SchoolStatsModel.countDocuments({})).resolves.toBe(1)
   })
 })
