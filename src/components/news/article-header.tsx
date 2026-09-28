@@ -2,8 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 
-import { formatNewsDate, type NewsPost } from "@/lib/news"
-import { Badge } from "@/components/ui/badge"
+import { ADVISORY_VERIFICATION_RULE, formatNewsDate, type NewsPost } from "@/lib/news"
+import { CategoryBadge } from "@/components/news/category-badge"
 
 /** Title block of a single bulletin: where you are, what it is, who wrote it. */
 function ArticleHeader({ post }: { post: NewsPost }) {
@@ -27,15 +27,26 @@ function ArticleHeader({ post }: { post: NewsPost }) {
           </Link>
         </div>
         <div>
-          <Badge variant="active" className="w-fit">
-            {post.category}
-          </Badge>
+          <CategoryBadge category={post.category} variant="active" />
         </div>
         <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             {post.title}
           </h1>
         </div>
+        {post.category === "Advisory" ? (
+          <aside
+            aria-label="Advisory verification"
+            className="flex flex-col gap-xs rounded-container bg-secondary-fixed p-sm text-on-secondary-fixed md:p-md"
+          >
+            {post.signatoryName && post.signatoryRole ? (
+              <p className="font-mono text-label-md uppercase">
+                Signed by: {post.signatoryName}, {post.signatoryRole}
+              </p>
+            ) : null}
+            <p className="text-body-md">{ADVISORY_VERIFICATION_RULE}</p>
+          </aside>
+        ) : null}
         <div>
           <p className="text-body-lg text-primary-fixed">{post.excerpt}</p>
         </div>

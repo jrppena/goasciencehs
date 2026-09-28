@@ -90,11 +90,18 @@ export async function createNews(input: NewsPost): Promise<AdminNewsPost> {
   return { ...post.toObject(), _id: String(post._id) }
 }
 
+/**
+ * Validates before connecting. Update validators run with query context, not
+ * document context, so a conditional `required` (see `requiredForAdvisory` in
+ * the News model) would otherwise be silently skipped on edit.
+ */
 export async function updateNews(
   id: string,
   input: NewsPost
 ): Promise<AdminNewsPost | null> {
   if (!isValidObjectId(id)) return null
+
+  await new NewsModel(input).validate()
 
   await connect()
   const post = await NewsModel.findByIdAndUpdate(

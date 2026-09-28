@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react"
 import Link from "next/link"
 
-import { newsCategories, slugify, type NewsPost } from "@/lib/news"
+import { newsCategories, signatoryRoles, slugify, type NewsPost } from "@/lib/news"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -151,6 +151,41 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             aria-invalid={state.fieldErrors?.author ? true : undefined}
           />
           <FieldError message={state.fieldErrors?.author} />
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <Label htmlFor="signatoryName">Signatory name</Label>
+          <Input
+            id="signatoryName"
+            name="signatoryName"
+            defaultValue={state.values?.signatoryName ?? post?.signatoryName ?? ""}
+            aria-invalid={state.fieldErrors?.signatoryName ? true : undefined}
+          />
+          <FieldError message={state.fieldErrors?.signatoryName} />
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <Label htmlFor="signatoryRole">Signatory role</Label>
+          <select
+            id="signatoryRole"
+            name="signatoryRole"
+            defaultValue={
+              state.values?.signatoryRole ?? post?.signatoryRole ?? ""
+            }
+            aria-invalid={state.fieldErrors?.signatoryRole ? true : undefined}
+            className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
+          >
+            <option value="">—</option>
+            {signatoryRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
+          <p className="text-body-sm text-muted-foreground">
+            Required for Advisory posts.
+          </p>
+          <FieldError message={state.fieldErrors?.signatoryRole} />
         </div>
 
         <fieldset className="flex flex-col gap-sm">

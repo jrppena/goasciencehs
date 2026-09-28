@@ -4,6 +4,8 @@ export type NewsValues = {
   category: string
   publishedOn: string
   author: string
+  signatoryName: string
+  signatoryRole: string
   excerpt: string
   body: string
   image: string

@@ -20,6 +20,8 @@ function newsForm(overrides: Record<string, string> = {}) {
   formData.set("publishedOn", "2026-01-01")
   formData.set("excerpt", "An excerpt.")
   formData.set("author", "Office of the Principal")
+  formData.set("signatoryName", "Ronald Enciso")
+  formData.set("signatoryRole", "Principal")
   formData.set("body", "First paragraph.\n\nSecond paragraph.")
 
   for (const [key, value] of Object.entries(overrides)) {
@@ -52,5 +54,17 @@ describe("createNewsAction", () => {
 
     expect(state.status).toBe("error")
     expect(state.fieldErrors).toHaveProperty("title")
+  })
+
+  it("requires a signatory for an Advisory post", async () => {
+    mockedRequireAdmin.mockResolvedValue({ email: "admin@example.com" })
+
+    const state = await createNewsAction(
+      initialNewsFormState,
+      newsForm({ signatoryName: "", signatoryRole: "" })
+    )
+
+    expect(state.fieldErrors).toHaveProperty("signatoryName")
+    expect(state.fieldErrors).toHaveProperty("signatoryRole")
   })
 })

@@ -69,6 +69,8 @@ beforeEach(async () => {
 const baseNews: Omit<NewsPost, "slug" | "category" | "publishedOn" | "title"> = {
   excerpt: "An excerpt.",
   author: "Office of the Principal",
+  signatoryName: "Ronald Enciso",
+  signatoryRole: "Principal",
   body: ["A paragraph."],
   isPublished: true,
   isFeatured: false,

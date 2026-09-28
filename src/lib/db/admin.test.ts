@@ -114,6 +114,8 @@ const input: NewsPost = {
   title: "A post",
   excerpt: "An excerpt.",
   author: "Office of the Principal",
+  signatoryName: "Ronald Enciso",
+  signatoryRole: "Principal",
   body: ["First paragraph."],
   isPublished: true,
   isFeatured: false,
@@ -181,6 +183,43 @@ describe("admin news operations", () => {
 
     await deleteNews(created._id)
     await expect(getAdminNewsById(created._id)).resolves.toBeNull()
+  })
+
+  it("rejects switching a post to Advisory without a signatory", async (context) => {
+    if (!connected) return context.skip()
+
+    const created = await createNews({
+      ...input,
+      slug: "not-yet-an-advisory",
+      category: "Campus",
+      signatoryName: null,
+      signatoryRole: null,
+    })
+
+    await expect(
+      updateNews(created._id, {
+        ...input,
+        slug: "not-yet-an-advisory",
+        category: "Advisory",
+        signatoryName: null,
+        signatoryRole: null,
+      })
+    ).rejects.toMatchObject({ name: "ValidationError" })
+  })
+
+  it("still toggles publish on a legacy unsigned Advisory", async (context) => {
+    if (!connected) return context.skip()
+
+    const legacy = await NewsModel.collection.insertOne({
+      ...input,
+      slug: "legacy-unsigned-advisory",
+      signatoryName: undefined,
+      signatoryRole: undefined,
+    })
+
+    await expect(
+      setNewsPublished(String(legacy.insertedId), false)
+    ).resolves.toBeUndefined()
   })
 })
 
