@@ -10,8 +10,8 @@ vi.mock("@/lib/auth/require-admin", () => ({
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }))
 vi.mock("next/navigation", () => ({ redirect: vi.fn() }))
 
-import { createNewsAction } from "@/app/admin/news/actions"
-import { initialNewsFormState } from "@/app/admin/news/form-state"
+import { createNewsAction } from "./actions"
+import { initialNewsFormState } from "./form-state"
 
 function newsForm(overrides: Record<string, string> = {}) {
   const formData = new FormData()
