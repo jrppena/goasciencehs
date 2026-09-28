@@ -5,27 +5,37 @@ import { connect } from "@/lib/db/connect"
 import {
   createFaculty,
   createNews,
+  createTestimonial,
   deleteFaculty,
   deleteNews,
+  deleteTestimonial,
   getAdminFacultyById,
   getAdminNewsById,
+  getAdminTestimonialById,
   setFacultyVisible,
   setNewsFeatured,
   setNewsPublished,
+  setTestimonialVisible,
   updateFaculty,
   updateNews,
   updateSchoolStats,
   updateSiteSettings,
+  updateTestimonial,
 } from "@/lib/db/admin"
 import {
   getPublishedNews,
   getSiteSettings,
   getVisibleFaculty,
+  getVisibleTestimonials,
 } from "@/lib/db/content"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
 import { SiteSettingsModel } from "@/lib/db/models/site-settings"
+import {
+  TestimonialModel,
+  type Testimonial,
+} from "@/lib/db/models/testimonial"
 
 let connected = false
 
@@ -53,6 +63,7 @@ beforeEach(async () => {
       FacultyModel.deleteMany({}),
       SiteSettingsModel.deleteMany({}),
       SchoolStatsModel.deleteMany({}),
+      TestimonialModel.deleteMany({}),
     ])
   }
 })
@@ -241,5 +252,48 @@ describe("admin settings operations", () => {
     const stored = await SchoolStatsModel.findOne({}).lean()
     expect(stored?.facultyAndStaff).toBe("2")
     await expect(SchoolStatsModel.countDocuments({})).resolves.toBe(1)
+  })
+})
+
+const testimonialInput: Testimonial = {
+  quote: "A quote from an alumna.",
+  name: "Alumna Name",
+  batch: "Batch 2016",
+  now: "Medical Technologist",
+  isVisible: true,
+  order: 1,
+}
+
+describe("admin testimonial operations", () => {
+  it("visibility toggle changes the public listing", async (context) => {
+    if (!connected) return context.skip()
+
+    const created = await createTestimonial(testimonialInput)
+
+    await setTestimonialVisible(created._id, false)
+    await expect(getVisibleTestimonials()).resolves.toEqual([])
+
+    await setTestimonialVisible(created._id, true)
+    await expect(getVisibleTestimonials()).resolves.toMatchObject([
+      { quote: "A quote from an alumna." },
+    ])
+  })
+
+  it("updates and deletes a testimonial", async (context) => {
+    if (!connected) return context.skip()
+
+    const created = await createTestimonial(testimonialInput)
+    const updated = await updateTestimonial(created._id, {
+      ...testimonialInput,
+      name: "Renamed Alumna",
+    })
+
+    expect(updated?.name).toBe("Renamed Alumna")
+    await expect(getAdminTestimonialById(created._id)).resolves.toMatchObject({
+      name: "Renamed Alumna",
+    })
+
+    await deleteTestimonial(created._id)
+    await expect(getAdminTestimonialById(created._id)).resolves.toBeNull()
   })
 })

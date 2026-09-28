@@ -9,6 +9,10 @@ import {
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel, type SchoolStats } from "@/lib/db/models/school-stats"
 import { SiteSettingsModel, type SiteSettings } from "@/lib/db/models/site-settings"
+import {
+  TestimonialModel,
+  type Testimonial,
+} from "@/lib/db/models/testimonial"
 import type { NewsCategory } from "@/lib/news"
 
 /**
@@ -57,6 +61,13 @@ export async function getVisibleFaculty(
   await connect()
   const filter = kind ? { isVisible: true, kind } : { isVisible: true }
   return FacultyModel.find(filter).sort({ order: 1 }).lean()
+}
+
+export async function getVisibleTestimonials(): Promise<Testimonial[]> {
+  await connect()
+  return TestimonialModel.find({ isVisible: true })
+    .sort({ order: 1, name: 1 })
+    .lean()
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

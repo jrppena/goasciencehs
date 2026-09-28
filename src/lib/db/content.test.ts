@@ -9,10 +9,12 @@ import {
   getRelatedNews,
   getSchoolStats,
   getVisibleFaculty,
+  getVisibleTestimonials,
 } from "@/lib/db/content"
 import { FacultyModel } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
+import { TestimonialModel } from "@/lib/db/models/testimonial"
 
 let connected = false
 
@@ -34,7 +36,11 @@ afterAll(async () => {
 
 beforeEach(async () => {
   if (!connected) return
-  await Promise.all([NewsModel.deleteMany({}), FacultyModel.deleteMany({})])
+  await Promise.all([
+    NewsModel.deleteMany({}),
+    FacultyModel.deleteMany({}),
+    TestimonialModel.deleteMany({}),
+  ])
 })
 
 const baseNews: Omit<NewsPost, "slug" | "category" | "publishedOn" | "title"> = {
@@ -144,6 +150,30 @@ describe("content layer", () => {
     const teaching = await getVisibleFaculty("teaching")
 
     expect(teaching.map((member) => member.name)).toEqual(["First", "Second", "Third"])
+  })
+
+  it("returns visible testimonials in order", async (context) => {
+    if (!connected) return context.skip()
+
+    await TestimonialModel.create([
+      { quote: "Third", name: "C", batch: "Batch 2020", now: "Now", order: 3 },
+      { quote: "First", name: "A", batch: "Batch 2016", now: "Now", order: 1 },
+      {
+        quote: "Hidden",
+        name: "B",
+        batch: "Batch 2018",
+        now: "Now",
+        isVisible: false,
+        order: 0,
+      },
+    ])
+
+    const visible = await getVisibleTestimonials()
+
+    expect(visible.map((testimonial) => testimonial.quote)).toEqual([
+      "First",
+      "Third",
+    ])
   })
 
   it("recomputes facultyAndStaff from visible faculty", async (context) => {
