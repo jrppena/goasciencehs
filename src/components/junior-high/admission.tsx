@@ -13,9 +13,6 @@ function Admission() {
       className="bg-surface-container-low"
     >
       <div className="flex flex-wrap gap-sm">
-        <Button render={<Link href="/faculty-and-staff#front-office" />}>
-          Talk to the Registrar
-        </Button>
         <Button
           variant="outline"
           render={

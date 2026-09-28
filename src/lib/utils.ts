@@ -33,3 +33,8 @@ const twMerge = extendTailwindMerge({
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+/** Builds a `tel:` href from a display phone number, stripping whitespace. */
+export function telHref(phone: string) {
+  return `tel:${phone.replace(/\s/g, "")}`
+}

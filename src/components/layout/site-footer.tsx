@@ -3,6 +3,7 @@ import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react"
 
 import { navigation } from "@/lib/navigation"
 import { getSiteSettings } from "@/lib/db/content"
+import { telHref } from "@/lib/utils"
 
 const contactItemClassName =
   "flex items-start gap-base text-body-md text-inverse-on-surface/80 transition-colors hover:text-inverse-on-surface"
@@ -52,7 +53,7 @@ async function SiteFooter() {
             <MapPinIcon className="mt-1 size-4 shrink-0" aria-hidden="true" />
             {site.address}
           </p>
-          <a href={`tel:${site.phone.replace(/\s/g, "")}`} className={contactItemClassName}>
+          <a href={telHref(site.phone)} className={contactItemClassName}>
             <PhoneIcon className="mt-1 size-4 shrink-0" aria-hidden="true" />
             {site.phone}
           </a>

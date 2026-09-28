@@ -1,9 +1,13 @@
-import Link from "next/link"
+import { MailIcon, PhoneIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/motion/reveal"
+import { getSiteSettings } from "@/lib/db/content"
+import { telHref } from "@/lib/utils"
 
-function CtaBand() {
+async function CtaBand() {
+  const site = await getSiteSettings()
+
   return (
     <section className="relative overflow-hidden bg-primary-container text-on-primary">
       <div
@@ -16,17 +20,21 @@ function CtaBand() {
             Ready to begin?
           </h2>
           <p className="text-body-lg text-primary-fixed">
-            Talk to the registrar about admission for incoming Grade 7 and
-            Grade 11, including requirements and schedules.
+            Call or email the school office to reach the registrar about
+            admission for incoming Grade 7 and Grade 11, including
+            requirements and schedules.
           </p>
         </div>
-        <Button
-          size="lg"
-          variant="accent"
-          render={<Link href="/faculty-and-staff#front-office" />}
-        >
-          Contact the Registrar
-        </Button>
+        <div className="flex flex-wrap gap-sm">
+          <Button size="lg" variant="accent" render={<a href={telHref(site.phone)} />}>
+            <PhoneIcon />
+            Call the Office
+          </Button>
+          <Button size="lg" variant="outline" render={<a href={`mailto:${site.email}`} />}>
+            <MailIcon />
+            Email the Office
+          </Button>
+        </div>
       </Reveal>
     </section>
   )
