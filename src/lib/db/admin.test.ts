@@ -3,14 +3,20 @@ import mongoose from "mongoose"
 
 import { connect } from "@/lib/db/connect"
 import {
+  createFaculty,
   createNews,
+  deleteFaculty,
   deleteNews,
+  getAdminFacultyById,
   getAdminNewsById,
+  setFacultyVisible,
   setNewsFeatured,
   setNewsPublished,
+  updateFaculty,
   updateNews,
 } from "@/lib/db/admin"
-import { getPublishedNews } from "@/lib/db/content"
+import { getPublishedNews, getVisibleFaculty } from "@/lib/db/content"
+import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 
 let connected = false
@@ -33,7 +39,9 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
-  if (connected) await NewsModel.deleteMany({})
+  if (connected) {
+    await Promise.all([NewsModel.deleteMany({}), FacultyModel.deleteMany({})])
+  }
 })
 
 const input: NewsPost = {
@@ -110,5 +118,63 @@ describe("admin news operations", () => {
 
     await deleteNews(created._id)
     await expect(getAdminNewsById(created._id)).resolves.toBeNull()
+  })
+})
+
+const facultyInput: FacultyMember = {
+  honorific: "Ma'am",
+  name: "Test Teacher",
+  position: null,
+  email: null,
+  room: null,
+  subjects: null,
+  photo: null,
+  kind: "teaching",
+  isVisible: true,
+  order: 1,
+}
+
+describe("admin faculty operations", () => {
+  it("visibility toggle changes the public listing", async (context) => {
+    if (!connected) return context.skip()
+
+    const member = await createFaculty(facultyInput)
+
+    await setFacultyVisible(member._id, false)
+    await expect(getVisibleFaculty()).resolves.toEqual([])
+
+    await setFacultyVisible(member._id, true)
+    await expect(getVisibleFaculty()).resolves.toMatchObject([
+      { name: "Test Teacher" },
+    ])
+  })
+
+  it("order controls the public display order", async (context) => {
+    if (!connected) return context.skip()
+
+    await createFaculty({ ...facultyInput, name: "Second", order: 2 })
+    await createFaculty({ ...facultyInput, name: "First", order: 1 })
+
+    const teaching = await getVisibleFaculty("teaching")
+
+    expect(teaching.map((member) => member.name)).toEqual(["First", "Second"])
+  })
+
+  it("updates and deletes a member", async (context) => {
+    if (!connected) return context.skip()
+
+    const created = await createFaculty(facultyInput)
+    const updated = await updateFaculty(created._id, {
+      ...facultyInput,
+      name: "Renamed Teacher",
+    })
+
+    expect(updated?.name).toBe("Renamed Teacher")
+    await expect(getAdminFacultyById(created._id)).resolves.toMatchObject({
+      name: "Renamed Teacher",
+    })
+
+    await deleteFaculty(created._id)
+    await expect(getAdminFacultyById(created._id)).resolves.toBeNull()
   })
 })
