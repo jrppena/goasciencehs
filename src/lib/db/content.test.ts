@@ -3,6 +3,8 @@ import mongoose from "mongoose"
 
 import { connect } from "@/lib/db/connect"
 import {
+  getAboutStory,
+  getCoreValues,
   getNewsByCategory,
   getNewsBySlug,
   getPublishedNews,
@@ -11,6 +13,8 @@ import {
   getVisibleFaculty,
   getVisibleTestimonials,
 } from "@/lib/db/content"
+import { AboutStoryModel } from "@/lib/db/models/about-story"
+import { CoreValueModel } from "@/lib/db/models/core-value"
 import { FacultyModel } from "@/lib/db/models/faculty"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import { SchoolStatsModel } from "@/lib/db/models/school-stats"
@@ -40,6 +44,8 @@ beforeEach(async () => {
     NewsModel.deleteMany({}),
     FacultyModel.deleteMany({}),
     TestimonialModel.deleteMany({}),
+    CoreValueModel.deleteMany({}),
+    AboutStoryModel.deleteMany({}),
   ])
 })
 
@@ -194,5 +200,32 @@ describe("content layer", () => {
     const stats = await getSchoolStats()
 
     expect(stats.facultyAndStaff).toBe("2")
+  })
+
+  it("returns core values in order", async (context) => {
+    if (!connected) return context.skip()
+
+    await CoreValueModel.create([
+      { title: "Second", body: "B", order: 2 },
+      { title: "First", body: "A", order: 1 },
+    ])
+
+    const values = await getCoreValues()
+
+    expect(values.map((value) => value.title)).toEqual(["First", "Second"])
+  })
+
+  it("returns the About story", async (context) => {
+    if (!connected) return context.skip()
+
+    await AboutStoryModel.create({
+      heading: "A heading",
+      paragraphs: ["One.", "Two."],
+    })
+
+    await expect(getAboutStory()).resolves.toMatchObject({
+      heading: "A heading",
+      paragraphs: ["One.", "Two."],
+    })
   })
 })

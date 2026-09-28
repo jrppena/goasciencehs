@@ -3,7 +3,14 @@ import "server-only"
 import { isValidObjectId } from "mongoose"
 
 import { connect } from "@/lib/db/connect"
+import { AboutStoryModel, type AboutStory } from "@/lib/db/models/about-story"
+import { CoreValueModel, type CoreValue } from "@/lib/db/models/core-value"
 import { FacultyModel, type FacultyMember } from "@/lib/db/models/faculty"
+import { MilestoneModel, type Milestone } from "@/lib/db/models/milestone"
+import {
+  MissionVisionModel,
+  type MissionVisionStatement,
+} from "@/lib/db/models/mission-vision"
 import { NewsModel, type NewsPost } from "@/lib/db/models/news"
 import {
   SchoolStatsModel,
@@ -287,5 +294,168 @@ export async function setTestimonialVisible(id: string, isVisible: boolean) {
     { _id: id },
     { $set: { isVisible } },
     { runValidators: true }
+  )
+}
+
+/** An About list entry with a serialisable id, for admin lists and forms. */
+type WithId<T> = T & { _id: string }
+
+function withId<T extends { _id: unknown }>(document: T): WithId<T> {
+  return { ...document, _id: String(document._id) }
+}
+
+export type AdminCoreValue = WithId<CoreValue>
+
+export async function getAdminCoreValues(): Promise<AdminCoreValue[]> {
+  await connect()
+  const values = await CoreValueModel.find({}).sort({ order: 1, title: 1 }).lean()
+  return values.map(withId)
+}
+
+export async function getAdminCoreValueById(
+  id: string
+): Promise<AdminCoreValue | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const value = await CoreValueModel.findById(id).lean()
+  return value ? withId(value) : null
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function createCoreValue(input: CoreValue) {
+  const value = new CoreValueModel(input)
+  await value.validate()
+
+  await connect()
+  await value.save()
+}
+
+export async function updateCoreValue(id: string, input: CoreValue) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await CoreValueModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteCoreValue(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await CoreValueModel.findByIdAndDelete(id)
+}
+
+export type AdminMilestone = WithId<Milestone>
+
+export async function getAdminMilestones(): Promise<AdminMilestone[]> {
+  await connect()
+  const milestones = await MilestoneModel.find({})
+    .sort({ order: 1, year: 1 })
+    .lean()
+  return milestones.map(withId)
+}
+
+export async function getAdminMilestoneById(
+  id: string
+): Promise<AdminMilestone | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const milestone = await MilestoneModel.findById(id).lean()
+  return milestone ? withId(milestone) : null
+}
+
+export async function createMilestone(input: Milestone) {
+  const milestone = new MilestoneModel(input)
+  await milestone.validate()
+
+  await connect()
+  await milestone.save()
+}
+
+export async function updateMilestone(id: string, input: Milestone) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await MilestoneModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteMilestone(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await MilestoneModel.findByIdAndDelete(id)
+}
+
+export type AdminMissionVision = WithId<MissionVisionStatement>
+
+export async function getAdminMissionVision(): Promise<AdminMissionVision[]> {
+  await connect()
+  const statements = await MissionVisionModel.find({})
+    .sort({ order: 1, label: 1 })
+    .lean()
+  return statements.map(withId)
+}
+
+export async function getAdminMissionVisionById(
+  id: string
+): Promise<AdminMissionVision | null> {
+  if (!isValidObjectId(id)) return null
+
+  await connect()
+  const statement = await MissionVisionModel.findById(id).lean()
+  return statement ? withId(statement) : null
+}
+
+export async function createMissionVision(input: MissionVisionStatement) {
+  const statement = new MissionVisionModel(input)
+  await statement.validate()
+
+  await connect()
+  await statement.save()
+}
+
+export async function updateMissionVision(
+  id: string,
+  input: MissionVisionStatement
+) {
+  if (!isValidObjectId(id)) return false
+
+  await connect()
+  const result = await MissionVisionModel.updateOne(
+    { _id: id },
+    { $set: input },
+    { runValidators: true }
+  )
+  return result.matchedCount > 0
+}
+
+export async function deleteMissionVision(id: string) {
+  if (!isValidObjectId(id)) return
+
+  await connect()
+  await MissionVisionModel.findByIdAndDelete(id)
+}
+
+/** Validates before connecting, so bad input never opens a database connection. */
+export async function updateAboutStory(input: AboutStory) {
+  const story = new AboutStoryModel(input)
+  await story.validate()
+
+  await connect()
+  await AboutStoryModel.updateOne(
+    {},
+    { $set: input },
+    { upsert: true, runValidators: true }
   )
 }

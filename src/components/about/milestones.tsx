@@ -1,26 +1,12 @@
+import { getMilestones } from "@/lib/db/content"
 import { Section } from "@/components/home/section"
 import { RevealGroup } from "@/components/motion/reveal-group"
 import { RevealItem } from "@/components/motion/reveal-item"
 
-const milestones = [
-  {
-    year: "2015",
-    title: "The school is established",
-    body: "Local stakeholders open GSHS so learners who miss the Philippine Science High School cut-off can still take a science curriculum without leaving Goa. Classes begin in a temporary campus at the ABC Building along Belen Street.",
-  },
-  {
-    year: "2017",
-    title: "Relocation to the permanent campus",
-    body: "The school moves to its own grounds in Tagongtong, Goa — room at last for dedicated laboratories and a full six year levels.",
-  },
-  {
-    year: "2026",
-    title: "Six year levels on one campus",
-    body: "Junior high and senior high now run at Tagongtong, from Grade 7 through Grade 12.",
-  },
-]
+async function Milestones() {
+  const milestones = await getMilestones()
+  if (milestones.length === 0) return null
 
-function Milestones() {
   return (
     <Section
       eyebrow="History"
