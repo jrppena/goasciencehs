@@ -3,6 +3,7 @@
 import { motion, stagger } from "motion/react"
 
 import { STAGGER_SECONDS } from "@/lib/motion"
+import { useRevealControls } from "@/components/motion/use-reveal-controls"
 
 /**
  * The group animates nothing itself; it exists to hand its RevealItem children
@@ -26,11 +27,17 @@ function RevealGroup({
   children: React.ReactNode
 }) {
   const Component = motion[as]
+  const { ref, controls } = useRevealControls()
 
   return (
     <Component
+      // `Component` is a dynamic `motion[as]`, so its ref type is an
+      // intersection across every possible element — no single ref
+      // satisfies it structurally, though `ref` is always an HTMLElement.
+      ref={ref as never}
       className={className}
-      initial="hidden"
+      initial={false}
+      animate={controls}
       whileInView="visible"
       // No `amount`: it's relative to the whole element, so on tall
       // content (e.g. long grids) the viewport can never satisfy a

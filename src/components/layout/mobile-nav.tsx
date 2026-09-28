@@ -23,7 +23,7 @@ function MobileNav({ shortName }: { shortName: string }) {
     <Drawer swipeDirection="right">
       <DrawerTrigger
         render={
-          <Button variant="ghost" size="icon" aria-label="Open menu">
+          <Button variant="ghost" size="icon-lg" aria-label="Open menu">
             <MenuIcon />
           </Button>
         }
@@ -33,7 +33,7 @@ function MobileNav({ shortName }: { shortName: string }) {
           <DrawerTitle>{shortName}</DrawerTitle>
           <DrawerClose
             render={
-              <Button variant="ghost" size="icon" aria-label="Close menu">
+              <Button variant="ghost" size="icon-lg" aria-label="Close menu">
                 <XIcon />
               </Button>
             }
