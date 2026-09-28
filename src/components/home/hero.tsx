@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { getSiteSettings } from "@/lib/db/content"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 async function Hero() {
@@ -32,11 +31,6 @@ async function Hero() {
           would leave the hero blank until JS hydrates. */}
       <div className="page-gutter relative flex min-h-[32rem] max-w-3xl flex-col justify-center gap-md py-xl">
         <div>
-          <Badge variant="active" className="w-fit whitespace-normal">
-            Admissions open for S.Y. 2026–2027
-          </Badge>
-        </div>
-        <div>
           <h1 className="text-headline-lg-mobile uppercase md:text-headline-lg xl:text-display-lg">
             Science, discipline, and a place to belong
           </h1>
@@ -52,9 +46,9 @@ async function Hero() {
           <Button
             size="lg"
             variant="accent"
-            render={<Link href="/academics/junior-high-school" />}
+            render={<Link href="/academics/junior-high-school#admission" />}
           >
-            Explore Academics
+            Admission Details
           </Button>
           <Button
             size="lg"

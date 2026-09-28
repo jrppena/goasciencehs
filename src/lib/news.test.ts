@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { advisoryWindow } from "@/lib/news"
+import { advisoryWindow, slugify } from "@/lib/news"
 
 describe("advisoryWindow", () => {
   it("anchors to the Asia/Manila calendar date, not UTC", () => {
@@ -19,5 +19,17 @@ describe("advisoryWindow", () => {
 
   it("rolls the window across a year boundary", () => {
     expect(advisoryWindow(new Date("2027-01-01T01:00:00Z")).since).toBe("2026-12-30")
+  })
+})
+
+describe("slugify", () => {
+  it("produces distinct ids for the seed elective cluster names", () => {
+    expect(slugify("Science, Technology, Engineering and Mathematics")).toBe(
+      "science-technology-engineering-and-mathematics"
+    )
+    expect(slugify("Business and Entrepreneurship")).toBe(
+      "business-and-entrepreneurship"
+    )
+    expect(slugify("Field Experience")).toBe("field-experience")
   })
 })
