@@ -1,9 +1,10 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 
 import type { SchoolStats } from "@/lib/db/models/school-stats"
 import { FormField } from "@/components/admin/form-field"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -15,9 +16,16 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
     updateSchoolStatsAction,
     initialStatsFormState
   )
+  const [dirty, setDirty] = useState(false)
+
+  useUnsavedChanges(dirty)
 
   return (
-    <form action={formAction} className="flex flex-col gap-md">
+    <form
+      action={formAction}
+      onChange={() => setDirty(true)}
+      className="flex flex-col gap-md"
+    >
       <Card>
         <CardHeader>
           <CardTitle>

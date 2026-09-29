@@ -5,6 +5,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ComponentProps,
@@ -69,4 +70,37 @@ function GuardedLink({ onNavigate, ...props }: ComponentProps<typeof Link>) {
   )
 }
 
-export { GuardedLink, NavigationGuardProvider, useNavigationGuard }
+/**
+ * Shared unsaved-work guard for admin editors: marks in-app navigation as
+ * blocked while the form is dirty and warns before a reload or tab close.
+ */
+function useUnsavedChanges(dirty: boolean) {
+  const guard = useNavigationGuard()
+  const setIsBlocked = guard?.setIsBlocked
+
+  useEffect(() => {
+    if (!setIsBlocked) return
+
+    setIsBlocked(dirty)
+    return () => setIsBlocked(false)
+  }, [dirty, setIsBlocked])
+
+  useEffect(() => {
+    if (!dirty) return
+
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault()
+      event.returnValue = ""
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload)
+  }, [dirty])
+}
+
+export {
+  GuardedLink,
+  NavigationGuardProvider,
+  useNavigationGuard,
+  useUnsavedChanges,
+}

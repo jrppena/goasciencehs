@@ -1,10 +1,11 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import Link from "next/link"
 
 import type { Testimonial } from "@/lib/testimonials"
 import { FormField } from "@/components/admin/form-field"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -20,10 +21,14 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
     testimonial ? updateTestimonialAction : createTestimonialAction,
     initialTestimonialFormState
   )
+  const [dirty, setDirty] = useState(false)
+
+  useUnsavedChanges(dirty)
 
   return (
     <form
       action={formAction}
+      onChange={() => setDirty(true)}
       className="grid items-start gap-lg xl:grid-cols-[minmax(0,1fr)_22rem]"
     >
       {testimonial ? (

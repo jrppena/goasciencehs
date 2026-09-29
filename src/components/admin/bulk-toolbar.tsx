@@ -119,7 +119,11 @@ function BulkToolbar({
           status?.error ? "text-error" : "text-muted-foreground"
         )}
       >
-        {hasSelection ? `${count} selected` : (status?.text ?? "")}
+        {status?.error
+          ? status.text
+          : hasSelection
+            ? `${count} selected`
+            : (status?.text ?? "")}
       </p>
 
       <div className="ml-auto flex flex-wrap items-center gap-xs">
@@ -171,7 +175,8 @@ function BulkToolbar({
               size="sm"
               onClick={() => {
                 clear()
-                statusRef.current?.focus()
+                setStatus(null)
+                selectAllRef.current?.focus()
               }}
             >
               Clear selection

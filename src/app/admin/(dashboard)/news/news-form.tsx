@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useState } from "react"
 import { ExternalLinkIcon } from "lucide-react"
 
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/lib/news"
 import {
   GuardedLink,
-  useNavigationGuard,
+  useUnsavedChanges,
 } from "@/components/admin/navigation-guard"
 import { FormField, Select } from "@/components/admin/form-field"
 import { ImageUpload } from "@/components/admin/image-upload"
@@ -45,8 +45,7 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
   const [dirty, setDirty] = useState(false)
   const [submitting, setSubmitting] = useState<SubmitIntent | null>(null)
 
-  const guard = useNavigationGuard()
-  const setIsBlocked = guard?.setIsBlocked
+  useUnsavedChanges(dirty)
 
   const isAdvisory = category === "Advisory"
   const published = post?.isPublished ?? false
@@ -58,27 +57,6 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
     setTitle(value)
     if (!slugEdited) setSlug(slugify(value))
   }
-
-  // A reload or tab close would discard unsaved work.
-  useEffect(() => {
-    if (!dirty) return
-
-    function handleBeforeUnload(event: BeforeUnloadEvent) {
-      event.preventDefault()
-      event.returnValue = ""
-    }
-
-    window.addEventListener("beforeunload", handleBeforeUnload)
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload)
-  }, [dirty])
-
-  // In-app navigation through the shell asks first, too.
-  useEffect(() => {
-    if (!setIsBlocked) return
-
-    setIsBlocked(dirty)
-    return () => setIsBlocked(false)
-  }, [dirty, setIsBlocked])
 
   return (
     <form

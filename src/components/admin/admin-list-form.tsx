@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useActionState, useState } from "react"
 
 import { FormField, Select } from "@/components/admin/form-field"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -73,6 +74,9 @@ function AdminListForm<S extends AdminListFormState>({
   const [listValues, setListValues] = useState<Record<string, string[]>>(() =>
     initialRows(fields, values)
   )
+  const [dirty, setDirty] = useState(false)
+
+  useUnsavedChanges(dirty)
 
   function updateRow(field: string, index: number, value: string) {
     setListValues((current) => {
@@ -97,7 +101,11 @@ function AdminListForm<S extends AdminListFormState>({
   }
 
   return (
-    <form action={formAction} className="grid gap-md md:grid-cols-2">
+    <form
+      action={formAction}
+      onChange={() => setDirty(true)}
+      className="grid gap-md md:grid-cols-2"
+    >
       {hiddenId ? <input type="hidden" name="id" value={hiddenId} /> : null}
 
       {fields.map((field) => {

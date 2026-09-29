@@ -1,9 +1,10 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 
 import type { AcademicsSettings } from "@/lib/db/models/academics-settings"
 import { FormField } from "@/components/admin/form-field"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { initialAcademicsListFormState } from "./list-form-state"
@@ -14,12 +15,19 @@ function CoreSubjectHoursForm({ settings }: { settings: AcademicsSettings }) {
     updateAcademicsSettingsAction,
     initialAcademicsListFormState
   )
+  const [dirty, setDirty] = useState(false)
   const echoed = state.values?.coreSubjectHours
   const defaultValue =
     typeof echoed === "string" ? echoed : String(settings.coreSubjectHours)
 
+  useUnsavedChanges(dirty)
+
   return (
-    <form action={formAction} className="grid gap-md md:grid-cols-2">
+    <form
+      action={formAction}
+      onChange={() => setDirty(true)}
+      className="grid gap-md md:grid-cols-2"
+    >
       <FormField
         name="coreSubjectHours"
         label="Core subject hours"

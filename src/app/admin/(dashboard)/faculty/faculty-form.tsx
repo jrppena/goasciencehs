@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import Link from "next/link"
 
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/lib/faculty"
 import { FormField, Select } from "@/components/admin/form-field"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -29,10 +30,14 @@ function FacultyForm({ member }: FacultyFormProps) {
     member ? updateFacultyAction : createFacultyAction,
     initialFacultyFormState
   )
+  const [dirty, setDirty] = useState(false)
+
+  useUnsavedChanges(dirty)
 
   return (
     <form
       action={formAction}
+      onChange={() => setDirty(true)}
       className="grid items-start gap-lg xl:grid-cols-[minmax(0,1fr)_22rem]"
     >
       {member ? <input type="hidden" name="id" value={member._id} /> : null}

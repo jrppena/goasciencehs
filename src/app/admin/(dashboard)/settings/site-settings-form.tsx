@@ -4,6 +4,7 @@ import { useActionState, useState } from "react"
 
 import type { SiteSettings } from "@/lib/db/models/site-settings"
 import { FormField } from "@/components/admin/form-field"
+import { useUnsavedChanges } from "@/components/admin/navigation-guard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,6 +20,9 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
     initialSettingsFormState
   )
   const [socials, setSocials] = useState<SocialLink[]>(settings.socials)
+  const [dirty, setDirty] = useState(false)
+
+  useUnsavedChanges(dirty)
 
   function updateSocial(index: number, patch: Partial<SocialLink>) {
     setSocials((current) =>
@@ -27,7 +31,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-md">
+    <form
+      action={formAction}
+      onChange={() => setDirty(true)}
+      className="flex flex-col gap-md"
+    >
       <Card>
         <CardHeader>
           <CardTitle>
