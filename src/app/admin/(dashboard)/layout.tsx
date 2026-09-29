@@ -1,7 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
-import { requireAdmin } from "@/lib/auth/require-admin"
+import { auth } from "@/lib/auth"
 import { AdminNav } from "@/components/admin/admin-nav"
 import { Button } from "@/components/ui/button"
 import { signOutAction } from "@/app/admin/actions"
@@ -11,10 +12,21 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const admin = await requireAdmin()
+  const session = await auth()
+
+  if (!session?.user) redirect("/admin/login")
+
+  const admin = session.user
 
   return (
     <div className="flex min-h-svh flex-col bg-surface-container-low">
+      <a
+        href="#main"
+        className="sr-only rounded-control bg-primary px-md py-base font-display text-button uppercase text-on-primary focus:not-sr-only focus:absolute focus:top-base focus:left-base focus:z-50"
+      >
+        Skip to content
+      </a>
+
       <header className="border-b bg-card">
         <div className="flex h-16 items-center justify-between gap-md px-md">
           <Link href="/admin" className="flex items-center gap-sm">

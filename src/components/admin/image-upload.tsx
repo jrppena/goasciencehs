@@ -4,6 +4,7 @@ import { useRef, useState } from "react"
 import Image from "next/image"
 
 import { uploadImageAction } from "@/app/admin/upload-action"
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -66,6 +67,11 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
             name={name}
             value={url}
             onChange={(event) => setUrl(event.target.value)}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy(
+              `${name}-hint`,
+              error && `${name}-error`
+            )}
             placeholder="/photo.png or https://res.cloudinary.com/…"
           />
           <div className="flex items-center gap-sm">
@@ -96,10 +102,14 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
               </Button>
             ) : null}
           </div>
-          <p className="text-body-sm text-muted-foreground">
+          <p id={`${name}-hint`} className="text-body-sm text-muted-foreground">
             {hint ?? "Uploads go to Cloudinary. Images up to 5 MB."}
           </p>
-          {error ? <p className="text-body-sm text-error">{error}</p> : null}
+          {error ? (
+            <p id={`${name}-error`} className="text-body-sm text-error">
+              {error}
+            </p>
+          ) : null}
         </div>
       </div>
     </div>

@@ -51,16 +51,90 @@ export type AdminNewsPost = NewsPost & { _id: string }
 export async function getAdminCounts() {
   await connect()
 
-  const [news, publishedNews, faculty, visibleFaculty] = await Promise.all([
+  const [
+    news,
+    publishedNews,
+    drafts,
+    latestAdvisory,
+    faculty,
+    visibleFaculty,
+    testimonials,
+    visibleTestimonials,
+    coreValues,
+    milestones,
+    missionVision,
+    story,
+    learningAreas,
+    scienceProgramLevels,
+    matatagSteps,
+    coreSubjects,
+    electiveClusters,
+    curriculumShiftSteps,
+    siteSettings,
+  ] = await Promise.all([
     NewsModel.countDocuments({}),
     NewsModel.countDocuments({ isPublished: true }),
+    NewsModel.countDocuments({ isPublished: false }),
+    NewsModel.findOne({ category: "Advisory" })
+      .sort({ publishedOn: -1 })
+      .select({ title: 1, publishedOn: 1, isPublished: 1 })
+      .lean(),
     FacultyModel.countDocuments({}),
     FacultyModel.countDocuments({ isVisible: true }),
+    TestimonialModel.countDocuments({}),
+    TestimonialModel.countDocuments({ isVisible: true }),
+    CoreValueModel.countDocuments({}),
+    MilestoneModel.countDocuments({}),
+    MissionVisionModel.countDocuments({}),
+    AboutStoryModel.exists({}),
+    LearningAreaModel.countDocuments({}),
+    ScienceProgramLevelModel.countDocuments({}),
+    MatatagStepModel.countDocuments({}),
+    CoreSubjectModel.countDocuments({}),
+    ElectiveClusterModel.countDocuments({}),
+    CurriculumShiftStepModel.countDocuments({}),
+    SiteSettingsModel.exists({}),
   ])
 
   return {
-    news: { total: news, published: publishedNews },
+    news: {
+      total: news,
+      published: publishedNews,
+      drafts,
+      latestAdvisory: latestAdvisory
+        ? {
+            id: String(latestAdvisory._id),
+            title: latestAdvisory.title,
+            publishedOn: latestAdvisory.publishedOn,
+            isPublished: latestAdvisory.isPublished,
+          }
+        : null,
+    },
     faculty: { total: faculty, visible: visibleFaculty },
+    testimonials: { total: testimonials, visible: visibleTestimonials },
+    about: {
+      coreValues,
+      milestones,
+      missionVision,
+      story: story !== null,
+      entries: coreValues + milestones + missionVision,
+    },
+    academics: {
+      learningAreas,
+      scienceProgramLevels,
+      matatagSteps,
+      coreSubjects,
+      electiveClusters,
+      curriculumShiftSteps,
+      entries:
+        learningAreas +
+        scienceProgramLevels +
+        matatagSteps +
+        coreSubjects +
+        electiveClusters +
+        curriculumShiftSteps,
+    },
+    settings: { stored: siteSettings !== null },
   }
 }
 

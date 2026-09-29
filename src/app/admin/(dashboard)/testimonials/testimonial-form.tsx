@@ -4,6 +4,7 @@ import { useActionState } from "react"
 import Link from "next/link"
 
 import type { Testimonial } from "@/lib/testimonials"
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -39,8 +40,11 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
             rows={5}
             defaultValue={state.values?.quote ?? testimonial?.quote ?? ""}
             aria-invalid={state.fieldErrors?.quote ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.quote && "quote-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.quote} />
+          <FieldError id="quote-error" message={state.fieldErrors?.quote} />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -50,8 +54,11 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
             name="name"
             defaultValue={state.values?.name ?? testimonial?.name ?? ""}
             aria-invalid={state.fieldErrors?.name ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.name && "name-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.name} />
+          <FieldError id="name-error" message={state.fieldErrors?.name} />
         </div>
 
         <div className="grid gap-md sm:grid-cols-2">
@@ -62,8 +69,11 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
               name="batch"
               defaultValue={state.values?.batch ?? testimonial?.batch ?? ""}
               aria-invalid={state.fieldErrors?.batch ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.batch && "batch-error"
+              )}
             />
-            <FieldError message={state.fieldErrors?.batch} />
+            <FieldError id="batch-error" message={state.fieldErrors?.batch} />
           </div>
 
           <div className="flex flex-col gap-xs">
@@ -73,8 +83,11 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
               name="now"
               defaultValue={state.values?.now ?? testimonial?.now ?? ""}
               aria-invalid={state.fieldErrors?.now ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.now && "now-error"
+              )}
             />
-            <FieldError message={state.fieldErrors?.now} />
+            <FieldError id="now-error" message={state.fieldErrors?.now} />
           </div>
         </div>
       </div>
@@ -92,11 +105,15 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
             type="number"
             defaultValue={state.values?.order ?? String(testimonial?.order ?? 0)}
             aria-invalid={state.fieldErrors?.order ? true : undefined}
+            aria-describedby={describedBy(
+              "order-hint",
+              state.fieldErrors?.order && "order-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="order-hint" className="text-body-sm text-muted-foreground">
             Lower numbers appear first.
           </p>
-          <FieldError message={state.fieldErrors?.order} />
+          <FieldError id="order-error" message={state.fieldErrors?.order} />
         </div>
 
         <label className="flex items-center gap-xs text-body-md">
@@ -135,10 +152,14 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
   )
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
 
-  return <p className="text-body-sm text-error">{message}</p>
+  return (
+    <p id={id} className="text-body-sm text-error">
+      {message}
+    </p>
+  )
 }
 
 export { TestimonialForm }
