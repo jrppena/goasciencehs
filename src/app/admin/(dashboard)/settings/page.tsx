@@ -29,19 +29,9 @@ export default async function AdminSettingsPage() {
         </p>
       </header>
 
-      <section className="flex flex-col gap-sm">
-        <h2 className="font-display text-headline-md uppercase text-primary">
-          Site identity
-        </h2>
-        <SiteSettingsForm settings={settings} />
-      </section>
+      <SiteSettingsForm settings={settings} />
 
-      <section className="flex flex-col gap-sm">
-        <h2 className="font-display text-headline-md uppercase text-primary">
-          School stats
-        </h2>
-        <SchoolStatsForm stats={stats} />
-      </section>
+      <SchoolStatsForm stats={stats} />
     </div>
   )
 }

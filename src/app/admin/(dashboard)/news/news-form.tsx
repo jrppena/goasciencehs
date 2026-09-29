@@ -1,7 +1,6 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import Link from "next/link"
 import { ExternalLinkIcon } from "lucide-react"
 
 import {
@@ -11,11 +10,15 @@ import {
   type NewsCategory,
   type NewsPost,
 } from "@/lib/news"
-import { describedBy } from "@/lib/utils"
+import {
+  GuardedLink,
+  useUnsavedChanges,
+} from "@/components/admin/navigation-guard"
+import { FormField, Select } from "@/components/admin/form-field"
 import { ImageUpload } from "@/components/admin/image-upload"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createNewsAction, updateNewsAction } from "./actions"
 import { initialNewsFormState } from "./form-state"
@@ -24,6 +27,8 @@ type NewsFormProps = {
   post?: NewsPost & { _id: string }
   defaultPublishedOn: string
 }
+
+type SubmitIntent = "save" | "publish" | "unpublish"
 
 function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
   const [state, formAction, pending] = useActionState(
@@ -37,8 +42,16 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
   const [category, setCategory] = useState<NewsCategory>(
     post?.category ?? "Achievement"
   )
+  const [dirty, setDirty] = useState(false)
+  const [submitting, setSubmitting] = useState<SubmitIntent | null>(null)
+
+  useUnsavedChanges(dirty)
 
   const isAdvisory = category === "Advisory"
+  const published = post?.isPublished ?? false
+  const publishIntent: SubmitIntent = published ? "unpublish" : "publish"
+  const primaryLabel = post ? "Save changes" : "Save draft"
+  const publishLabel = published ? "Unpublish" : "Publish"
 
   function handleTitleChange(value: string) {
     setTitle(value)
@@ -48,62 +61,58 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
   return (
     <form
       action={formAction}
+      onChange={() => setDirty(true)}
       className="grid items-start gap-lg xl:grid-cols-[minmax(0,1fr)_22rem]"
     >
       {post ? <input type="hidden" name="id" value={post._id} /> : null}
+      <input
+        type="hidden"
+        name="published"
+        value={published ? "on" : "off"}
+      />
 
       <div className="flex flex-col gap-md">
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            name="title"
-            value={title}
-            onChange={(event) => handleTitleChange(event.target.value)}
-            aria-invalid={state.fieldErrors?.title ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.title && "title-error"
-            )}
-          />
-          <FieldError id="title-error" message={state.fieldErrors?.title} />
-        </div>
+        <FormField name="title" label="Title" error={state.fieldErrors?.title}>
+          {(control) => (
+            <Input
+              {...control}
+              value={title}
+              onChange={(event) => handleTitleChange(event.target.value)}
+            />
+          )}
+        </FormField>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="slug">Slug</Label>
-          <Input
-            id="slug"
-            name="slug"
-            value={slug}
-            onChange={(event) => {
-              setSlug(event.target.value)
-              setSlugEdited(true)
-            }}
-            aria-invalid={state.fieldErrors?.slug ? true : undefined}
-            aria-describedby={describedBy(
-              "slug-hint",
-              state.fieldErrors?.slug && "slug-error"
-            )}
-          />
-          <p id="slug-hint" className="text-body-sm text-muted-foreground">
-            The URL segment under /about/news-and-announcements.
-          </p>
-          <FieldError id="slug-error" message={state.fieldErrors?.slug} />
-        </div>
+        <FormField
+          name="slug"
+          label="Slug"
+          hint="The URL segment under /about/news-and-announcements."
+          error={state.fieldErrors?.slug}
+        >
+          {(control) => (
+            <Input
+              {...control}
+              value={slug}
+              onChange={(event) => {
+                setSlug(event.target.value)
+                setSlugEdited(true)
+              }}
+            />
+          )}
+        </FormField>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="excerpt">Excerpt</Label>
-          <Textarea
-            id="excerpt"
-            name="excerpt"
-            rows={3}
-            defaultValue={state.values?.excerpt ?? post?.excerpt ?? ""}
-            aria-invalid={state.fieldErrors?.excerpt ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.excerpt && "excerpt-error"
-            )}
-          />
-          <FieldError id="excerpt-error" message={state.fieldErrors?.excerpt} />
-        </div>
+        <FormField
+          name="excerpt"
+          label="Excerpt"
+          error={state.fieldErrors?.excerpt}
+        >
+          {(control) => (
+            <Textarea
+              {...control}
+              rows={3}
+              defaultValue={state.values?.excerpt ?? post?.excerpt ?? ""}
+            />
+          )}
+        </FormField>
 
         <ImageUpload
           name="image"
@@ -112,24 +121,20 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
           hint="Shown on the article page. Uploads go to Cloudinary; images up to 5 MB."
         />
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="body">Body</Label>
-          <Textarea
-            id="body"
-            name="body"
-            rows={16}
-            defaultValue={state.values?.body ?? post?.body.join("\n\n") ?? ""}
-            aria-invalid={state.fieldErrors?.body ? true : undefined}
-            aria-describedby={describedBy(
-              "body-hint",
-              state.fieldErrors?.body && "body-error"
-            )}
-          />
-          <p id="body-hint" className="text-body-sm text-muted-foreground">
-            Separate paragraphs with a blank line.
-          </p>
-          <FieldError id="body-error" message={state.fieldErrors?.body} />
-        </div>
+        <FormField
+          name="body"
+          label="Body"
+          hint="Separate paragraphs with a blank line."
+          error={state.fieldErrors?.body}
+        >
+          {(control) => (
+            <Textarea
+              {...control}
+              rows={16}
+              defaultValue={state.values?.body ?? post?.body.join("\n\n") ?? ""}
+            />
+          )}
+        </FormField>
       </div>
 
       <aside className="flex flex-col gap-md rounded-container border border-border bg-card p-md">
@@ -137,135 +142,114 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
           Publishing
         </span>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="category">Category</Label>
-          <select
-            id="category"
-            name="category"
-            value={category}
-            onChange={(event) =>
-              setCategory(event.target.value as NewsCategory)
-            }
-            aria-invalid={state.fieldErrors?.category ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.category && "category-error"
-            )}
-            className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
-          >
-            {newsCategories.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <FieldError id="category-error" message={state.fieldErrors?.category} />
-        </div>
+        <FormField
+          name="category"
+          label="Category"
+          error={state.fieldErrors?.category}
+        >
+          {(control) => (
+            <Select
+              {...control}
+              value={category}
+              onChange={(event) =>
+                setCategory(event.target.value as NewsCategory)
+              }
+            >
+              {newsCategories.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </Select>
+          )}
+        </FormField>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="publishedOn">Published on</Label>
-          <Input
-            id="publishedOn"
-            name="publishedOn"
-            type="date"
-            defaultValue={
-              state.values?.publishedOn ?? post?.publishedOn ?? defaultPublishedOn
-            }
-            aria-invalid={state.fieldErrors?.publishedOn ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.publishedOn && "publishedOn-error"
-            )}
-          />
-          <FieldError
-            id="publishedOn-error"
-            message={state.fieldErrors?.publishedOn}
-          />
-        </div>
+        <FormField
+          name="publishedOn"
+          label="Published on"
+          error={state.fieldErrors?.publishedOn}
+        >
+          {(control) => (
+            <Input
+              {...control}
+              type="date"
+              defaultValue={
+                state.values?.publishedOn ??
+                post?.publishedOn ??
+                defaultPublishedOn
+              }
+            />
+          )}
+        </FormField>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="author">Author</Label>
-          <Input
-            id="author"
-            name="author"
-            defaultValue={state.values?.author ?? post?.author ?? ""}
-            aria-invalid={state.fieldErrors?.author ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.author && "author-error"
-            )}
-          />
-          <FieldError id="author-error" message={state.fieldErrors?.author} />
-        </div>
+        <FormField name="author" label="Author" error={state.fieldErrors?.author}>
+          {(control) => (
+            <Input
+              {...control}
+              defaultValue={state.values?.author ?? post?.author ?? ""}
+            />
+          )}
+        </FormField>
 
         {isAdvisory ? (
           <>
-            <div className="flex flex-col gap-xs">
-              <Label htmlFor="signatoryName">Signatory name</Label>
-              <Input
-                id="signatoryName"
-                name="signatoryName"
-                defaultValue={
-                  state.values?.signatoryName ?? post?.signatoryName ?? ""
-                }
-                aria-invalid={state.fieldErrors?.signatoryName ? true : undefined}
-                aria-describedby={describedBy(
-                  state.fieldErrors?.signatoryName && "signatoryName-error"
-                )}
-              />
-              <FieldError
-                id="signatoryName-error"
-                message={state.fieldErrors?.signatoryName}
-              />
-            </div>
+            <FormField
+              name="signatoryName"
+              label="Signatory name"
+              error={state.fieldErrors?.signatoryName}
+            >
+              {(control) => (
+                <Input
+                  {...control}
+                  defaultValue={
+                    state.values?.signatoryName ?? post?.signatoryName ?? ""
+                  }
+                />
+              )}
+            </FormField>
 
-            <div className="flex flex-col gap-xs">
-              <Label htmlFor="signatoryRole">Signatory role</Label>
-              <select
-                id="signatoryRole"
-                name="signatoryRole"
-                defaultValue={
-                  state.values?.signatoryRole ?? post?.signatoryRole ?? ""
-                }
-                aria-invalid={
-                  state.fieldErrors?.signatoryRole ? true : undefined
-                }
-                aria-describedby={describedBy(
-                  "signatoryRole-hint",
-                  state.fieldErrors?.signatoryRole && "signatoryRole-error"
-                )}
-                className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
-              >
-                <option value="">—</option>
-                {signatoryRoles.map((role) => (
-                  <option key={role} value={role}>
-                    {role}
-                  </option>
-                ))}
-              </select>
-              <p
-                id="signatoryRole-hint"
-                className="text-body-sm text-muted-foreground"
-              >
-                Advisories carry a signatory; other categories do not.
-              </p>
-              <FieldError
-                id="signatoryRole-error"
-                message={state.fieldErrors?.signatoryRole}
-              />
-            </div>
+            <FormField
+              name="signatoryRole"
+              label="Signatory role"
+              hint="Advisories carry a signatory; other categories do not."
+              error={state.fieldErrors?.signatoryRole}
+            >
+              {(control) => (
+                <Select
+                  {...control}
+                  defaultValue={
+                    state.values?.signatoryRole ?? post?.signatoryRole ?? ""
+                  }
+                >
+                  <option value="">—</option>
+                  {signatoryRoles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            </FormField>
           </>
         ) : null}
 
-        <fieldset className="flex flex-col gap-sm">
-          <label className="flex items-center gap-xs text-body-md">
-            <input
-              type="checkbox"
-              name="isPublished"
-              defaultChecked={
-                state.values?.isPublished ?? post?.isPublished ?? true
-              }
-              className="size-4 accent-primary"
-            />
-            Published
-          </label>
+        <div className="flex flex-col gap-xs">
+          {post ? (
+            <div className="flex flex-wrap items-center gap-xs">
+              <Badge variant={published ? "primary" : "outline"}>
+                {published ? "Published" : "Draft"}
+              </Badge>
+              <span className="text-body-sm text-muted-foreground">
+                {published
+                  ? "Live on the public site."
+                  : "Not visible on the public site."}
+              </span>
+            </div>
+          ) : (
+            <p className="text-body-sm text-muted-foreground">
+              New posts stay drafts until you choose Publish.
+            </p>
+          )}
           <label className="flex items-center gap-xs text-body-md">
             <input
               type="checkbox"
@@ -277,7 +261,7 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             />
             Feature on the home and news pages
           </label>
-        </fieldset>
+        </div>
 
         {state.status === "error" && state.message ? (
           <p role="alert" className="text-body-md text-error">
@@ -287,60 +271,87 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
 
         <div className="flex flex-col gap-sm">
           <div className="hidden flex-col gap-sm xl:flex">
-            <Button type="submit" disabled={pending} className="w-full">
-              {pending ? "Saving…" : post ? "Save changes" : "Create post"}
+            <Button
+              type="submit"
+              name="intent"
+              value="save"
+              disabled={pending}
+              className="w-full"
+              onClick={() => setSubmitting("save")}
+            >
+              {pending && submitting === "save" ? "Saving…" : primaryLabel}
             </Button>
+            <Button
+              type="submit"
+              name="intent"
+              value={publishIntent}
+              variant="secondary"
+              disabled={pending}
+              className="w-full"
+              onClick={() => setSubmitting(publishIntent)}
+            >
+              {pending && submitting === publishIntent
+                ? "Saving…"
+                : publishLabel}
+            </Button>
+            {post?.isPublished ? (
+              <Button
+                variant="outline"
+                className="w-full"
+                render={
+                  <GuardedLink
+                    href={`/about/news-and-announcements/${post.slug}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
+              >
+                View live
+                <ExternalLinkIcon />
+              </Button>
+            ) : null}
             <Button
               type="button"
               variant="ghost"
               className="w-full"
-              render={<Link href="/admin/news" />}
+              render={<GuardedLink href="/admin/news" />}
             >
               Cancel
             </Button>
           </div>
-          {post?.isPublished ? (
-            <Button
-              variant="outline"
-              className="w-full"
-              render={
-                <Link
-                  href={`/about/news-and-announcements/${post.slug}`}
-                  target="_blank"
-                  rel="noreferrer"
-                />
-              }
-            >
-              View live
-              <ExternalLinkIcon />
-            </Button>
-          ) : null}
         </div>
       </aside>
 
-      <div className="sticky bottom-0 z-10 -mx-md flex items-center gap-sm border-t border-border bg-card/95 px-md py-sm backdrop-blur md:-mx-lg md:px-lg xl:hidden">
-        <Button type="submit" disabled={pending} className="flex-1">
-          {pending ? "Saving…" : post ? "Save changes" : "Create post"}
+      <div className="sticky bottom-0 z-10 -mx-md flex flex-wrap items-center gap-sm border-t border-border bg-card/95 px-md py-sm backdrop-blur md:-mx-lg md:px-lg xl:hidden">
+        <Button
+          type="submit"
+          name="intent"
+          value="save"
+          disabled={pending}
+          className="min-w-0 flex-1"
+          onClick={() => setSubmitting("save")}
+        >
+          {pending && submitting === "save" ? "Saving…" : primaryLabel}
+        </Button>
+        <Button
+          type="submit"
+          name="intent"
+          value={publishIntent}
+          variant="secondary"
+          disabled={pending}
+          onClick={() => setSubmitting(publishIntent)}
+        >
+          {pending && submitting === publishIntent ? "Saving…" : publishLabel}
         </Button>
         <Button
           type="button"
           variant="ghost"
-          render={<Link href="/admin/news" />}
+          render={<GuardedLink href="/admin/news" />}
         >
           Cancel
         </Button>
       </div>
     </form>
-  )
-}
-
-function FieldError({ id, message }: { id: string; message?: string }) {
-  if (!message) return null
-
-  return (
-    <p id={id} className="text-body-sm text-error">
-      {message}
-    </p>
   )
 }
 
