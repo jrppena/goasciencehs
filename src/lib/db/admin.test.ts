@@ -11,8 +11,11 @@ import {
   createTestimonial,
   deleteCoreValue,
   deleteFaculty,
+  deleteFacultyMany,
   deleteNews,
+  deleteNewsMany,
   deleteTestimonial,
+  deleteTestimonialMany,
   getAdminCoreValueById,
   getAdminCoreValues,
   getAdminCounts,
@@ -21,9 +24,12 @@ import {
   getAdminScienceProgramLevels,
   getAdminTestimonialById,
   setFacultyVisible,
+  setFacultyVisibleMany,
   setNewsFeatured,
   setNewsPublished,
+  setNewsPublishedMany,
   setTestimonialVisible,
+  setTestimonialVisibleMany,
   updateAboutStory,
   updateAcademicsSettings,
   updateCoreValue,
@@ -374,6 +380,72 @@ describe("admin testimonial operations", () => {
 
     await deleteTestimonial(created._id)
     await expect(getAdminTestimonialById(created._id)).resolves.toBeNull()
+  })
+})
+
+describe("admin bulk operations", () => {
+  it("publishes, unpublishes, and deletes news in bulk", async (context) => {
+    if (!connected) return context.skip()
+
+    const first = await createNews({ ...input, slug: "bulk-first" })
+    const second = await createNews({ ...input, slug: "bulk-second" })
+
+    await setNewsPublishedMany([first._id, second._id], false)
+    await expect(getPublishedNews()).resolves.toEqual([])
+
+    await setNewsPublishedMany([first._id, second._id, "not-an-id"], true)
+    expect(
+      (await getPublishedNews()).map((post) => post.slug).sort()
+    ).toEqual(["bulk-first", "bulk-second"])
+
+    await deleteNewsMany([first._id, second._id])
+    await expect(getAdminNewsById(first._id)).resolves.toBeNull()
+    await expect(getAdminNewsById(second._id)).resolves.toBeNull()
+  })
+
+  it("hides, shows, and deletes faculty in bulk", async (context) => {
+    if (!connected) return context.skip()
+
+    const first = await createFaculty({ ...facultyInput, name: "First Teacher" })
+    const second = await createFaculty({
+      ...facultyInput,
+      name: "Second Teacher",
+    })
+
+    await setFacultyVisibleMany([first._id, second._id], false)
+    await expect(getVisibleFaculty()).resolves.toEqual([])
+
+    await setFacultyVisibleMany([first._id, second._id], true)
+    await expect(getVisibleFaculty()).resolves.toHaveLength(2)
+
+    await deleteFacultyMany([first._id, second._id, "not-an-id"])
+    await expect(getAdminFacultyById(first._id)).resolves.toBeNull()
+    await expect(getAdminFacultyById(second._id)).resolves.toBeNull()
+  })
+
+  it("hides, shows, and deletes testimonials in bulk", async (context) => {
+    if (!connected) return context.skip()
+
+    const first = await createTestimonial({
+      ...testimonialInput,
+      name: "First Alumna",
+      quote: "First quote.",
+    })
+    const second = await createTestimonial({
+      ...testimonialInput,
+      name: "Second Alumna",
+      quote: "Second quote.",
+    })
+
+    await setTestimonialVisibleMany([first._id, second._id], false)
+    await expect(getVisibleTestimonials()).resolves.toEqual([])
+
+    await setTestimonialVisibleMany([first._id, second._id], true)
+    await expect(getVisibleTestimonials()).resolves.toHaveLength(2)
+
+    await deleteTestimonialMany([first._id, second._id])
+    await expect(getAdminTestimonialById(first._id)).resolves.toBeNull()
+    await expect(getAdminTestimonialById(second._id)).resolves.toBeNull()
   })
 })
 

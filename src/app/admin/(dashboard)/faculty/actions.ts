@@ -7,7 +7,9 @@ import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   createFaculty,
   deleteFaculty,
+  deleteFacultyMany,
   setFacultyVisible,
+  setFacultyVisibleMany,
   updateFaculty,
 } from "@/lib/db/admin"
 import { revalidateContent } from "@/lib/db/revalidate"
@@ -66,6 +68,27 @@ export async function setFacultyVisibleAction(id: string, isVisible: boolean) {
   await requireAdmin()
 
   await setFacultyVisible(id, isVisible)
+  revalidateContent("faculty")
+}
+
+export async function bulkShowFacultyAction(ids: string[]) {
+  await requireAdmin()
+
+  await setFacultyVisibleMany(ids, true)
+  revalidateContent("faculty")
+}
+
+export async function bulkHideFacultyAction(ids: string[]) {
+  await requireAdmin()
+
+  await setFacultyVisibleMany(ids, false)
+  revalidateContent("faculty")
+}
+
+export async function bulkDeleteFacultyAction(formData: FormData) {
+  await requireAdmin()
+
+  await deleteFacultyMany(formData.getAll("ids").map(String))
   revalidateContent("faculty")
 }
 

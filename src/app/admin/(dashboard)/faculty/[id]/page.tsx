@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getAdminFacultyById } from "@/lib/db/admin"
+import { GuardedLink } from "@/components/admin/navigation-guard"
 import { FacultyForm } from "../faculty-form"
 
 export const metadata: Metadata = {
@@ -20,9 +21,20 @@ export default async function EditFacultyPage({
 
   return (
     <div className="flex flex-col gap-lg">
-      <h1 className="font-display text-headline-lg uppercase text-primary">
-        Edit member
-      </h1>
+      <header className="flex flex-col gap-xs">
+        <GuardedLink
+          href="/admin/faculty"
+          className="font-mono text-label-md uppercase text-muted-foreground hover:text-primary"
+        >
+          ← Faculty and Staff
+        </GuardedLink>
+        <h1 className="font-display text-headline-lg uppercase text-primary">
+          Edit member
+        </h1>
+        <p className="font-display text-body-lg">
+          {member.honorific} {member.name}
+        </p>
+      </header>
       <FacultyForm member={member} />
     </div>
   )

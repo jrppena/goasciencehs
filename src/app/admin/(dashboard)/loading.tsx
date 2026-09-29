@@ -5,17 +5,11 @@ export default function AdminLoading() {
 
       <div className="flex flex-col gap-xs">
         <div className="h-10 w-56 max-w-full animate-pulse rounded-control bg-surface-container" />
-        <div className="h-5 w-72 max-w-full animate-pulse rounded-control bg-surface-container-low" />
+        <div className="h-5 w-72 max-w-full animate-pulse rounded-control bg-surface-container" />
       </div>
 
-      <div className="flex flex-col gap-sm rounded-container border border-border bg-card p-md">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-14 animate-pulse rounded-control bg-surface-container-low"
-          />
-        ))}
-      </div>
+      {/* One neutral block: the routes it covers are half lists, half forms. */}
+      <div className="h-72 w-full animate-pulse rounded-container border border-border bg-card" />
     </div>
   )
 }

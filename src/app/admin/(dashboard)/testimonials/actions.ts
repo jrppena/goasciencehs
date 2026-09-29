@@ -7,7 +7,9 @@ import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   createTestimonial,
   deleteTestimonial,
+  deleteTestimonialMany,
   setTestimonialVisible,
+  setTestimonialVisibleMany,
   updateTestimonial,
 } from "@/lib/db/admin"
 import { revalidateContent } from "@/lib/db/revalidate"
@@ -69,6 +71,27 @@ export async function setTestimonialVisibleAction(
   await requireAdmin()
 
   await setTestimonialVisible(id, isVisible)
+  revalidateContent("testimonials")
+}
+
+export async function bulkShowTestimonialAction(ids: string[]) {
+  await requireAdmin()
+
+  await setTestimonialVisibleMany(ids, true)
+  revalidateContent("testimonials")
+}
+
+export async function bulkHideTestimonialAction(ids: string[]) {
+  await requireAdmin()
+
+  await setTestimonialVisibleMany(ids, false)
+  revalidateContent("testimonials")
+}
+
+export async function bulkDeleteTestimonialAction(formData: FormData) {
+  await requireAdmin()
+
+  await deleteTestimonialMany(formData.getAll("ids").map(String))
   revalidateContent("testimonials")
 }
 

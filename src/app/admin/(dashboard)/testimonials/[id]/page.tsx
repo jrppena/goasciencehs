@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getAdminTestimonialById } from "@/lib/db/admin"
+import { GuardedLink } from "@/components/admin/navigation-guard"
 import { TestimonialForm } from "../testimonial-form"
 
 export const metadata: Metadata = {
@@ -20,9 +21,18 @@ export default async function EditTestimonialPage({
 
   return (
     <div className="flex flex-col gap-lg">
-      <h1 className="font-display text-headline-lg uppercase text-primary">
-        Edit testimonial
-      </h1>
+      <header className="flex flex-col gap-xs">
+        <GuardedLink
+          href="/admin/testimonials"
+          className="font-mono text-label-md uppercase text-muted-foreground hover:text-primary"
+        >
+          ← Testimonials
+        </GuardedLink>
+        <h1 className="font-display text-headline-lg uppercase text-primary">
+          Edit testimonial
+        </h1>
+        <p className="font-display text-body-lg">{testimonial.name}</p>
+      </header>
       <TestimonialForm testimonial={testimonial} />
     </div>
   )

@@ -7,13 +7,16 @@ import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   createNews,
   deleteNews,
+  deleteNewsMany,
   setNewsFeatured,
   setNewsPublished,
+  setNewsPublishedMany,
   updateNews,
 } from "@/lib/db/admin"
 import { revalidateContent } from "@/lib/db/revalidate"
 import { slugify, type NewsPost } from "@/lib/news"
 import type { NewsFormState, NewsValues } from "./form-state"
+import { resolveIsPublished } from "./publish-intent"
 
 export async function createNewsAction(
   _previous: NewsFormState,
@@ -23,7 +26,7 @@ export async function createNewsAction(
 
   const values = readNewsValues(formData)
   try {
-    await createNews(toNewsPost(values))
+    await createNews(toNewsPost(values, resolveIsPublished(formData)))
   } catch (error) {
     return { ...toErrorState(error), values }
   }
@@ -40,7 +43,10 @@ export async function updateNewsAction(
 
   const values = readNewsValues(formData)
   try {
-    const post = await updateNews(readString(formData, "id"), toNewsPost(values))
+    const post = await updateNews(
+      readString(formData, "id"),
+      toNewsPost(values, resolveIsPublished(formData))
+    )
     if (!post) {
       return { status: "error", message: "That post no longer exists." }
     }
@@ -74,6 +80,27 @@ export async function setFeaturedAction(id: string, isFeatured: boolean) {
   revalidateContent("news")
 }
 
+export async function bulkPublishNewsAction(ids: string[]) {
+  await requireAdmin()
+
+  await setNewsPublishedMany(ids, true)
+  revalidateContent("news")
+}
+
+export async function bulkUnpublishNewsAction(ids: string[]) {
+  await requireAdmin()
+
+  await setNewsPublishedMany(ids, false)
+  revalidateContent("news")
+}
+
+export async function bulkDeleteNewsAction(formData: FormData) {
+  await requireAdmin()
+
+  await deleteNewsMany(formData.getAll("ids").map(String))
+  revalidateContent("news")
+}
+
 function readNewsValues(formData: FormData): NewsValues {
   return {
     title: readString(formData, "title"),
@@ -86,12 +113,11 @@ function readNewsValues(formData: FormData): NewsValues {
     excerpt: readString(formData, "excerpt"),
     body: readString(formData, "body"),
     image: readString(formData, "image"),
-    isPublished: formData.get("isPublished") === "on",
     isFeatured: formData.get("isFeatured") === "on",
   }
 }
 
-function toNewsPost(values: NewsValues): NewsPost {
+function toNewsPost(values: NewsValues, isPublished: boolean): NewsPost {
   return {
     title: values.title,
     slug: values.slug || slugify(values.title),
@@ -106,7 +132,7 @@ function toNewsPost(values: NewsValues): NewsPost {
       .map((paragraph) => paragraph.trim())
       .filter(Boolean),
     image: values.image || null,
-    isPublished: values.isPublished,
+    isPublished,
     isFeatured: values.isFeatured,
   }
 }

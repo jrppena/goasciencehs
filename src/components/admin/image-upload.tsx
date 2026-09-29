@@ -4,7 +4,7 @@ import { useRef, useState } from "react"
 import Image from "next/image"
 
 import { uploadImageAction } from "@/app/admin/upload-action"
-import { describedBy } from "@/lib/utils"
+import { FieldError } from "@/components/admin/form-field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -68,10 +68,9 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
             value={url}
             onChange={(event) => setUrl(event.target.value)}
             aria-invalid={error ? true : undefined}
-            aria-describedby={describedBy(
-              `${name}-hint`,
-              error && `${name}-error`
-            )}
+            aria-describedby={
+              error ? `${name}-hint ${name}-error` : `${name}-hint`
+            }
             placeholder="/photo.png or https://res.cloudinary.com/…"
           />
           <div className="flex items-center gap-sm">
@@ -96,7 +95,12 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => setUrl("")}
+                onClick={() => {
+                  setUrl("")
+                  setError(undefined)
+                  // Reset the picker so the same file can be chosen again.
+                  if (fileInput.current) fileInput.current.value = ""
+                }}
               >
                 Clear
               </Button>
@@ -105,11 +109,7 @@ function ImageUpload({ name, label, defaultValue, hint }: ImageUploadProps) {
           <p id={`${name}-hint`} className="text-body-sm text-muted-foreground">
             {hint ?? "Uploads go to Cloudinary. Images up to 5 MB."}
           </p>
-          {error ? (
-            <p id={`${name}-error`} className="text-body-sm text-error">
-              {error}
-            </p>
-          ) : null}
+          <FieldError id={`${name}-error`} message={error} />
         </div>
       </div>
     </div>

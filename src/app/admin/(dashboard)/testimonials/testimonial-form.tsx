@@ -4,10 +4,9 @@ import { useActionState } from "react"
 import Link from "next/link"
 
 import type { Testimonial } from "@/lib/testimonials"
-import { describedBy } from "@/lib/utils"
+import { FormField } from "@/components/admin/form-field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createTestimonialAction, updateTestimonialAction } from "./actions"
 import { initialTestimonialFormState } from "./form-state"
@@ -32,63 +31,43 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
       ) : null}
 
       <div className="flex flex-col gap-md">
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="quote">Quote</Label>
-          <Textarea
-            id="quote"
-            name="quote"
-            rows={5}
-            defaultValue={state.values?.quote ?? testimonial?.quote ?? ""}
-            aria-invalid={state.fieldErrors?.quote ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.quote && "quote-error"
-            )}
-          />
-          <FieldError id="quote-error" message={state.fieldErrors?.quote} />
-        </div>
+        <FormField name="quote" label="Quote" error={state.fieldErrors?.quote}>
+          {(control) => (
+            <Textarea
+              {...control}
+              rows={5}
+              defaultValue={state.values?.quote ?? testimonial?.quote ?? ""}
+            />
+          )}
+        </FormField>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            name="name"
-            defaultValue={state.values?.name ?? testimonial?.name ?? ""}
-            aria-invalid={state.fieldErrors?.name ? true : undefined}
-            aria-describedby={describedBy(
-              state.fieldErrors?.name && "name-error"
-            )}
-          />
-          <FieldError id="name-error" message={state.fieldErrors?.name} />
-        </div>
+        <FormField name="name" label="Name" error={state.fieldErrors?.name}>
+          {(control) => (
+            <Input
+              {...control}
+              defaultValue={state.values?.name ?? testimonial?.name ?? ""}
+            />
+          )}
+        </FormField>
 
         <div className="grid gap-md sm:grid-cols-2">
-          <div className="flex flex-col gap-xs">
-            <Label htmlFor="batch">Batch</Label>
-            <Input
-              id="batch"
-              name="batch"
-              defaultValue={state.values?.batch ?? testimonial?.batch ?? ""}
-              aria-invalid={state.fieldErrors?.batch ? true : undefined}
-              aria-describedby={describedBy(
-                state.fieldErrors?.batch && "batch-error"
-              )}
-            />
-            <FieldError id="batch-error" message={state.fieldErrors?.batch} />
-          </div>
+          <FormField name="batch" label="Batch" error={state.fieldErrors?.batch}>
+            {(control) => (
+              <Input
+                {...control}
+                defaultValue={state.values?.batch ?? testimonial?.batch ?? ""}
+              />
+            )}
+          </FormField>
 
-          <div className="flex flex-col gap-xs">
-            <Label htmlFor="now">Now</Label>
-            <Input
-              id="now"
-              name="now"
-              defaultValue={state.values?.now ?? testimonial?.now ?? ""}
-              aria-invalid={state.fieldErrors?.now ? true : undefined}
-              aria-describedby={describedBy(
-                state.fieldErrors?.now && "now-error"
-              )}
-            />
-            <FieldError id="now-error" message={state.fieldErrors?.now} />
-          </div>
+          <FormField name="now" label="Now" error={state.fieldErrors?.now}>
+            {(control) => (
+              <Input
+                {...control}
+                defaultValue={state.values?.now ?? testimonial?.now ?? ""}
+              />
+            )}
+          </FormField>
         </div>
       </div>
 
@@ -97,24 +76,20 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
           Display
         </span>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="order">Order</Label>
-          <Input
-            id="order"
-            name="order"
-            type="number"
-            defaultValue={state.values?.order ?? String(testimonial?.order ?? 0)}
-            aria-invalid={state.fieldErrors?.order ? true : undefined}
-            aria-describedby={describedBy(
-              "order-hint",
-              state.fieldErrors?.order && "order-error"
-            )}
-          />
-          <p id="order-hint" className="text-body-sm text-muted-foreground">
-            Lower numbers appear first.
-          </p>
-          <FieldError id="order-error" message={state.fieldErrors?.order} />
-        </div>
+        <FormField
+          name="order"
+          label="Order"
+          hint="Lower numbers appear first."
+          error={state.fieldErrors?.order}
+        >
+          {(control) => (
+            <Input
+              {...control}
+              type="number"
+              defaultValue={state.values?.order ?? String(testimonial?.order ?? 0)}
+            />
+          )}
+        </FormField>
 
         <label className="flex items-center gap-xs text-body-md">
           <input
@@ -149,16 +124,6 @@ function TestimonialForm({ testimonial }: TestimonialFormProps) {
         </div>
       </aside>
     </form>
-  )
-}
-
-function FieldError({ id, message }: { id: string; message?: string }) {
-  if (!message) return null
-
-  return (
-    <p id={id} className="text-body-sm text-error">
-      {message}
-    </p>
   )
 }
 

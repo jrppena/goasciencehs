@@ -3,10 +3,9 @@
 import { useActionState } from "react"
 
 import type { AcademicsSettings } from "@/lib/db/models/academics-settings"
-import { describedBy } from "@/lib/utils"
+import { FormField } from "@/components/admin/form-field"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { initialAcademicsListFormState } from "./list-form-state"
 import { updateAcademicsSettingsAction } from "./settings-actions"
 
@@ -21,32 +20,16 @@ function CoreSubjectHoursForm({ settings }: { settings: AcademicsSettings }) {
 
   return (
     <form action={formAction} className="grid gap-md md:grid-cols-2">
-      <div className="flex flex-col gap-xs">
-        <Label htmlFor="coreSubjectHours">Core subject hours</Label>
-        <Input
-          id="coreSubjectHours"
-          name="coreSubjectHours"
-          type="number"
-          defaultValue={defaultValue}
-          aria-invalid={state.fieldErrors?.coreSubjectHours ? true : undefined}
-          aria-describedby={describedBy(
-            "coreSubjectHours-hint",
-            state.fieldErrors?.coreSubjectHours && "coreSubjectHours-error"
-          )}
-        />
-        <p
-          id="coreSubjectHours-hint"
-          className="text-body-sm text-muted-foreground"
-        >
-          Drives the senior high core-subjects description and the hour labels
-          on each subject.
-        </p>
-        {state.fieldErrors?.coreSubjectHours ? (
-          <p id="coreSubjectHours-error" className="text-body-sm text-error">
-            {state.fieldErrors.coreSubjectHours}
-          </p>
-        ) : null}
-      </div>
+      <FormField
+        name="coreSubjectHours"
+        label="Core subject hours"
+        hint="Drives the senior high core-subjects description and the hour labels on each subject."
+        error={state.fieldErrors?.coreSubjectHours}
+      >
+        {(control) => (
+          <Input {...control} type="number" defaultValue={defaultValue} />
+        )}
+      </FormField>
 
       {state.status === "error" && state.message ? (
         <p role="alert" className="text-body-md text-error md:col-span-2">

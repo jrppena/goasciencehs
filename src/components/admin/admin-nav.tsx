@@ -1,9 +1,9 @@
 "use client"
 
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
+import { GuardedLink } from "@/components/admin/navigation-guard"
 
 const items = [
   { href: "/admin", label: "Dashboard" },
@@ -29,7 +29,7 @@ function AdminNav() {
           (item.href !== "/admin" && pathname.startsWith(`${item.href}/`))
 
         return (
-          <Link
+          <GuardedLink
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
@@ -41,7 +41,7 @@ function AdminNav() {
             )}
           >
             {item.label}
-          </Link>
+          </GuardedLink>
         )
       })}
     </nav>

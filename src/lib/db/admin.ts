@@ -197,10 +197,32 @@ export async function deleteNews(id: string) {
   await NewsModel.findByIdAndDelete(id)
 }
 
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function deleteNewsMany(ids: string[]) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await NewsModel.deleteMany({ _id: { $in: validIds } })
+}
+
 export async function setNewsPublished(id: string, isPublished: boolean) {
   await connect()
   await NewsModel.updateOne(
     { _id: id },
+    { $set: { isPublished } },
+    { runValidators: true }
+  )
+}
+
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function setNewsPublishedMany(ids: string[], isPublished: boolean) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await NewsModel.updateMany(
+    { _id: { $in: validIds } },
     { $set: { isPublished } },
     { runValidators: true }
   )
@@ -280,10 +302,35 @@ export async function deleteFaculty(id: string) {
   await FacultyModel.findByIdAndDelete(id)
 }
 
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function deleteFacultyMany(ids: string[]) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await FacultyModel.deleteMany({ _id: { $in: validIds } })
+}
+
 export async function setFacultyVisible(id: string, isVisible: boolean) {
   await connect()
   await FacultyModel.updateOne(
     { _id: id },
+    { $set: { isVisible } },
+    { runValidators: true }
+  )
+}
+
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function setFacultyVisibleMany(
+  ids: string[],
+  isVisible: boolean
+) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await FacultyModel.updateMany(
+    { _id: { $in: validIds } },
     { $set: { isVisible } },
     { runValidators: true }
   )
@@ -388,10 +435,35 @@ export async function deleteTestimonial(id: string) {
   await TestimonialModel.findByIdAndDelete(id)
 }
 
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function deleteTestimonialMany(ids: string[]) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await TestimonialModel.deleteMany({ _id: { $in: validIds } })
+}
+
 export async function setTestimonialVisible(id: string, isVisible: boolean) {
   await connect()
   await TestimonialModel.updateOne(
     { _id: id },
+    { $set: { isVisible } },
+    { runValidators: true }
+  )
+}
+
+/** Bulk variant used by the list toolbar; invalid ids are dropped. */
+export async function setTestimonialVisibleMany(
+  ids: string[],
+  isVisible: boolean
+) {
+  const validIds = ids.filter((id) => isValidObjectId(id))
+  if (validIds.length === 0) return
+
+  await connect()
+  await TestimonialModel.updateMany(
+    { _id: { $in: validIds } },
     { $set: { isVisible } },
     { runValidators: true }
   )
