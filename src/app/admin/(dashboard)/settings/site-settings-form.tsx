@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react"
 
 import type { SiteSettings } from "@/lib/db/models/site-settings"
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -34,8 +35,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           name="name"
           defaultValue={state.values?.name ?? settings.name}
           aria-invalid={state.fieldErrors?.name ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.name && "name-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.name} />
+        <FieldError id="name-error" message={state.fieldErrors?.name} />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -45,8 +49,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           name="shortName"
           defaultValue={state.values?.shortName ?? settings.shortName}
           aria-invalid={state.fieldErrors?.shortName ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.shortName && "shortName-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.shortName} />
+        <FieldError id="shortName-error" message={state.fieldErrors?.shortName} />
       </div>
 
       <div className="flex flex-col gap-xs md:col-span-2">
@@ -56,8 +63,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           name="tagline"
           defaultValue={state.values?.tagline ?? settings.tagline}
           aria-invalid={state.fieldErrors?.tagline ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.tagline && "tagline-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.tagline} />
+        <FieldError id="tagline-error" message={state.fieldErrors?.tagline} />
       </div>
 
       <div className="flex flex-col gap-xs md:col-span-2">
@@ -68,11 +78,18 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           rows={3}
           defaultValue={state.values?.description ?? settings.description}
           aria-invalid={state.fieldErrors?.description ? true : undefined}
+          aria-describedby={describedBy(
+            "description-hint",
+            state.fieldErrors?.description && "description-error"
+          )}
         />
-        <p className="text-body-sm text-muted-foreground">
+        <p id="description-hint" className="text-body-sm text-muted-foreground">
           Used for the site metadata description.
         </p>
-        <FieldError message={state.fieldErrors?.description} />
+        <FieldError
+          id="description-error"
+          message={state.fieldErrors?.description}
+        />
       </div>
 
       <div className="flex flex-col gap-xs md:col-span-2">
@@ -82,8 +99,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           name="address"
           defaultValue={state.values?.address ?? settings.address}
           aria-invalid={state.fieldErrors?.address ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.address && "address-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.address} />
+        <FieldError id="address-error" message={state.fieldErrors?.address} />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -93,8 +113,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           name="phone"
           defaultValue={state.values?.phone ?? settings.phone}
           aria-invalid={state.fieldErrors?.phone ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.phone && "phone-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.phone} />
+        <FieldError id="phone-error" message={state.fieldErrors?.phone} />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -105,8 +128,11 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
           type="email"
           defaultValue={state.values?.email ?? settings.email}
           aria-invalid={state.fieldErrors?.email ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.email && "email-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.email} />
+        <FieldError id="email-error" message={state.fieldErrors?.email} />
       </div>
 
       <div className="flex flex-col gap-sm md:col-span-2">
@@ -175,10 +201,14 @@ function SiteSettingsForm({ settings }: { settings: SiteSettings }) {
   )
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
 
-  return <p className="text-body-sm text-error">{message}</p>
+  return (
+    <p id={id} className="text-body-sm text-error">
+      {message}
+    </p>
+  )
 }
 
 export { SiteSettingsForm }

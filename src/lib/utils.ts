@@ -34,6 +34,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/** Builds an `aria-describedby` value, ignoring ids whose elements are not rendered. */
+export function describedBy(...ids: (string | false | null | undefined)[]) {
+  const value = ids.filter(Boolean).join(" ")
+  return value || undefined
+}
+
 /** Builds a `tel:` href from a display phone number, stripping whitespace. */
 export function telHref(phone: string) {
   return `tel:${phone.replace(/\s/g, "")}`

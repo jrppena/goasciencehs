@@ -3,6 +3,7 @@
 import { useActionState } from "react"
 
 import type { AcademicsSettings } from "@/lib/db/models/academics-settings"
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -28,13 +29,20 @@ function CoreSubjectHoursForm({ settings }: { settings: AcademicsSettings }) {
           type="number"
           defaultValue={defaultValue}
           aria-invalid={state.fieldErrors?.coreSubjectHours ? true : undefined}
+          aria-describedby={describedBy(
+            "coreSubjectHours-hint",
+            state.fieldErrors?.coreSubjectHours && "coreSubjectHours-error"
+          )}
         />
-        <p className="text-body-sm text-muted-foreground">
+        <p
+          id="coreSubjectHours-hint"
+          className="text-body-sm text-muted-foreground"
+        >
           Drives the senior high core-subjects description and the hour labels
           on each subject.
         </p>
         {state.fieldErrors?.coreSubjectHours ? (
-          <p className="text-body-sm text-error">
+          <p id="coreSubjectHours-error" className="text-body-sm text-error">
             {state.fieldErrors.coreSubjectHours}
           </p>
         ) : null}

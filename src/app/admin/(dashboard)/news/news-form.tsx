@@ -2,8 +2,16 @@
 
 import { useActionState, useState } from "react"
 import Link from "next/link"
+import { ExternalLinkIcon } from "lucide-react"
 
-import { newsCategories, signatoryRoles, slugify, type NewsPost } from "@/lib/news"
+import {
+  newsCategories,
+  signatoryRoles,
+  slugify,
+  type NewsCategory,
+  type NewsPost,
+} from "@/lib/news"
+import { describedBy } from "@/lib/utils"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,6 +34,11 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
   const [title, setTitle] = useState(post?.title ?? "")
   const [slug, setSlug] = useState(post?.slug ?? "")
   const [slugEdited, setSlugEdited] = useState(Boolean(post))
+  const [category, setCategory] = useState<NewsCategory>(
+    post?.category ?? "Achievement"
+  )
+
+  const isAdvisory = category === "Advisory"
 
   function handleTitleChange(value: string) {
     setTitle(value)
@@ -48,8 +61,11 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             value={title}
             onChange={(event) => handleTitleChange(event.target.value)}
             aria-invalid={state.fieldErrors?.title ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.title && "title-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.title} />
+          <FieldError id="title-error" message={state.fieldErrors?.title} />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -63,11 +79,15 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
               setSlugEdited(true)
             }}
             aria-invalid={state.fieldErrors?.slug ? true : undefined}
+            aria-describedby={describedBy(
+              "slug-hint",
+              state.fieldErrors?.slug && "slug-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="slug-hint" className="text-body-sm text-muted-foreground">
             The URL segment under /about/news-and-announcements.
           </p>
-          <FieldError message={state.fieldErrors?.slug} />
+          <FieldError id="slug-error" message={state.fieldErrors?.slug} />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -78,8 +98,11 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             rows={3}
             defaultValue={state.values?.excerpt ?? post?.excerpt ?? ""}
             aria-invalid={state.fieldErrors?.excerpt ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.excerpt && "excerpt-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.excerpt} />
+          <FieldError id="excerpt-error" message={state.fieldErrors?.excerpt} />
         </div>
 
         <ImageUpload
@@ -97,11 +120,15 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             rows={16}
             defaultValue={state.values?.body ?? post?.body.join("\n\n") ?? ""}
             aria-invalid={state.fieldErrors?.body ? true : undefined}
+            aria-describedby={describedBy(
+              "body-hint",
+              state.fieldErrors?.body && "body-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="body-hint" className="text-body-sm text-muted-foreground">
             Separate paragraphs with a blank line.
           </p>
-          <FieldError message={state.fieldErrors?.body} />
+          <FieldError id="body-error" message={state.fieldErrors?.body} />
         </div>
       </div>
 
@@ -115,17 +142,23 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
           <select
             id="category"
             name="category"
-            defaultValue={state.values?.category ?? post?.category ?? "Achievement"}
+            value={category}
+            onChange={(event) =>
+              setCategory(event.target.value as NewsCategory)
+            }
             aria-invalid={state.fieldErrors?.category ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.category && "category-error"
+            )}
             className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
           >
-            {newsCategories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            {newsCategories.map((option) => (
+              <option key={option} value={option}>
+                {option}
               </option>
             ))}
           </select>
-          <FieldError message={state.fieldErrors?.category} />
+          <FieldError id="category-error" message={state.fieldErrors?.category} />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -138,8 +171,14 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
               state.values?.publishedOn ?? post?.publishedOn ?? defaultPublishedOn
             }
             aria-invalid={state.fieldErrors?.publishedOn ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.publishedOn && "publishedOn-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.publishedOn} />
+          <FieldError
+            id="publishedOn-error"
+            message={state.fieldErrors?.publishedOn}
+          />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -149,44 +188,71 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
             name="author"
             defaultValue={state.values?.author ?? post?.author ?? ""}
             aria-invalid={state.fieldErrors?.author ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.author && "author-error"
+            )}
           />
-          <FieldError message={state.fieldErrors?.author} />
+          <FieldError id="author-error" message={state.fieldErrors?.author} />
         </div>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="signatoryName">Signatory name</Label>
-          <Input
-            id="signatoryName"
-            name="signatoryName"
-            defaultValue={state.values?.signatoryName ?? post?.signatoryName ?? ""}
-            aria-invalid={state.fieldErrors?.signatoryName ? true : undefined}
-          />
-          <FieldError message={state.fieldErrors?.signatoryName} />
-        </div>
+        {isAdvisory ? (
+          <>
+            <div className="flex flex-col gap-xs">
+              <Label htmlFor="signatoryName">Signatory name</Label>
+              <Input
+                id="signatoryName"
+                name="signatoryName"
+                defaultValue={
+                  state.values?.signatoryName ?? post?.signatoryName ?? ""
+                }
+                aria-invalid={state.fieldErrors?.signatoryName ? true : undefined}
+                aria-describedby={describedBy(
+                  state.fieldErrors?.signatoryName && "signatoryName-error"
+                )}
+              />
+              <FieldError
+                id="signatoryName-error"
+                message={state.fieldErrors?.signatoryName}
+              />
+            </div>
 
-        <div className="flex flex-col gap-xs">
-          <Label htmlFor="signatoryRole">Signatory role</Label>
-          <select
-            id="signatoryRole"
-            name="signatoryRole"
-            defaultValue={
-              state.values?.signatoryRole ?? post?.signatoryRole ?? ""
-            }
-            aria-invalid={state.fieldErrors?.signatoryRole ? true : undefined}
-            className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
-          >
-            <option value="">—</option>
-            {signatoryRoles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
-          </select>
-          <p className="text-body-sm text-muted-foreground">
-            Required for Advisory posts.
-          </p>
-          <FieldError message={state.fieldErrors?.signatoryRole} />
-        </div>
+            <div className="flex flex-col gap-xs">
+              <Label htmlFor="signatoryRole">Signatory role</Label>
+              <select
+                id="signatoryRole"
+                name="signatoryRole"
+                defaultValue={
+                  state.values?.signatoryRole ?? post?.signatoryRole ?? ""
+                }
+                aria-invalid={
+                  state.fieldErrors?.signatoryRole ? true : undefined
+                }
+                aria-describedby={describedBy(
+                  "signatoryRole-hint",
+                  state.fieldErrors?.signatoryRole && "signatoryRole-error"
+                )}
+                className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
+              >
+                <option value="">—</option>
+                {signatoryRoles.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </select>
+              <p
+                id="signatoryRole-hint"
+                className="text-body-sm text-muted-foreground"
+              >
+                Advisories carry a signatory; other categories do not.
+              </p>
+              <FieldError
+                id="signatoryRole-error"
+                message={state.fieldErrors?.signatoryRole}
+              />
+            </div>
+          </>
+        ) : null}
 
         <fieldset className="flex flex-col gap-sm">
           <label className="flex items-center gap-xs text-body-md">
@@ -220,27 +286,62 @@ function NewsForm({ post, defaultPublishedOn }: NewsFormProps) {
         ) : null}
 
         <div className="flex flex-col gap-sm">
-          <Button type="submit" disabled={pending} className="w-full">
-            {pending ? "Saving…" : post ? "Save changes" : "Create post"}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full"
-            render={<Link href="/admin/news" />}
-          >
-            Cancel
-          </Button>
+          <div className="hidden flex-col gap-sm xl:flex">
+            <Button type="submit" disabled={pending} className="w-full">
+              {pending ? "Saving…" : post ? "Save changes" : "Create post"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full"
+              render={<Link href="/admin/news" />}
+            >
+              Cancel
+            </Button>
+          </div>
+          {post?.isPublished ? (
+            <Button
+              variant="outline"
+              className="w-full"
+              render={
+                <Link
+                  href={`/about/news-and-announcements/${post.slug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                />
+              }
+            >
+              View live
+              <ExternalLinkIcon />
+            </Button>
+          ) : null}
         </div>
       </aside>
+
+      <div className="sticky bottom-0 z-10 -mx-md flex items-center gap-sm border-t border-border bg-card/95 px-md py-sm backdrop-blur md:-mx-lg md:px-lg xl:hidden">
+        <Button type="submit" disabled={pending} className="flex-1">
+          {pending ? "Saving…" : post ? "Save changes" : "Create post"}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          render={<Link href="/admin/news" />}
+        >
+          Cancel
+        </Button>
+      </div>
     </form>
   )
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
 
-  return <p className="text-body-sm text-error">{message}</p>
+  return (
+    <p id={id} className="text-body-sm text-error">
+      {message}
+    </p>
+  )
 }
 
 export { NewsForm }

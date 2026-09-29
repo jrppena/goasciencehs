@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react"
 import Link from "next/link"
 
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -122,6 +123,10 @@ function AcademicsListForm({
                       aria-invalid={
                         state.fieldErrors?.[field.name] ? true : undefined
                       }
+                      aria-describedby={describedBy(
+                        field.hint && `${field.name}-hint`,
+                        state.fieldErrors?.[field.name] && `${field.name}-error`
+                      )}
                     />
                     <Button
                       type="button"
@@ -150,6 +155,10 @@ function AcademicsListForm({
                 rows={field.rows ?? 4}
                 defaultValue={defaultValue}
                 aria-invalid={state.fieldErrors?.[field.name] ? true : undefined}
+                aria-describedby={describedBy(
+                  field.hint && `${field.name}-hint`,
+                  state.fieldErrors?.[field.name] && `${field.name}-error`
+                )}
               />
             ) : field.kind === "select" ? (
               <select
@@ -157,6 +166,10 @@ function AcademicsListForm({
                 name={field.name}
                 defaultValue={defaultValue}
                 aria-invalid={state.fieldErrors?.[field.name] ? true : undefined}
+                aria-describedby={describedBy(
+                  field.hint && `${field.name}-hint`,
+                  state.fieldErrors?.[field.name] && `${field.name}-error`
+                )}
                 className={selectClassName}
               >
                 {(field.options ?? []).map((option) => (
@@ -172,13 +185,25 @@ function AcademicsListForm({
                 type={field.kind === "number" ? "number" : "text"}
                 defaultValue={defaultValue}
                 aria-invalid={state.fieldErrors?.[field.name] ? true : undefined}
+                aria-describedby={describedBy(
+                  field.hint && `${field.name}-hint`,
+                  state.fieldErrors?.[field.name] && `${field.name}-error`
+                )}
               />
             )}
             {field.hint ? (
-              <p className="text-body-sm text-muted-foreground">{field.hint}</p>
+              <p
+                id={`${field.name}-hint`}
+                className="text-body-sm text-muted-foreground"
+              >
+                {field.hint}
+              </p>
             ) : null}
             {state.fieldErrors?.[field.name] ? (
-              <p className="text-body-sm text-error">
+              <p
+                id={`${field.name}-error`}
+                className="text-body-sm text-error"
+              >
                 {state.fieldErrors[field.name]}
               </p>
             ) : null}

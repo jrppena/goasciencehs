@@ -3,6 +3,7 @@
 import { useActionState } from "react"
 
 import type { SchoolStats } from "@/lib/db/models/school-stats"
+import { describedBy } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,8 +25,14 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
           name="learnersEnrolled"
           defaultValue={state.values?.learnersEnrolled ?? stats.learnersEnrolled}
           aria-invalid={state.fieldErrors?.learnersEnrolled ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.learnersEnrolled && "learnersEnrolled-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.learnersEnrolled} />
+        <FieldError
+          id="learnersEnrolled-error"
+          message={state.fieldErrors?.learnersEnrolled}
+        />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -35,8 +42,14 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
           name="yearEstablished"
           defaultValue={state.values?.yearEstablished ?? stats.yearEstablished}
           aria-invalid={state.fieldErrors?.yearEstablished ? true : undefined}
+          aria-describedby={describedBy(
+            state.fieldErrors?.yearEstablished && "yearEstablished-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.yearEstablished} />
+        <FieldError
+          id="yearEstablished-error"
+          message={state.fieldErrors?.yearEstablished}
+        />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -50,8 +63,15 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
           aria-invalid={
             state.fieldErrors?.collegeProgressionRate ? true : undefined
           }
+          aria-describedby={describedBy(
+            state.fieldErrors?.collegeProgressionRate &&
+              "collegeProgressionRate-error"
+          )}
         />
-        <FieldError message={state.fieldErrors?.collegeProgressionRate} />
+        <FieldError
+          id="collegeProgressionRate-error"
+          message={state.fieldErrors?.collegeProgressionRate}
+        />
       </div>
 
       <div className="flex flex-col gap-xs">
@@ -61,8 +81,12 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
           value={stats.facultyAndStaff}
           disabled
           readOnly
+          aria-describedby="facultyAndStaff-hint"
         />
-        <p className="text-body-sm text-muted-foreground">
+        <p
+          id="facultyAndStaff-hint"
+          className="text-body-sm text-muted-foreground"
+        >
           Computed from the visible faculty list — manage it under Faculty.
         </p>
       </div>
@@ -82,10 +106,14 @@ function SchoolStatsForm({ stats }: { stats: SchoolStats }) {
   )
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
 
-  return <p className="text-body-sm text-error">{message}</p>
+  return (
+    <p id={id} className="text-body-sm text-error">
+      {message}
+    </p>
+  )
 }
 
 export { SchoolStatsForm }

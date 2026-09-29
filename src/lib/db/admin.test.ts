@@ -15,6 +15,7 @@ import {
   deleteTestimonial,
   getAdminCoreValueById,
   getAdminCoreValues,
+  getAdminCounts,
   getAdminFacultyById,
   getAdminNewsById,
   getAdminScienceProgramLevels,
@@ -502,5 +503,58 @@ describe("admin academics operations", () => {
     await expect(getAcademicsSettings()).resolves.toMatchObject({
       coreSubjectHours: 200,
     })
+  })
+})
+
+describe("admin dashboard counts", () => {
+  it("summarises every section and surfaces drafts and the latest advisory", async (context) => {
+    if (!connected) return context.skip()
+
+    await createNews({ ...input, slug: "older-advisory" })
+    await createNews({
+      ...input,
+      slug: "newer-advisory-draft",
+      publishedOn: "2026-02-01",
+      isPublished: false,
+    })
+    await createNews({
+      ...input,
+      slug: "campus-post",
+      category: "Campus",
+      publishedOn: "2026-03-01",
+      signatoryName: null,
+      signatoryRole: null,
+    })
+
+    await createFaculty(facultyInput)
+    await createFaculty({
+      ...facultyInput,
+      name: "Hidden Teacher",
+      isVisible: false,
+    })
+    await createTestimonial(testimonialInput)
+    await createCoreValue({
+      icon: "Compass",
+      title: "Discipline",
+      body: "Show up, prepare, follow through.",
+      order: 1,
+    })
+    await updateSiteSettings(settingsInput)
+
+    const counts = await getAdminCounts()
+
+    expect(counts.news.total).toBe(3)
+    expect(counts.news.published).toBe(2)
+    expect(counts.news.drafts).toBe(1)
+    expect(counts.news.latestAdvisory).toMatchObject({
+      title: "A post",
+      publishedOn: "2026-02-01",
+      isPublished: false,
+    })
+    expect(counts.faculty).toEqual({ total: 2, visible: 1 })
+    expect(counts.testimonials).toEqual({ total: 1, visible: 1 })
+    expect(counts.about).toMatchObject({ entries: 1, story: false })
+    expect(counts.academics.entries).toBe(0)
+    expect(counts.settings).toEqual({ stored: true })
   })
 })

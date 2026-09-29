@@ -24,7 +24,9 @@ function AdminNav() {
       className="flex gap-xs overflow-x-auto p-sm md:flex-col"
     >
       {items.map((item) => {
-        const active = pathname === item.href
+        const active =
+          pathname === item.href ||
+          (item.href !== "/admin" && pathname.startsWith(`${item.href}/`))
 
         return (
           <Link

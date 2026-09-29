@@ -4,6 +4,7 @@ import { useActionState } from "react"
 import Link from "next/link"
 
 import { facultyKindLabels, type FacultyKind, type FacultyMember } from "@/lib/faculty"
+import { describedBy } from "@/lib/utils"
 import { ImageUpload } from "@/components/admin/image-upload"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,6 +43,9 @@ function FacultyForm({ member }: FacultyFormProps) {
               name="honorific"
               defaultValue={state.values?.honorific ?? member?.honorific ?? "Ma'am"}
               aria-invalid={state.fieldErrors?.honorific ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.honorific && "honorific-error"
+              )}
               className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
             >
               {HONORIFICS.map((honorific) => (
@@ -50,7 +54,7 @@ function FacultyForm({ member }: FacultyFormProps) {
                 </option>
               ))}
             </select>
-            <FieldError message={state.fieldErrors?.honorific} />
+            <FieldError id="honorific-error" message={state.fieldErrors?.honorific} />
           </div>
 
           <div className="flex flex-col gap-xs">
@@ -60,8 +64,11 @@ function FacultyForm({ member }: FacultyFormProps) {
               name="name"
               defaultValue={state.values?.name ?? member?.name ?? ""}
               aria-invalid={state.fieldErrors?.name ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.name && "name-error"
+              )}
             />
-            <FieldError message={state.fieldErrors?.name} />
+            <FieldError id="name-error" message={state.fieldErrors?.name} />
           </div>
         </div>
 
@@ -72,11 +79,15 @@ function FacultyForm({ member }: FacultyFormProps) {
             name="position"
             defaultValue={state.values?.position ?? member?.position ?? ""}
             aria-invalid={state.fieldErrors?.position ? true : undefined}
+            aria-describedby={describedBy(
+              "position-hint",
+              state.fieldErrors?.position && "position-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="position-hint" className="text-body-sm text-muted-foreground">
             Blank renders the “To be announced” placeholder on the public site.
           </p>
-          <FieldError message={state.fieldErrors?.position} />
+          <FieldError id="position-error" message={state.fieldErrors?.position} />
         </div>
 
         <div className="grid gap-md sm:grid-cols-2">
@@ -88,8 +99,11 @@ function FacultyForm({ member }: FacultyFormProps) {
               type="email"
               defaultValue={state.values?.email ?? member?.email ?? ""}
               aria-invalid={state.fieldErrors?.email ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.email && "email-error"
+              )}
             />
-            <FieldError message={state.fieldErrors?.email} />
+            <FieldError id="email-error" message={state.fieldErrors?.email} />
           </div>
 
           <div className="flex flex-col gap-xs">
@@ -99,8 +113,11 @@ function FacultyForm({ member }: FacultyFormProps) {
               name="room"
               defaultValue={state.values?.room ?? member?.room ?? ""}
               aria-invalid={state.fieldErrors?.room ? true : undefined}
+              aria-describedby={describedBy(
+                state.fieldErrors?.room && "room-error"
+              )}
             />
-            <FieldError message={state.fieldErrors?.room} />
+            <FieldError id="room-error" message={state.fieldErrors?.room} />
           </div>
         </div>
 
@@ -114,12 +131,16 @@ function FacultyForm({ member }: FacultyFormProps) {
               state.values?.subjects ?? member?.subjects?.join("\n") ?? ""
             }
             aria-invalid={state.fieldErrors?.subjects ? true : undefined}
+            aria-describedby={describedBy(
+              "subjects-hint",
+              state.fieldErrors?.subjects && "subjects-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="subjects-hint" className="text-body-sm text-muted-foreground">
             One subject per line. Blank renders the “To be announced”
             placeholder.
           </p>
-          <FieldError message={state.fieldErrors?.subjects} />
+          <FieldError id="subjects-error" message={state.fieldErrors?.subjects} />
         </div>
 
         <ImageUpload
@@ -142,6 +163,9 @@ function FacultyForm({ member }: FacultyFormProps) {
             name="kind"
             defaultValue={state.values?.kind ?? member?.kind ?? "teaching"}
             aria-invalid={state.fieldErrors?.kind ? true : undefined}
+            aria-describedby={describedBy(
+              state.fieldErrors?.kind && "kind-error"
+            )}
             className="h-10 w-full rounded-control border border-input bg-card px-sm text-body-md text-foreground transition-colors outline-none focus-visible:border-2 focus-visible:border-ring aria-invalid:border-2 aria-invalid:border-on-primary-fixed-variant"
           >
             {KINDS.map((kind) => (
@@ -150,7 +174,7 @@ function FacultyForm({ member }: FacultyFormProps) {
               </option>
             ))}
           </select>
-          <FieldError message={state.fieldErrors?.kind} />
+          <FieldError id="kind-error" message={state.fieldErrors?.kind} />
         </div>
 
         <div className="flex flex-col gap-xs">
@@ -161,11 +185,15 @@ function FacultyForm({ member }: FacultyFormProps) {
             type="number"
             defaultValue={state.values?.order ?? String(member?.order ?? 0)}
             aria-invalid={state.fieldErrors?.order ? true : undefined}
+            aria-describedby={describedBy(
+              "order-hint",
+              state.fieldErrors?.order && "order-error"
+            )}
           />
-          <p className="text-body-sm text-muted-foreground">
+          <p id="order-hint" className="text-body-sm text-muted-foreground">
             Lower numbers appear first within the group.
           </p>
-          <FieldError message={state.fieldErrors?.order} />
+          <FieldError id="order-error" message={state.fieldErrors?.order} />
         </div>
 
         <label className="flex items-center gap-xs text-body-md">
@@ -202,10 +230,14 @@ function FacultyForm({ member }: FacultyFormProps) {
   )
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
 
-  return <p className="text-body-sm text-error">{message}</p>
+  return (
+    <p id={id} className="text-body-sm text-error">
+      {message}
+    </p>
+  )
 }
 
 export { FacultyForm }

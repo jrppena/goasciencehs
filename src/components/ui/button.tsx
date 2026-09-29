@@ -47,8 +47,12 @@ function Button({
   size = "default",
   render,
   children,
+  ref,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & {
+    ref?: React.Ref<HTMLButtonElement>
+  }) {
   // A rendered element (a Link, say) is usually not a <button>. Base UI's
   // `nativeButton={false}` keeps it keyboard-operable but still stamps
   // `role="button"` and its own keydown/keyup handling onto it, which
@@ -63,6 +67,7 @@ function Button({
       render,
       {
         "data-slot": "button",
+        ref,
         className: cn(
           buttonVariants({ variant, size, className }),
           render.props.className
@@ -75,6 +80,7 @@ function Button({
 
   return (
     <ButtonPrimitive
+      ref={ref}
       data-slot="button"
       render={render}
       // Anything that reaches the primitive here is either absent (a real
