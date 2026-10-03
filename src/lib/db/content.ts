@@ -1,5 +1,7 @@
 import "server-only"
 
+import { cache } from "react"
+
 import { connect } from "@/lib/db/connect"
 import { AboutStoryModel, type AboutStory } from "@/lib/db/models/about-story"
 import {
@@ -135,7 +137,8 @@ export async function getAboutStory(): Promise<AboutStory> {
   return story
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+/** Cached per request: layout, header, footer and CTA all read it in one render. */
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   await connect()
   const settings = await SiteSettingsModel.findOne().lean()
 
@@ -144,7 +147,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   }
 
   return settings
-}
+})
 
 export async function getSchoolStats(): Promise<SchoolStats> {
   await connect()
