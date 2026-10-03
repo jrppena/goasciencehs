@@ -49,7 +49,7 @@ export default async function NewsPage({
             <p className="text-body-lg text-muted-foreground">
               No {activeCategory} posts yet.
             </p>
-            <Button variant="outline" render={<Link href={NEWS_PATH} />}>
+            <Button variant="outline" render={<Link href={NEWS_PATH} scroll={false} />}>
               View all news
             </Button>
           </div>

@@ -24,12 +24,13 @@ function FacultyCard({
     <Card className="h-full gap-0 py-0 text-center">
       {member.photo ? (
         <div className="relative aspect-square border-b border-border">
+          {/* Portraits frame the face in the top third; a centered crop clips heads. */}
           <Image
             src={member.photo}
             alt={`Portrait of ${fullName}`}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover"
+            className="object-cover object-[50%_20%]"
           />
         </div>
       ) : (
