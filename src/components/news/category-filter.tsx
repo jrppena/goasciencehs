@@ -17,7 +17,7 @@ function CategoryFilter({ active }: { active?: NewsCategory }) {
           <Badge
             variant={active ? "outline" : "active"}
             aria-current={active ? undefined : "true"}
-            render={<Link href={NEWS_PATH} />}
+            render={<Link href={NEWS_PATH} scroll={false} />}
           >
             All
           </Badge>
@@ -27,7 +27,9 @@ function CategoryFilter({ active }: { active?: NewsCategory }) {
             <Badge
               variant={active === category ? "active" : "outline"}
               aria-current={active === category ? "true" : undefined}
-              render={<Link href={`${NEWS_PATH}?category=${category}`} />}
+              render={
+                <Link href={`${NEWS_PATH}?category=${category}`} scroll={false} />
+              }
             >
               {category}
             </Badge>
